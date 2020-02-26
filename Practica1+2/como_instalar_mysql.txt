@@ -1,0 +1,12 @@
+Lo primero, en el prompt de la terminal escribimos el comando:
+
+apt-get update
+
+Tras actualizar las dependencias escribiremos:
+
+yes | apt-get install mysql-server
+
+Ahora tendremos que configurar el SGBD, para ello ejecutaremos la orden:
+
+sudo mysql_secure_installation
+

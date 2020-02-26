@@ -1,2 +1,2 @@
 # Ignorar los .zip del directorio ImagenesMV
-ImagenesMV/*.zip
+ImagenesMV/*
