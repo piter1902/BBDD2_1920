@@ -1,0 +1,26 @@
+Instalamos los paquetes necesarios:
+
+(no estamos seguros de este paso)
+sudo apt update
+sudo apt -y install libxtst6
+
+Crear una cuenta y descargar DB2 desde:
+
+https://jazz.net/downloads/DB2/releases/10.1
+
+Descargaremos la versión Linux x86-64
+
+Extraemos el fichero con:
+
+tar -xzvf <filename> .
+
+*PROBLEMA CON LA VARIABLE DISPLAY. EN NUESTRO CASO HEMOS USADO ssh -X*
+
+Entramos al directorio extraido
+Ejecutamos el siguiente comando
+
+sudo ./db2_setup
+
+Creamos el usuario:
+user: remote
+pswd: BBDD1920

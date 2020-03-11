@@ -1,0 +1,13 @@
+Actualizamos el gestor 
+
+apt update
+
+Instalamos postgresql (en nuestro caso la version 9.6)
+
+apt -y install postgresql-9.6
+
+Cambiaremos al usuario postgres
+
+su - postgres
+
+Ejecutaremos el comando: 'psql' para acceder a la BD y crear al usuario que queramos.
