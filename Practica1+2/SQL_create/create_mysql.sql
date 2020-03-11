@@ -1,200 +1,113 @@
--- *************** SqlDBM: PostgreSQL ****************;
+-- ****************** SqlDBM: MySQL ******************;
 -- ***************************************************;
 
 
--- ************************************** "Cuenta_ahorro"
+-- ************************************** `Cuenta_Ahorro`
 
-CREATE TABLE "Cuenta_ahorro"
+CREATE TABLE `Cuenta_Ahorro`
 (
- "Num_cuenta"     int NOT NULL,
- "IBAN"           varchar(40) NOT NULL,
- "Fecha_creacion" date NOT NULL,
- "Saldo"          int NOT NULL,
- "Interes"        int NOT NULL,
- CONSTRAINT "PK_Cuenta" PRIMARY KEY ( "Num_cuenta" )
+ `Num_cuenta`     varchar(40) NOT NULL ,
+ `Fecha_creacion` date NOT NULL ,
+ `Saldo`          int NOT NULL ,
+ `Interes`        int NOT NULL ,
+ `IBAN`           varchar(40) NOT NULL ,
+
+PRIMARY KEY (`Num_cuenta`)
 );
 
+-- ************************************** `Cliente`
 
-
-
-
-
-
-
--- ************************************** "Cliente"
-
-CREATE TABLE "Cliente"
+CREATE TABLE `Cliente`
 (
- "DNI"       varchar(10) NOT NULL,
- "Nombre"    varchar(50) NOT NULL,
- "Apellido"  varchar(50) NOT NULL,
- "Edad"      int NOT NULL,
- "Direccion" varchar(100) NOT NULL,
- "Telefono"  int NOT NULL,
- "Email"     varchar(50) NULL,
- CONSTRAINT "PK_Cliente" PRIMARY KEY ( "DNI" )
+ `DNI`       varchar(50) NOT NULL ,
+ `Nombre`    varchar(50) NOT NULL ,
+ `Apellidos` varchar(50) NOT NULL ,
+ `Edad`      int NOT NULL ,
+ `Direccion` varchar(100) NOT NULL ,
+ `Telefono`  int NOT NULL ,
+ `Email`     varchar(50) NULL ,
+
+PRIMARY KEY (`DNI`)
 );
 
--- *************** SqlDBM: PostgreSQL ****************;
--- ***************************************************;
+-- ************************************** `Cuenta_corriente`
 
-
--- ************************************** "Cuenta_corriente"
-
-CREATE TABLE "Cuenta_corriente"
+CREATE TABLE `Cuenta_corriente`
 (
- "Num_cuenta"     int NOT NULL,
- "IBAN"           varchar(40) NOT NULL,
- "Fecha_creacion" date NOT NULL,
- "Saldo"          int NOT NULL,
- CONSTRAINT "PK_Cuenta" PRIMARY KEY ( "Num_cuenta" )
+ `Num_cuenta`     varchar(40) NOT NULL ,
+ `Fecha_creacion` date NOT NULL ,
+ `Saldo`          int NOT NULL ,
+ `IBAN`           varchar(40) NOT NULL ,
+
+PRIMARY KEY (`Num_cuenta`)
 );
 
--- ************************************** "Operacion"
+-- ************************************** `Operacion`
 
-CREATE TABLE "Operacion"
+CREATE TABLE `Operacion`
 (
- "Num_transaccion"         int NOT NULL,
- "Num_cuenta_realizante"   int NOT NULL,
- "Num_cuenta_beneficiario" int NOT NULL,
- "Fecha"                   date NOT NULL,
- "Hora"                    varchar(10) NOT NULL,
- "Importe"                 int NOT NULL,
- "Descripcion"             varchar(280) NULL,
- "Codigo"                  varchar(50) NOT NULL,
- CONSTRAINT "PK_Transaccion" PRIMARY KEY ( "Num_transaccion", "Num_cuenta_realizante", "Num_cuenta_beneficiario" ),
- CONSTRAINT "FK_76" FOREIGN KEY ( "Num_cuenta_realizante" ) REFERENCES "Cuenta_ahorro" ( "Num_cuenta" ),
- CONSTRAINT "FK_83" FOREIGN KEY ( "Num_cuenta_beneficiario" ) REFERENCES "Cuenta_ahorro" ( "Num_cuenta" ),
- CONSTRAINT "FK_95" FOREIGN KEY ( "Codigo" ) REFERENCES "Sucursal" ( "Codigo" )
+ `Num_transaccion_Operacion` int NOT NULL ,
+ `Num_cuenta`                varchar(40) NOT NULL ,
+ `Fecha`                     date NOT NULL ,
+ `Importe`                   int NOT NULL ,
+ `Descripcion`               varchar(280) NULL ,
+ `Hora`                      varchar(10) NOT NULL ,
+ `Tipo`                      varchar(10) NOT NULL ,
+ `Codigo`                    varchar(50) NOT NULL ,
+
+PRIMARY KEY (`Num_transaccion_Operacion`, `Num_cuenta`),
+KEY `fkIdx_166` (`Codigo`),
+CONSTRAINT `FK_166` FOREIGN KEY `fkIdx_166` (`Codigo`) REFERENCES `Sucursal` (`Codigo`),
+KEY `fkIdx_169` (`Num_cuenta`),
+CONSTRAINT `FK_169` FOREIGN KEY `fkIdx_169` (`Num_cuenta`) REFERENCES `Cuenta_Ahorro` (`Num_cuenta`)
 );
 
-CREATE INDEX "fkIdx_76" ON "Operacion"
+-- ************************************** `Sucursal`
+
+CREATE TABLE `Sucursal`
 (
- "Num_cuenta_realizante"
+ `Codigo`    varchar(50) NOT NULL ,
+ `Direccion` varchar(50) NOT NULL ,
+ `Telefono`  int NOT NULL ,
+
+PRIMARY KEY (`Codigo`)
 );
 
-CREATE INDEX "fkIdx_83" ON "Operacion"
+-- ************************************** `Poseer`
+
+CREATE TABLE `Poseer`
 (
- "Num_cuenta_beneficiario"
+ `Num_cuenta` varchar(40) NOT NULL ,
+ `DNI`        varchar(50) NOT NULL ,
+
+PRIMARY KEY (`Num_cuenta`, `DNI`),
+KEY `fkIdx_130` (`Num_cuenta`),
+CONSTRAINT `FK_130` FOREIGN KEY `fkIdx_130` (`Num_cuenta`) REFERENCES `Cuenta_Ahorro` (`Num_cuenta`),
+KEY `fkIdx_134` (`Num_cuenta`),
+CONSTRAINT `FK_134` FOREIGN KEY `fkIdx_134` (`Num_cuenta`) REFERENCES `Cuenta_corriente` (`Num_cuenta`),
+KEY `fkIdx_136` (`DNI`),
+CONSTRAINT `FK_136` FOREIGN KEY `fkIdx_136` (`DNI`) REFERENCES `Cliente` (`DNI`)
 );
 
-CREATE INDEX "fkIdx_95" ON "Operacion"
+-- ************************************** `Transferencia`
+
+CREATE TABLE `Transferencia`
 (
- "Codigo"
-);
+ `Num_transaccion_Transferencia` int NOT NULL ,
+ `Num_cuenta_realizante`         varchar(40) NOT NULL ,
+ `Num_cuenta_beneficiario`       varchar(40) NOT NULL ,
+ `Fecha`                         date NOT NULL ,
+ `Importe`                       int NOT NULL ,
+ `Descripcion`                   varchar(280) NULL ,
+ `Hora`                          varchar(10) NOT NULL ,
+ `Tipo`                          varchar(10) NOT NULL ,
+ `Codigo`                        varchar(50) NOT NULL ,
 
--- *************** SqlDBM: PostgreSQL ****************;
--- ***************************************************;
-
-
--- ************************************** "Sucursal"
-
-CREATE TABLE "Sucursal"
-(
- "Codigo"    varchar(50) NOT NULL,
- "Direccion" varchar(100) NOT NULL,
- "Telefono"  int NOT NULL,
- CONSTRAINT "PK_Sucursal" PRIMARY KEY ( "Codigo" )
-);
-
-
-
-
-
-
-
-
--- ************************************** "Poseer"
-
-CREATE TABLE "Poseer"
-(
- "DNI"        varchar(10) NOT NULL,
- "Num_cuenta" int NOT NULL,
- CONSTRAINT "PK_table_31" PRIMARY KEY ( "DNI", "Num_cuenta" ),
- CONSTRAINT "FK_37" FOREIGN KEY ( "DNI" ) REFERENCES "Cliente" ( "DNI" ),
- CONSTRAINT "FK_41" FOREIGN KEY ( "Num_cuenta" ) REFERENCES "Cuenta_ahorro" ( "Num_cuenta" ),
- CONSTRAINT "FK_47" FOREIGN KEY ( "Num_cuenta" ) REFERENCES "Cuenta_corriente" ( "Num_cuenta" )
-);
-
-CREATE INDEX "fkIdx_37" ON "Poseer"
-(
- "DNI"
-);
-
-CREATE INDEX "fkIdx_41" ON "Poseer"
-(
- "Num_cuenta"
-);
-
-CREATE INDEX "fkIdx_47" ON "Poseer"
-(
- "Num_cuenta"
-);
-
--- *************** SqlDBM: PostgreSQL ****************;
--- ***************************************************;
-
-
--- ************************************** "Sucursal"
-
-CREATE TABLE "Sucursal"
-(
- "Codigo"    varchar(50) NOT NULL,
- "Direccion" varchar(100) NOT NULL,
- "Telefono"  int NOT NULL,
- CONSTRAINT "PK_Sucursal" PRIMARY KEY ( "Codigo" )
-);
-
--- ************************************** "Poseer"
-
-CREATE TABLE "Poseer"
-(
- "DNI"        varchar(10) NOT NULL,
- "Num_cuenta" int NOT NULL,
- CONSTRAINT "PK_table_31" PRIMARY KEY ( "DNI", "Num_cuenta" ),
- CONSTRAINT "FK_37" FOREIGN KEY ( "DNI" ) REFERENCES "Cliente" ( "DNI" ),
- CONSTRAINT "FK_41" FOREIGN KEY ( "Num_cuenta" ) REFERENCES "Cuenta_ahorro" ( "Num_cuenta" ),
- CONSTRAINT "FK_47" FOREIGN KEY ( "Num_cuenta" ) REFERENCES "Cuenta_corriente" ( "Num_cuenta" )
-);
-
-CREATE INDEX "fkIdx_37" ON "Poseer"
-(
- "DNI"
-);
-
-CREATE INDEX "fkIdx_41" ON "Poseer"
-(
- "Num_cuenta"
-);
-
-CREATE INDEX "fkIdx_47" ON "Poseer"
-(
- "Num_cuenta"
-);
-
--- ************************************** "Transaccion"
-
-CREATE TABLE "Transaccion"
-(
- "Num_transaccion"       int NOT NULL,
- "Num_cuenta_realizante" int NOT NULL,
- "Fecha"                 date NOT NULL,
- "Hora"                  varchar(10) NOT NULL,
- "Importe"               int NOT NULL,
- "Descripcion"           varchar(280) NULL,
- "Tipo"                  varchar(10) NOT NULL,
- "Codigo"                varchar(50) NOT NULL,
- CONSTRAINT "PK_Transaccion" PRIMARY KEY ( "Num_transaccion", "Num_cuenta_realizante" ),
- CONSTRAINT "FK_76" FOREIGN KEY ( "Num_cuenta_realizante" ) REFERENCES "Cuenta_ahorro" ( "Num_cuenta" ),
- CONSTRAINT "FK_92" FOREIGN KEY ( "Codigo" ) REFERENCES "Sucursal" ( "Codigo" )
-);
-
-CREATE INDEX "fkIdx_76" ON "Transaccion"
-(
- "Num_cuenta_realizante"
-);
-
-CREATE INDEX "fkIdx_92" ON "Transaccion"
-(
- "Codigo"
+PRIMARY KEY (`Num_transaccion_Transferencia`, `Num_cuenta_realizante`, `Num_cuenta_beneficiario`),
+KEY `fkIdx_157` (`Num_cuenta_realizante`),
+CONSTRAINT `FK_157` FOREIGN KEY `fkIdx_157` (`Num_cuenta_realizante`) REFERENCES `Cuenta_Ahorro` (`Num_cuenta`),
+KEY `fkIdx_160` (`Num_cuenta_beneficiario`),
+CONSTRAINT `FK_160` FOREIGN KEY `fkIdx_160` (`Num_cuenta_beneficiario`) REFERENCES `Cuenta_Ahorro` (`Num_cuenta`),
+KEY `fkIdx_163` (`Codigo`),
+CONSTRAINT `FK_163` FOREIGN KEY `fkIdx_163` (`Codigo`) REFERENCES `Sucursal` (`Codigo`)
 );
