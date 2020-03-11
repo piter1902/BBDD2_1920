@@ -1,0 +1,60 @@
+Para instalar Oracle hay que descargar:
+
+https://oss.oracle.com/debian/dists/unstable/non-free/binary-i386/oracle-xe_10.2.0.1-1.1_i386.deb
+
+Instalaremos las dependencias con:
+
+apt-get install libaio1
+apt-get upgrade libaio
+apt-get upgrade glibc
+
+Instalaremos el paquete con:
+
+apt-get install bc
+dpkg --install oracle-xe_10.2.0.1-1.1_i386.deb
+/etc/init.d/oracle-xe configure
+
+Instalaremos el SGBD
+user: 
+pswd: 
+
+Ejecutaremos:
+nano /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/nls_lang.sh
+
+Reemplazaremos:
+
+if [[ -n "$LC_ALL" ]]; then
+locale=$LC_ALL
+elif [[ -n "$LANG" ]]; then
+locale=$LANG
+else
+locale=
+fi
+
+por:
+
+if [ -n "$LC_ALL" ]; then
+locale=$LC_ALL
+elif [ -n "$LANG" ]; then
+locale=$LANG
+else
+locale=
+fi
+
+Ejecutaremos 'nano /etc/profile' y añadiremos:
+. /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/oracle_env.sh
+export PATH
+
+Ejecutaremos 'nano .bashrc' y reemplazaremos:
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+por:
+
+PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Ejecutaremos '. /etc/profile'
+
+Para conectarse a la base de datos:
+sqlplus sys/ORA-PASS1 as sysdba
+sqlplus sys as sysdba

@@ -10,4 +10,16 @@ Cambiaremos al usuario postgres
 
 su - postgres
 
+Para entrar a psql
+
+psql postgres #postgres es una Base de datos
+
 Ejecutaremos el comando: 'psql' para acceder a la BD y crear al usuario que queramos.
+
+Listado de metacomandos:
+https://dataschool.com/learn-sql/meta-commands-in-psql/
+
+Para ver las bases de datos ya existentes:
+\l
+
+Para crear una base de datos desde 'psql'

@@ -94,7 +94,7 @@ CREATE TABLE "Operacion"
  "Hora"            varchar(10) NOT NULL,
  "Tipo"            varchar(10) NOT NULL,
  "Codigo"          varchar(50) NOT NULL,
- CONSTRAINT "PK_Transaccion" PRIMARY KEY ( "Num_transaccion", "Num_cuenta" ),
+ CONSTRAINT "PK_Transaccion_Operacion" PRIMARY KEY ( "Num_transaccion", "Num_cuenta" ),
  CONSTRAINT "FK_70" FOREIGN KEY ( "Num_cuenta" ) REFERENCES "Cuenta_Ahorro" ( "Num_cuenta" ),
  CONSTRAINT "FK_87" FOREIGN KEY ( "Codigo" ) REFERENCES "Sucursal" ( "Codigo" )
 );
@@ -122,7 +122,7 @@ CREATE TABLE "Transferencia"
  "Hora"                    varchar(10) NOT NULL,
  "Tipo"                    varchar(10) NOT NULL,
  "Codigo"                  varchar(50) NOT NULL,
- CONSTRAINT "PK_Transaccion" PRIMARY KEY ( "Num_transaccion", "Num_cuenta_realizante", "Num_cuenta_beneficiario" ),
+ CONSTRAINT "PK_Transaccion_Transferencia" PRIMARY KEY ( "Num_transaccion", "Num_cuenta_realizante", "Num_cuenta_beneficiario" ),
  CONSTRAINT "FK_73" FOREIGN KEY ( "Num_cuenta_realizante" ) REFERENCES "Cuenta_Ahorro" ( "Num_cuenta" ),
  CONSTRAINT "FK_76" FOREIGN KEY ( "Num_cuenta_beneficiario" ) REFERENCES "Cuenta_Ahorro" ( "Num_cuenta" ),
  CONSTRAINT "FK_84" FOREIGN KEY ( "Codigo" ) REFERENCES "Sucursal" ( "Codigo" )

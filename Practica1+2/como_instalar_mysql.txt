@@ -10,3 +10,10 @@ Ahora tendremos que configurar el SGBD, para ello ejecutaremos la orden:
 
 sudo mysql_secure_installation
 
+Para crear una BD ejecutaremos:
+mysql -u <user> -p
+create database practica1;
+use practica1;
+
+Para importar un fichero .sql haremos:
+source <file>.sql
