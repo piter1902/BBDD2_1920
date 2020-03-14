@@ -58,3 +58,37 @@ Ejecutaremos '. /etc/profile'
 Para conectarse a la base de datos:
 sqlplus sys/ORA-PASS1 as sysdba
 sqlplus sys as sysdba
+
+
+
+-----------
+
+Descargamos los ficheros linux....
+
+Creamos un un usuario 'oracle':
+mkdir '/oracle'
+groupadd dba
+useradd -g dba -d dba -s /bin/bash oracle
+passwd oracle # Introducimos su password
+
+Copiamos los ficheros linux....zip al home de oracle
+cp *.zip ~oracle
+
+Copiamos los ficheros de configuracion de root
+cp .profile ~oracle
+cp .bashrc ~oracle
+cp .Xauthority ~oracle # Esto es importante. Si algo no funciona, puede ser por esto
+
+Les damos los permisos pertinentes
+chown oracle:dba /oracle
+chown oracle:dba *.zip
+chown oracle:dba .*
+
+Ahora descomprimimos los ficheros linux...zip
+for file in $(linux*.zip); do unzip $file; done
+
+Nos introducimos al directorio 'database' creado al descomprimir, y ejecutamos:
+
+./runInstaller
+
+

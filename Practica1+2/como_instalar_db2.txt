@@ -27,6 +27,8 @@ pswd: BBDD1920
 
 Añadimos el directorio a la variable de entorno PATH:
 
+En el fichero ~/.bashrc
+
 Creamos una nueva instancia de DB2:
 db2ictr ??
 Para ver las instancias:

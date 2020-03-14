@@ -16,6 +16,8 @@ psql postgres #postgres es una Base de datos
 
 Ejecutaremos el comando: 'psql' para acceder a la BD y crear al usuario que queramos.
 
+Le damos permisos al usuario 'root' -> alter user root with superuser;
+
 Listado de metacomandos:
 https://dataschool.com/learn-sql/meta-commands-in-psql/
 
