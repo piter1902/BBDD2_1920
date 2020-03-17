@@ -92,3 +92,38 @@ Nos introducimos al directorio 'database' creado al descomprimir, y ejecutamos:
 ./runInstaller
 
 
+-- PROBLEMAS --
+Existen problemas con el espacio de la máquina. Al instalar todos los gestores no quedaba sitio suficiente para instalar oracle.
+Para arreglar este problema se ha aumentado el espacio del disco proporcionado con la máquina a 32GB. Pero al intentar aumentar la particion (/dev/sda1)
+que estaba montada en / hemos notado que existía una partición swap (/dev/sda5) que nos impedía redimensionar la primera.
+Para intentar solucionar este problema se creó el nuevo espacio adicional como otra partición (/dev/sda3) y editando el fichero /etc/fstab se montó en el arranque
+en el directorio /oracle, directorio home del usuario oracle (necesario para la instalacion del SGBD).
+Esto solucionó el problema con el espacio, pero tras proseguir con la instalación nos encontramos con un apartado de comprobación de prerrequisitos. Aquí se comprueban
+de manera automática que se cumplen ciertas precondiciones. Nuestra máquina no las cumplía y, el instalador propone como solución ejecutar un script ubicado en el directorio
+/tmp. Al intentarlo ejecutar la terminal nos muestra ciertos errores de formateo:
+
+./orarun.sh: 186: [: true: unexpected operator
+./orarun.sh: 848: [: unexpected operator
+./orarun.sh: 864: [: unexpected operator
+./orarun.sh: 882: [: unexpected operator
+./orarun.sh: 903: [: true: unexpected operator
+./orarun.sh: 1052: [: unexpected operator
+./orarun.sh: 1057: [: unexpected operator
+./orarun.sh: 1075: [: unexpected operator
+./orarun.sh: 1085: [: unexpected operator
+./orarun.sh: 1115: [: unexpected operator
+./orarun.sh: 1143: [: unexpected operator
+./orarun.sh: 1189: [: unexpected operator
+./orarun.sh: 139: [: unexpected operator
+./orarun.sh: 139: [: unexpected operator
+./orarun.sh: 1228: [: unexpected operator
+./orarun.sh: 1284: [: unexpected operator
+./orarun.sh: 1342: [: unexpected operator
+./orarun.sh: 1426: [: unexpected operator
+./orarun.sh: 1451: [: unexpected operator
+
+Al inspeccionar el archivo orarun.sh no se encuentra ningún problema. Al buscar en Internet la única explicación que se encuentra es que estamos instalando
+Oracle en una distro no certificada para ello.
+
+Por ello procedemos a instalar Oracle en la máquina de 32 bits.
+
