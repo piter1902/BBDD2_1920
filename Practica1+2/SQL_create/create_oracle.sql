@@ -26,7 +26,7 @@ CREATE TABLE Cliente
 
 CREATE TABLE Cuenta_corriente
 (
-    Num_cuenta     int CONSTRAINT PK_Cuenta NOT NULL PRIMARY KEY,
+    Num_cuenta     int CONSTRAINT PK_CuentaC NOT NULL PRIMARY KEY,
     IBAN           varchar(40) NOT NULL,
     Fecha_creacion date NOT NULL,
     Saldo          int NOT NULL
@@ -53,7 +53,7 @@ CREATE TABLE Operacion
     Importe                 int NOT NULL,
     Descripcion             varchar(280) NULL,
     Codigo                  varchar(50) NOT NULL,
-    CONSTRAINT PK_Transaccion PRIMARY KEY (Num_transaccion, Num_cuenta_realizante, Num_cuenta_beneficiario ),
+    CONSTRAINT PK_TransaccionOpe PRIMARY KEY (Num_transaccion, Num_cuenta_realizante, Num_cuenta_beneficiario ),
     CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
     CONSTRAINT FK_83 FOREIGN KEY ( Num_cuenta_beneficiario ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
     CONSTRAINT FK_95 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
@@ -115,8 +115,8 @@ CREATE TABLE Transaccion
     Descripcion           varchar(280) NULL,
     Tipo                  varchar(10) NOT NULL,
     Codigo                varchar(50) NOT NULL,
-    CONSTRAINT PK_Transaccion PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
-    CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
+    CONSTRAINT PK_TransaccionTra PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
+    CONSTRAINT FK_77 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
     CONSTRAINT FK_92 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
 );
 
