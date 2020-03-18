@@ -61,14 +61,12 @@ create or replace type transaccionUdt as object
     Hora                  varchar(10),
     Importe               int,
     Descripcion           varchar(280),
-    Tipo                  varchar(10),
     Codigo                varchar(50),
     Sucursal              ref sucursalUdt
 ) not final;
 /
 
 -- Operacion
--- DA ERROR
 create or replace type operacionUdt under transaccionUdt
 (
     Tipo                  varchar(10)
