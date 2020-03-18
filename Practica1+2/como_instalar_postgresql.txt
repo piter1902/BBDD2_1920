@@ -24,4 +24,29 @@ https://dataschool.com/learn-sql/meta-commands-in-psql/
 Para ver las bases de datos ya existentes:
 \l
 
-Para crear una base de datos desde 'psql'
+Para crear una base de datos desde 'psql':
+createdb <database_name>
+
+En caso de que que aparezca el mensaje: "createdb: command not found", 
+probar a ejecutar el comando utilizando la ruta absoluta: 
+/usr/local/pgsql/bin/createdb mydb
+
+Para borrar base de datos:
+dropdb <database_name>
+
+Como hemos mencionado anteriormente, para acceder a la BD creada, se utiliza el comando: 
+psql <database_name>
+
+Para salir de la BD, se utiliza: 
+\q
+
+Si se desea obtener ayuda con respecto a los comandos, se puede escribir "\h"
+
+Una vez dentro de la BD, se puede ejecutar un script de creacion de tablas sql de la siguiente manera: 
+\i <nombre_fichero>
+
+Si se quiere mostrar las tablas de la BD, se utiliza: 
+\dt
+
+Para ver el contenido de una tabla en concreto, utilizar: 
+SELECT * FROM "<table_name>" ---> Las comillas son necesarias

@@ -42,6 +42,17 @@ CREATE TABLE `Cuenta_corriente`
 PRIMARY KEY (`Num_cuenta`)
 );
 
+-- ************************************** `Sucursal`
+
+CREATE TABLE `Sucursal`
+(
+ `Codigo`    varchar(50) NOT NULL ,
+ `Direccion` varchar(50) NOT NULL ,
+ `Telefono`  int NOT NULL ,
+
+PRIMARY KEY (`Codigo`)
+);
+
 -- ************************************** `Operacion`
 
 CREATE TABLE `Operacion`
@@ -60,17 +71,6 @@ KEY `fkIdx_166` (`Codigo`),
 CONSTRAINT `FK_166` FOREIGN KEY `fkIdx_166` (`Codigo`) REFERENCES `Sucursal` (`Codigo`),
 KEY `fkIdx_169` (`Num_cuenta`),
 CONSTRAINT `FK_169` FOREIGN KEY `fkIdx_169` (`Num_cuenta`) REFERENCES `Cuenta_Ahorro` (`Num_cuenta`)
-);
-
--- ************************************** `Sucursal`
-
-CREATE TABLE `Sucursal`
-(
- `Codigo`    varchar(50) NOT NULL ,
- `Direccion` varchar(50) NOT NULL ,
- `Telefono`  int NOT NULL ,
-
-PRIMARY KEY (`Codigo`)
 );
 
 -- ************************************** `Poseer`

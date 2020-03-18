@@ -1,67 +1,145 @@
-Para instalar Oracle hay que descargar:
+########################
+# Contraseña:BBDD_1920 #
+########################
 
-https://oss.oracle.com/debian/dists/unstable/non-free/binary-i386/oracle-xe_10.2.0.1-1.1_i386.deb
+Manual para realizar la instalación de oracle XE 10g en la máquina Turnkey de 32 bits
+-----------
 
-Instalaremos las dependencias con:
+Antes de empezar, se recomienda ejecutar el siguiente comando: 
+apt-get install bc
 
+Al realizarlo, puede aparecer algún problema, como: 
+Failed to fetch http://cdn.debian.net/debian/pool/main/b/bc/bc_1.06.95-2_i386.deb  404  Not Found [IP: 151.101.132.204 80]
+
+La terminal recomienda realizar apt-get update, pero al hacerlo vuelven a aparecer errores parecidos:
+W: Failed to fetch http://cdn.debian.net/debian/dists/wheezy/main/binary-i386/Packages  404  Not Found [IP: 151.101.132.204 80]
+
+Para solucionar estos errores se debe realizar lo siguiente: 
+
+Se debe modificar el archivo sources.list (nano /etc/apt/sources.list.d/sources.list) para que quede de la siguiente manera:
+deb http://archive.debian.org/debian/ wheezy main contrib non-free
+deb-src http://archive.debian.org/debian/ wheezy main contrib non-free
+deb http://archive.debian.org/debian-security/ wheezy/updates main contrib non-free
+
+*Aviso: se recomienda realizar copia de seguridad antes de modificar con: 
+cp -p /etc/apt/sources.list.d/sources.list{,.back}
+
+Si al hacer "apt-get update" se obtiene un mensaje del tipo:
+
+W: There is no public key available for the following key IDs:
+7638D0442B90D010
+
+se debe realizar: 
+apt-get install debian-archive-keyring
+apt-key update
+
+Si al realizar "apt-get" se obtiene el siguiente mensaje:
+
+E: Release file for http://archive.debian.org/debian-security/dists/wheezy/updates/InRelease is expired (invalid since 342d 1h 8min 23s). Updates for this repository will not be applied.
+
+Se puede evitar añadiendo la opción "-o Acquire::Check-Valid-Until=false" al comando "apt-get".
+
+A partir de ahora no debería aparecer ningún problema para utilziar "apt-get".
+Como se ha mencionado anteriormente, previo a la instalación de oracle, se recomienda realizar: 
+apt-get install bc
 apt-get install libaio1
 apt-get upgrade libaio
 apt-get upgrade glibc
 
-Instalaremos el paquete con:
+Al realizar "apt-get upgrade libaio", tras instalar varios paquetes, aparecerá una pantalla en la que se deberá elegir
+la codificacón deseada. Se deberá elegir: es_ES-UTF.8
 
-apt-get install bc
+También aparecerán dos ventanas en las que se deberá elegir en ambas "mantener la versión actual"
+
+A continuación, se debe instalar el paquete deb de oracle previamente descargado mediante:
 dpkg --install oracle-xe_10.2.0.1-1.1_i386.deb
+
+Aparecerá un error que indica que necesita más memoria de swap para completar la instalación.
+Por ello, deberemos aumentar la partición de swap.
+
+Primero, cerrar la máquina virtual para poder aumentar el tamaño del disco.
+Se debe instalar el pack de extensión de virtualBox desde la página web de virtualBox
+A continuación, desde una terminal en la máquina local, ejecutar el siguiente comando: 
+VBoxManage modifyhd Turnkey32.vdi --resize 17408
+
+Con esto hemos hecho que el disco de la máquina virtual ahora sea de 17 GB.
+
+A continuación, procederemos a aumentar la partición de swap con la herramienta gparted.
+Esta herramienta utiliza interfaz gráfica para trabajar, por lo que tendremos que introducirnos en la máquina virtual
+utilizando la terminal mediante ssh con la opción -X:
+ssh -X root@<DIR_IP_MV>
+
+Seguidamente, ejecutamos "gparted". Desde la interfaz, seleccionamos linux-swap->SwapOff, para poder modificarlo.
+Ahora, se vuelve a seleccionar linux-swap->Resize/Remove y se aumenta el swap a 2048. 
+
+Una vez realizado lo anterior, se puede proceder a instalar oracle con: 
+dpkg --install oracle-xe_10.2.0.1-1.1_i386.deb
+
+Cuando se haya instalado, procedemos a configurar oracle:
 /etc/init.d/oracle-xe configure
 
-Instalaremos el SGBD
-user: 
-pswd: 
+<<
+Specify the HTTP port that will be used for Oracle Application Express [8080]: 8081
+Specify a port that will be used for the database listener [1521]:
+Password: <NEW_PASSWORD>
+Do you want Oracle Database 11g Express Edition to be started on boot (y/n) [y]: n
+>>
 
-Ejecutaremos:
+Despues, relizaremos cambios en los siguientes archivos:
 nano /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/nls_lang.sh
-
 Reemplazaremos:
-
+<<
 if [[ -n "$LC_ALL" ]]; then
-locale=$LC_ALL
+    locale=$LC_ALL
 elif [[ -n "$LANG" ]]; then
-locale=$LANG
+    locale=$LANG
 else
-locale=
+    locale=
 fi
 
 por:
 
 if [ -n "$LC_ALL" ]; then
-locale=$LC_ALL
+    locale=$LC_ALL
 elif [ -n "$LANG" ]; then
-locale=$LANG
+    locale=$LANG
 else
-locale=
+    locale=
 fi
+>>
 
-Ejecutaremos 'nano /etc/profile' y añadiremos:
+nano/etc/profile
+Añadimos:
+<<
 . /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/oracle_env.sh
 export PATH
+>>
 
-Ejecutaremos 'nano .bashrc' y reemplazaremos:
-
+nano .bashrc
+Reemplaazar:
+<<
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
 por:
-
 PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+>>
 
-Ejecutaremos '. /etc/profile'
+Una vez instalado, para poder acceder a oracle se deben realizar los siguientes pasos:
 
-Para conectarse a la base de datos:
-sqlplus sys/ORA-PASS1 as sysdba
+Primero debemos iniciar el servidor oracle: 
+/etc/init.d/oracle-xe enable
+/etc/init.d/oracle-xe start
+
+. /etc/profile
+
+Conectarse como root: 
+sqlplus sys/<NEW_PASSWORD> as sysdba
 sqlplus sys as sysdba
 
-
-
------------
+Con esto, tendríamos el servidor Oracle listo para utilizar.
+-----------------------
+Enlaces de interés: 
+- https://www.raulprietofernandez.net/blog/virtualizacion/como-redimensionar-un-disco-virtual-en-virtualbox
+-----------------------
 
 Descargamos los ficheros linux....
 
