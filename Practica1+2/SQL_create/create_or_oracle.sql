@@ -17,7 +17,7 @@ create or replace type clienteUdt as object
     Direccion varchar(100),
     Telefono  int,
     Email     varchar(50),
-    Cuentas   listaCuentas,
+    Cuentas   listaCuentas
 ) not final;
 /
 
@@ -32,22 +32,25 @@ create or replace type cuentaUdt as object
     IBAN           varchar(40),
     Fecha_creacion date,
     Saldo          int,
-    Propietarios   listaPropietarios,
+    Propietarios   listaPropietarios
 ) not final;
 /
 
 -- Tipos derivados de cuenta
-create or replace type cuenta_corrienteUdt under cuentaUdt final;
+--create or replace type cuenta_corrienteUdt under cuentaUdt;
+create or replace type cuenta_corrienteUdt;
 /
 
 create or replace type cuenta_ahorroUdt under cuentaUdt
 (
-    Interes     int,
+    Interes     int
 ) final;
 /
 
 -- Sucursal
-create or replace type sucursalUdt as object;
+--create or replace type sucursalUdt as object;
+create or replace type sucursalUdt;
+/
 
 -- Transaccion
 create or replace type transaccionUdt as object
@@ -60,20 +63,22 @@ create or replace type transaccionUdt as object
     Descripcion           varchar(280),
     Tipo                  varchar(10),
     Codigo                varchar(50),
-    Sucursal              ref 
+    Sucursal              ref sucursalUdt
 ) not final;
 /
 
 -- Operacion
-create or replace type operacionUdt under transaccionUdt(
-    Tipo                  varchar(10),
+-- DA ERROR
+create or replace type operacionUdt under transaccionUdt
+(
+    Tipo                  varchar(10)
 ) final;
 /
 
 -- Transferencia
 create or replace type transferenciaUdt under transaccionUdt
 (
-    destinatario    ref cuentaUdt,
+    destinatario    ref cuentaUdt
 ) final;
 /
 
@@ -87,7 +92,7 @@ create or replace type sucursalUdt as object
     Codigo    varchar(50),
     Direccion varchar(100),
     Telefono  int,
-    Operaciones realizadasUdt,
+    Operaciones realizadasUdt
 ) final;
 /
 
@@ -119,5 +124,5 @@ create or replace table Cliente of clienteUdt
     --Email     NULL,
     --Cuentas not null, ??
     CONSTRAINT PK_Cliente PRIMARY KEY DNI,
-    CONSTRAINT FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas,
+    CONSTRAINT FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas
 );
