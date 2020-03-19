@@ -4,7 +4,7 @@ create or replace type cuentaUdt;
 /
 
 -- Tipo lista de cuentas
-create or replace type listaCuentas as varray(10) of ref cuentaUdt;
+create or replace type listaCuentas as table of ref cuentaUdt;
 /
 
 -- Tipo de cliente
@@ -22,7 +22,7 @@ create or replace type clienteUdt as object
 /
 
 -- Tipo lista de clientes
-create or replace type listaPropietarios as varray(10) of ref clienteUdt;
+create or replace type listaPropietarios as table of ref clienteUdt;
 /
 
 -- Redefinicion del tipo cuenta
@@ -97,21 +97,7 @@ create or replace type sucursalUdt as object
 
 -- Creamos las tablas (a partir de aqui no esta claro)
 
-CREATE or REPLACE table Cliente of clienteUdt;
-
-CREATE TABLE Cuenta of cuentaUdt
-(
-    Num_cuenta          NOT NULL,
-    IBAN                varchar(40) NOT NULL,
-    Fecha_creacion      date NOT NULL,
-    Saldo               int NOT NULL,
-    Interes             int NOT NULL,
-    Propietarios        not null,
-    CONSTRAINT PK_Cuenta PRIMARY KEY Num_cuenta,
-    CONSTRAINT FK_Cliente FOREIGN KEY (Propietarios) REFERENCES Cliente
-);
-
-create or replace table Cliente of clienteUdt
+CREATE table Cliente of clienteUdt
 (
     DNI       NOT NULL,
     Nombre    NOT NULL,
@@ -121,6 +107,23 @@ create or replace table Cliente of clienteUdt
     Telefono  NOT NULL,
     --Email     NULL,
     --Cuentas not null, ??
-    CONSTRAINT PK_Cliente PRIMARY KEY DNI,
-    CONSTRAINT FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas
-);
+    CONSTRAINT PK_Cliente PRIMARY KEY (DNI)
+    --CONSTRAINT FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas
+)object id system generated
+nested table Cuentas store as CuentasTabla;
+
+-- Tabla de cuentas
+CREATE TABLE Cuenta of cuentaUdt
+(
+    Num_cuenta          NOT NULL,
+    IBAN                NOT NULL,
+    Fecha_creacion      NOT NULL,
+    Saldo               NOT NULL,
+    -- Interes             NOT NULL, -- Es de un hijo
+    --Propietarios        not null,
+    CONSTRAINT PK_Cuenta PRIMARY KEY (Num_cuenta)
+    --CONSTRAINT FK_Cliente FOREIGN KEY (Propietarios) REFERENCES Cliente
+) object id system generated
+nested table Propietarios store as PropietariosTabla;
+
+alter table Cliente add constraint FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas;
