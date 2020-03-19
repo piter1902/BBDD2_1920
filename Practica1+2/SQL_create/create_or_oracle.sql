@@ -94,9 +94,7 @@ create or replace type sucursalUdt as object
 ) final;
 /
 
-
 -- Creamos las tablas (a partir de aqui no esta claro)
-
 CREATE table Cliente of clienteUdt
 (
     DNI       NOT NULL,
@@ -105,10 +103,7 @@ CREATE table Cliente of clienteUdt
     Edad      NOT NULL,
     Direccion NOT NULL,
     Telefono  NOT NULL,
-    --Email     NULL,
-    --Cuentas not null, ??
     CONSTRAINT PK_Cliente PRIMARY KEY (DNI)
-    --CONSTRAINT FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas
 )object id system generated
 nested table Cuentas store as CuentasTabla;
 
@@ -120,10 +115,41 @@ CREATE TABLE Cuenta of cuentaUdt
     Fecha_creacion      NOT NULL,
     Saldo               NOT NULL,
     -- Interes             NOT NULL, -- Es de un hijo
-    --Propietarios        not null,
     CONSTRAINT PK_Cuenta PRIMARY KEY (Num_cuenta)
-    --CONSTRAINT FK_Cliente FOREIGN KEY (Propietarios) REFERENCES Cliente
 ) object id system generated
 nested table Propietarios store as PropietariosTabla;
 
-alter table Cliente add constraint FK_Cuentas FOREIGN KEY(Cuentas) REFERENCES Cuentas;
+-- Establecemos las reestricciones a las tablas anidadas
+alter table CuentasTabla add(scope for (column_value) is Cuenta);
+alter table PropietariosTabla add(scope for (column_value) is Cliente);
+
+-- No necesitamos hacer tablas hijas de Cuenta (Cuenta es tablas sustituible)
+
+-- Tabla de Sucursal
+create table Sucursal of sucursalUdt
+(
+    Codigo    not null,
+    Direccion not null,
+    --Telefono not null,
+    CONSTRAINT PK_Sucursal PRIMARY KEY (Codigo)
+) object id system generated
+nested table Operaciones store as OperacionesTabla;
+
+-- Tabla de Transacciones
+create table Transaccion of transaccionUdt
+(
+    Num_transaccion       not null,
+    Num_cuenta_realizante not null,
+    Fecha                 not null,
+    Hora                  not null,
+    Importe               not null,
+    Descripcion           not null,
+    Codigo                not null,
+    Sucursal              not null,
+    CONSTRAINT PK_Transaccion PRIMARY KEY (Num_transaccion),
+    CONSTRAINT FK_CuentaRealizante FOREIGN KEY (Num_cuenta_realizante) REFERENCES Cuenta,
+    CONSTRAINT FK_Sucursal FOREIGN KEY (Sucursal) REFERENCES Sucursal
+) object id system generated;
+
+-- Establecemos la restriccion a la tabla anidada de operaciones
+alter table OperacionesTabla add(scope for (column_value) is Transaccion);
