@@ -1,11 +1,11 @@
---select 'drop table '||object_name||' force;' from user_objects where object_type='TABLE';
+-- select 'drop table '||object_name||' force;' from user_objects where object_type='TABLE';
 drop table SUCURSAL cascade constraints;
 drop table TRANSACCION cascade constraints;
 drop table CUENTA cascade constraints;
 drop table CLIENTE cascade constraints;
 
 
---select 'drop type '||type_name||' force;'  from user_types;
+-- select 'drop type '||type_name||' force;'  from user_types;
 
 drop type CUENTA_AHORROUDT force;
 drop type OPERACIONUDT force;
@@ -22,5 +22,5 @@ drop type LISTACUENTAS force;
 
 -- select type_name from user_types;
 -- select object_name from user_objects where object_type='TABLE';
---select table_name from user_tables;
---select 'drop table '||table_name||' force;'  from user_tables;
+-- select table_name from user_tables;
+-- select 'drop table '||table_name||' force;'  from user_tables;
