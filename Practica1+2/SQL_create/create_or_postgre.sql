@@ -1,4 +1,3 @@
-
 CREATE TABLE Cuenta
 (
  Num_cuenta     varchar(40) NOT NULL,
@@ -11,14 +10,12 @@ CREATE TABLE Cuenta
 
 CREATE TABLE Cuenta_Ahorro
 (
-    Num_cuenta     varchar(40) NOT NULL,
     Interes     int NOT NULL,
     CONSTRAINT PK_cuenta_ahorro PRIMARY KEY (Num_cuenta)
 ) INHERITS (Cuenta);
 
 CREATE TABLE Cuenta_Corriente
 (
-    Num_cuenta     varchar(40) NOT NULL,
     CONSTRAINT PK_cuenta_corriente PRIMARY KEY (Num_cuenta)
 ) INHERITS (Cuenta);
 
@@ -36,8 +33,8 @@ CREATE TABLE Cliente
 
 CREATE TABLE Poseer 
 (
-    Num_cuenta int REFERENCES Cuenta ON DELETE CASCADE,
-    DNI int REFERENCES Cliente ON DELETE CASCADE,
+    Num_cuenta varchar(40) REFERENCES Cuenta ON DELETE CASCADE,
+    DNI varchar(50) REFERENCES Cliente ON DELETE CASCADE,
     PRIMARY KEY (Num_cuenta, DNI)
 );
 
@@ -65,23 +62,17 @@ CREATE TABLE Transaccion
 
 CREATE TABLE Transferencia
 (
-    Num_transaccion             int NOT NULL,
-    Num_cuenta_realizante       varchar(40) NOT NULL,
     Num_cuenta_beneficiario     varchar(40) NOT NULL,
-    Codigo                      varchar(50) NOT NULL,
-    CONSTRAINT PK_Transferencia PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
-    CONSTRAINT FK_Transferencia_NumCuentaRea FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta,
+    CONSTRAINT PK_Transferencia PRIMARY KEY ( Num_transaccion, Num_cuenta ),
+    CONSTRAINT FK_Transferencia_NumCuentaRea FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta,
     CONSTRAINT FK_Transferencia_Sucursal FOREIGN KEY ( Codigo ) REFERENCES Sucursal,
     CONSTRAINT FK_Transferencia_NumCuentaBen FOREIGN KEY ( Num_cuenta_beneficiario ) REFERENCES Cuenta
 ) INHERITS(Transaccion);
 
 CREATE TABLE Operacion
 (
-    Num_transaccion             int NOT NULL,
-    Num_cuenta_realizante       varchar(40) NOT NULL,
-    Codigo                      varchar(50) NOT NULL,
-    CONSTRAINT PK_Operacion PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
-    CONSTRAINT FK_Operacion_NumCuentaRea FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta,
+    CONSTRAINT PK_Operacion PRIMARY KEY ( Num_transaccion, Num_cuenta ),
+    CONSTRAINT FK_Operacion_NumCuentaRea FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta,
     CONSTRAINT FK_Operacion_Sucursal FOREIGN KEY ( Codigo ) REFERENCES Sucursal
 ) INHERITS(Transaccion);
 
