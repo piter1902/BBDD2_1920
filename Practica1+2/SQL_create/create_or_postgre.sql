@@ -41,6 +41,14 @@ CREATE TABLE Poseer
     PRIMARY KEY (Num_cuenta, DNI)
 );
 
+CREATE TABLE Sucursal
+(
+ Codigo    varchar(50) NOT NULL,
+ Direccion varchar(50) NOT NULL,
+ Telefono  int NOT NULL,
+ CONSTRAINT PK_Sucursal PRIMARY KEY (Codigo)
+);
+
 CREATE TABLE Transaccion
 (
  Num_transaccion int NOT NULL,
@@ -63,7 +71,17 @@ CREATE TABLE Transferencia
     Codigo                      varchar(50) NOT NULL,
     CONSTRAINT PK_Transferencia PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
     CONSTRAINT FK_Transferencia_NumCuentaRea FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta,
-    CONSTRAINT FK_Transferencia_Sucursal FOREIGN KEY ( Codigo ) REFERENCES Sucursal
+    CONSTRAINT FK_Transferencia_Sucursal FOREIGN KEY ( Codigo ) REFERENCES Sucursal,
     CONSTRAINT FK_Transferencia_NumCuentaBen FOREIGN KEY ( Num_cuenta_beneficiario ) REFERENCES Cuenta
-)
+) INHERITS(Transaccion);
+
+CREATE TABLE Operacion
+(
+    Num_transaccion             int NOT NULL,
+    Num_cuenta_realizante       varchar(40) NOT NULL,
+    Codigo                      varchar(50) NOT NULL,
+    CONSTRAINT PK_Operacion PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
+    CONSTRAINT FK_Operacion_NumCuentaRea FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta,
+    CONSTRAINT FK_Operacion_Sucursal FOREIGN KEY ( Codigo ) REFERENCES Sucursal
+) INHERITS(Transaccion);
 
