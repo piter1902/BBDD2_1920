@@ -80,17 +80,12 @@ create or replace type transferenciaUdt under transaccionUdt
 ) final;
 /
 
--- Tipo para tabla anidada de transacciones
-create or replace type realizadasUdt as table of ref transaccionUdt;
-/
-
 -- Definicion de Sucursal
 create or replace type sucursalUdt as object
 (
     Codigo    varchar(50),
     Direccion varchar(100),
     Telefono  int,
-    Operaciones realizadasUdt
 ) final;
 /
 

@@ -30,18 +30,21 @@ Añadimos el directorio a la variable de entorno PATH:
 En el fichero ~/.bashrc
 
 Creamos una nueva instancia de DB2:
-db2ictr ??
+db2ictr <nombre_instancia>
 Para ver las instancias:
 db2ilist
-
-Debemos cambiar de usuario a 'remote'
-su - remote
 
 Escogemos 'remote' como la instancia (se ejecutaran todas las acciones sobre esa instancia)
 set db2instance=remote
 
+Debemos cambiar de usuario a 'remote'
+su - remote
+
 Para crear una base de datos ejecutaremos:
 db2 create database <database_name>
+
+Iniciamos la base de datos:
+db2start
 
 Para conectarnos a la base de datos que hemos creado escribiremos:
 db2 connect to <database_name>
