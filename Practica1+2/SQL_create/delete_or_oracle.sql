@@ -15,7 +15,6 @@ drop type LISTAPROPIETARIOS force;
 drop type CUENTA_CORRIENTEUDT force;
 drop type SUCURSALUDT force;
 drop type TRANSACCIONUDT force;
-drop type REALIZADASUDT force;
 drop type CLIENTEUDT force;
 drop type LISTACUENTAS force;
 
