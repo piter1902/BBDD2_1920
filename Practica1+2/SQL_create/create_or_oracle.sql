@@ -56,7 +56,8 @@ create or replace type sucursalUdt;
 create or replace type transaccionUdt as object
 (
     Num_transaccion       int,
-    Num_cuenta_realizante ref cuentaUdt,
+    Num_cuenta_realizante int,
+    Ref_Num_cuenta_realizante ref cuentaUdt,
     Fecha                 date,
     Hora                  varchar(10),
     Importe               int,
@@ -76,7 +77,8 @@ create or replace type operacionUdt under transaccionUdt
 -- Transferencia
 create or replace type transferenciaUdt under transaccionUdt
 (
-    destinatario    ref cuentaUdt
+    ref_destinatario    ref cuentaUdt,
+    destinatario        int   
 ) final;
 /
 
@@ -85,7 +87,7 @@ create or replace type sucursalUdt as object
 (
     Codigo    varchar(50),
     Direccion varchar(100),
-    Telefono  int,
+    Telefono  int
 ) final;
 /
 
@@ -127,14 +129,14 @@ create table Sucursal of sucursalUdt
     Direccion not null,
     --Telefono not null,
     CONSTRAINT PK_Sucursal PRIMARY KEY (Codigo)
-) object id system generated
-nested table Operaciones store as OperacionesTabla;
+) object id system generated;
 
 -- Tabla de Transacciones
 create table Transaccion of transaccionUdt
 (
     Num_transaccion       not null,
     Num_cuenta_realizante not null,
+    Ref_Num_cuenta_realizante not null,
     Fecha                 not null,
     Hora                  not null,
     Importe               not null,
@@ -142,9 +144,7 @@ create table Transaccion of transaccionUdt
     Codigo                not null,
     Sucursal              not null,
     CONSTRAINT PK_Transaccion PRIMARY KEY (Num_transaccion),
-    CONSTRAINT FK_CuentaRealizante FOREIGN KEY (Num_cuenta_realizante) REFERENCES Cuenta,
+    CONSTRAINT FK_CuentaRealizante FOREIGN KEY (Num_cuenta_realizante) REFERENCES Cuenta(Num_cuenta),
+    CONSTRAINT FK_CuentaRealizante_Ref FOREIGN KEY (Ref_Num_cuenta_realizante) REFERENCES Cuenta,
     CONSTRAINT FK_Sucursal FOREIGN KEY (Sucursal) REFERENCES Sucursal
 ) object id system generated;
-
--- Establecemos la restriccion a la tabla anidada de operaciones
-alter table OperacionesTabla add(scope for (column_value) is Transaccion);
