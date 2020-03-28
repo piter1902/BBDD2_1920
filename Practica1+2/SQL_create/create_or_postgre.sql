@@ -40,7 +40,7 @@ CREATE TABLE Poseer
 
 CREATE TABLE Sucursal
 (
- Codigo    varchar(50) NOT NULL,
+ Codigo    int NOT NULL,
  Direccion varchar(50) NOT NULL,
  Telefono  int NOT NULL,
  CONSTRAINT PK_Sucursal PRIMARY KEY (Codigo)
@@ -54,7 +54,7 @@ CREATE TABLE Transaccion
  Importe         int NOT NULL,
  Descripcion     varchar(280) NULL,
  Hora            varchar(10) NOT NULL,
- Codigo          varchar(50) NOT NULL,
+ Codigo          int NOT NULL,
  CONSTRAINT PK_Transaccion PRIMARY KEY ( Num_transaccion, Num_cuenta ),
  CONSTRAINT FK_Transaccion_NumCuenta FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta,
  CONSTRAINT FK_Transaccion_Sucursal FOREIGN KEY ( Codigo ) REFERENCES Sucursal
