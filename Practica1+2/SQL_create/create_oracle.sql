@@ -1,12 +1,20 @@
+-- ************************************** "Cuenta"
+CREATE TABLE Cuenta 
+(
+	Num_cuenta 			int CONSTRAINT PK_Cuenta NOT NULL PRIMARY KEY,
+	IBAN				varchar(40) NOT NULL,
+	Fecha_creacion      date NOT NULL,
+    Saldo               int NOT NULL,
+    Tipo 				varchar(10) NOT NULL		
+);
+
 -- ************************************** "Cuenta_ahorro"
 
 CREATE TABLE Cuenta_ahorro
 (
-    Num_cuenta          int CONSTRAINT PK_Cuenta NOT NULL PRIMARY KEY,
-    IBAN                varchar(40) NOT NULL,
-    Fecha_creacion      date NOT NULL,
-    Saldo               int NOT NULL,
-    Interes             int NOT NULL
+    ID_cuenta			int CONSTRAINT PK_CuentaAhorro NOT NULL PRIMARY KEY,
+    Interes				int NOT NULL,
+    CONSTRAINT FK_idCuenta FOREIGN KEY (ID_cuenta) REFERENCES Cuenta ( Num_cuenta )
 );
 
 -- ************************************** "Cliente"
@@ -24,38 +32,37 @@ CREATE TABLE Cliente
 
 -- ************************************** "Cuenta_corriente"
 
-CREATE TABLE Cuenta_corriente
-(
-    Num_cuenta     int CONSTRAINT PK_CuentaC NOT NULL PRIMARY KEY,
-    IBAN           varchar(40) NOT NULL,
-    Fecha_creacion date NOT NULL,
-    Saldo          int NOT NULL
-);
+-- CREATE TABLE Cuenta_corriente
+-- (
+--     Num_cuenta     int CONSTRAINT PK_CuentaC NOT NULL PRIMARY KEY,
+--     IBAN           varchar(40) NOT NULL,
+--     Fecha_creacion date NOT NULL,
+--     Saldo          int NOT NULL
+-- );
 
 -- ************************************** "Sucursal"
 
 CREATE TABLE Sucursal
 (
-    Codigo    varchar(50) CONSTRAINT PK_Sucursal NOT NULL PRIMARY KEY,
+    Codigo    int CONSTRAINT PK_Sucursal NOT NULL PRIMARY KEY,
     Direccion varchar(100) NOT NULL,
     Telefono  int NOT NULL
 );
 
--- ************************************** "Operacion"
+-- ************************************** "Transaccion"
 
-CREATE TABLE Operacion
+CREATE TABLE Transaccion
 (
     Num_transaccion         int NOT NULL,
     Num_cuenta_realizante   int NOT NULL,
     Num_cuenta_beneficiario int NOT NULL,
     Fecha                   date NOT NULL,
-    Hora                    varchar(10) NOT NULL,
     Importe                 int NOT NULL,
     Descripcion             varchar(280) NULL,
-    Codigo                  varchar(50) NOT NULL,
+    Codigo                  int NOT NULL,
     CONSTRAINT PK_TransaccionOpe PRIMARY KEY (Num_transaccion, Num_cuenta_realizante, Num_cuenta_beneficiario ),
-    CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
-    CONSTRAINT FK_83 FOREIGN KEY ( Num_cuenta_beneficiario ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
+    CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta ( Num_cuenta ),
+    CONSTRAINT FK_83 FOREIGN KEY ( Num_cuenta_beneficiario ) REFERENCES Cuenta ( Num_cuenta ),
     CONSTRAINT FK_95 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
 );
 
@@ -83,8 +90,7 @@ CREATE TABLE Poseer
     Num_cuenta int NOT NULL,
     CONSTRAINT PK_Poseer PRIMARY KEY ( DNI, Num_cuenta ),
     CONSTRAINT FK_37 FOREIGN KEY ( DNI ) REFERENCES Cliente ( DNI ),
-    CONSTRAINT FK_41 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
-    CONSTRAINT FK_47 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta_corriente ( Num_cuenta )
+    CONSTRAINT FK_41 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta ( Num_cuenta )
 );
 
 -- CREATE INDEX "fkIdx_37" ON "Poseer"
@@ -103,20 +109,19 @@ CREATE TABLE Poseer
 -- );
 
 
--- ************************************** "Transaccion"
+-- ************************************** "Operacion"
 
-CREATE TABLE Transaccion
+CREATE TABLE Operacion
 (
     Num_transaccion       int NOT NULL,
     Num_cuenta_realizante int NOT NULL,
     Fecha                 date NOT NULL,
-    Hora                  varchar(10) NOT NULL,
     Importe               int NOT NULL,
     Descripcion           varchar(280) NULL,
     Tipo                  varchar(10) NOT NULL,
-    Codigo                varchar(50) NOT NULL,
+    Codigo                int NOT NULL,
     CONSTRAINT PK_TransaccionTra PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
-    CONSTRAINT FK_77 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
+    CONSTRAINT FK_77 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta ( Num_cuenta ),
     CONSTRAINT FK_92 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
 );
 
