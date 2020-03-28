@@ -38,12 +38,12 @@ insert into Cliente     values ('17589312Z','Juan Jose','Tambo',20,'Atiqueteimpo
 insert into Cliente     values ('15879642W','Jesus','Villacampa',15,'Atiqueteimporta123456','456132789',NULL,NULL);
 
 -- insert de Cuenta
-insert into Cuenta      values (68635266387780010337,'ES1501283418593853658191',TO_DATE('07/02/2005', 'DD/MM/YYYY'),100000,NULL);
-insert into Cuenta      values (65638313471099711491,'ES3520954465562344263487',TO_DATE('17/12/2015', 'DD/MM/YYYY'),10000,NULL);
-insert into Cuenta      values (00009418575377349236,'ES0804871361214896945313',TO_DATE('15/10/2007', 'DD/MM/YYYY'),1000,NULL);
+insert into Cuenta      values (68635266387780010337,'ES1501283418593853658191',TO_DATE('07/02/2005', 'DD/MM/YYYY'),100000,listapropietarios(obtenerRefCliente('18064600D')));
+insert into Cuenta      values (65638313471099711491,'ES3520954465562344263487',TO_DATE('17/12/2015', 'DD/MM/YYYY'),10000,listapropietarios(obtenerRefCliente('15879642W')));
+insert into Cuenta      values (00009418575377349236,'ES0804871361214896945313',TO_DATE('15/10/2007', 'DD/MM/YYYY'),1000,listapropietarios(obtenerRefCliente('17589312Z')));
 
 -- insert en tabla anidada
---insert into ... ?
+-- insert into (select c.cuentas from Cliente c where c.dni = '18064600D') values (listacuentas(obtenerRefCuenta(68635266387780010337)));
 
 -- insert de Sucursal
 insert into Sucursal    values (1,'Atiqueteimporta123456',974246678);

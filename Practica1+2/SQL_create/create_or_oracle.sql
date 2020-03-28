@@ -62,7 +62,7 @@ create or replace type transaccionUdt as object
     Hora                  varchar(10),
     Importe               int,
     Descripcion           varchar(280),
-    Codigo                varchar(50),
+    Codigo                int,
     Sucursal              ref sucursalUdt
 ) not final;
 /
@@ -85,7 +85,7 @@ create or replace type transferenciaUdt under transaccionUdt
 -- Definicion de Sucursal
 create or replace type sucursalUdt as object
 (
-    Codigo    varchar(50),
+    Codigo    int,
     Direccion varchar(100),
     Telefono  int
 ) final;
