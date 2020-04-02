@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class Transacciones {
+public abstract class Transacciones {
     private Date Fecha;
 
     private String Hora;
@@ -11,19 +11,18 @@ public class Transacciones {
 
     private String Num_transaccion;
 
-    private Sucursal Codigo;
+    private Sucursal Sucursal;
 
     private Cuenta Num_cuenta_realizante;
 
-    public Transacciones(Date fecha, String hora, int importe, String descripcion, String num_transaccion,
-            Sucursal codigo, Cuenta num_cuenta_realizante) {
+    public Transacciones(Date fecha, String hora, int importe, String descripcion, String num_transaccion) {
         Fecha = fecha;
         Hora = hora;
         Importe = importe;
         Descripcion = descripcion;
         Num_transaccion = num_transaccion;
-        Codigo = codigo;
-        Num_cuenta_realizante = num_cuenta_realizante;
+        Sucursal = null;
+        Num_cuenta_realizante = null;
     }
 
     public Date getFecha() {
@@ -66,12 +65,12 @@ public class Transacciones {
         Num_transaccion = num_transaccion;
     }
 
-    public Sucursal getCodigo() {
-        return Codigo;
+    public Sucursal getSucursal() {
+        return Sucursal;
     }
 
-    public void setCodigo(Sucursal codigo) {
-        Codigo = codigo;
+    public void setSucursal(Sucursal Sucursal) {
+        this.Sucursal = Sucursal;
     }
 
     public Cuenta getNum_cuenta_realizante() {
@@ -80,5 +79,12 @@ public class Transacciones {
 
     public void setNum_cuenta_realizante(Cuenta num_cuenta_realizante) {
         Num_cuenta_realizante = num_cuenta_realizante;
+    }
+
+    @Override
+    public String toString() {
+        return "Transacciones [Sucursal=" + Sucursal.getCodigo() + ", Descripcion=" + Descripcion + ", Fecha=" + Fecha + ", Hora="
+                + Hora + ", Importe=" + Importe + ", Num_cuenta_realizante=" + Num_cuenta_realizante.getNum_cuenta()
+                + ", Num_transaccion=" + Num_transaccion + "]";
     }
 }

@@ -36,4 +36,9 @@ public class Sucursal {
         Telefono = telefono;
     }
 
+    @Override
+    public String toString() {
+        return "Sucursal [Codigo=" + Codigo + ", Direccion=" + Direccion + ", Telefono=" + Telefono + "]";
+    }
+
 }

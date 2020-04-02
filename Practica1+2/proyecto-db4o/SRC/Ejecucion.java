@@ -45,22 +45,10 @@ public class Ejecucion extends Util {
             // Creacón de objetos tipo Cuenta. Al haberse declarado Cuenta como abstracta,
             // no se puede instanciar un objeto de la misma.
             // En vez, se crean objetos de tipo cuenta ahorro y cuenta corriente.
-            // Cuenta cuen1 = new Cuenta_corriente(1287376372, "ES6621000418401235567891",
-            // new Date(2013, 11, 26), 3050,
-            // List.of(cl1, cl2));
-            // Cuenta cuen2 = new Cuenta_corriente(1737882920, "ES6621765764756476574657",
-            // new Date(2011, 8, 1), 10060,
-            // List.of(cl3));
-            // Cuenta cuen3 = new Cuenta_ahorro(1390000390, "ES5756765756756476545798", new
-            // Date(2016, 7, 13), 5700,
-            // List.of(cl4, cl1), 3);
-            // Cuenta cuen4 = new Cuenta_ahorro(1287378733, "ES8758785758785758755858", new
-            // Date(2019, 20, 14), 60790,
-            // List.of(cl2, cl3), 6);
-            Cuenta cuen1 = new Cuenta_corriente(1287376372, "ES6621000418401235567891", new Date(2013, 11, 26), 3050);
-            Cuenta cuen2 = new Cuenta_corriente(1737882920, "ES6621765764756476574657", new Date(2011, 8, 1), 10060);
-            Cuenta cuen3 = new Cuenta_ahorro(1390000390, "ES5756765756756476545798", new Date(2016, 7, 13), 5700, 3);
-            Cuenta cuen4 = new Cuenta_ahorro(1287378733, "ES8758785758785758755858", new Date(2019, 20, 14), 60790, 6);
+            Cuenta_corriente cuen1 = new Cuenta_corriente(1287376372, "ES6621000418401235567891", new Date(2013, 11, 26), 3050);
+            Cuenta_corriente cuen2 = new Cuenta_corriente(1737882920, "ES6621765764756476574657", new Date(2011, 8, 1), 10060);
+            Cuenta_ahorro cuen3 = new Cuenta_ahorro(1390000390, "ES5756765756756476545798", new Date(2016, 7, 13), 5700, 3);
+            Cuenta_ahorro cuen4 = new Cuenta_ahorro(1287378733, "ES8758785758785758755858", new Date(2019, 10, 14), 60790, 6);
             // Almacenamos las cuentas en la BD
             insertCuenta(db, cuen1);
             insertCuenta(db, cuen2);
@@ -84,14 +72,47 @@ public class Ejecucion extends Util {
             updateCuentaAhorro_client(db,cuen3, cl4);
             updateCuentaAhorro_client(db,cuen4, cl2);
             updateCuentaAhorro_client(db,cuen4, cl3);
-            // storeFirstPilot(db);
-            // storeSecondPilot(db);
-            // retrieveAllPilots(db);
-            // retrievePilotByName(db);
-            // retrievePilotByExactPoints(db);
-            // updatePilot(db);
-            // deleteFirstPilotByName(db);
-            // deleteSecondPilotByName(db);
+
+            //Se añaden las distintas Sucursales
+            Sucursal suc1 = new Sucursal(0130, "C/Juan Pablo II, N.32, Madrid", 976667896);
+            Sucursal suc2 = new Sucursal(9000, "C/Paseo Independencia, N.12, Barcelona", 976547845);
+            Sucursal suc3 = new Sucursal(0220, "C/Mayor, N.1, Lugo", 977863412);
+            Sucursal suc4 = new Sucursal(2085, "C/Maria de Luna, N.2, Zaragoza", 976675010);
+            
+            insertSucursal(db, suc1);
+            insertSucursal(db, suc2);
+            insertSucursal(db, suc3);
+            insertSucursal(db, suc4);
+
+            //Procedemos a crear las Transacciones, tanto transferencias como operaciones
+            Transferencia tr1 = new Transferencia(new Date(2020,3,31), "17:50", 23, "Transferencia a hayk", "6754837");
+            Transferencia tr2 = new Transferencia(new Date(2020,12,2), "5:17", 50, "Pago para peña", "874764");
+            Transferencia tr3 = new Transferencia(new Date(2020,01,4), "19:35", 120, "Deuda pendiente", "87548549");
+            Operacion tr4 = new Operacion(new Date(2020,11,3), "17:50", 20, "", "5657373","Extracto");
+            Operacion tr5 = new Operacion(new Date(2019,8,16), "21:54", 100, "Ingreso para estudios", "984374","Ingreso");
+            Operacion tr6 = new Operacion(new Date(2018,6,11), "17:32", 45, "", "3372888","Extracto");
+
+            //Se añaden las cuentas con las que están relacionadas esas transacciones
+            tr1.setNum_cuenta_realizante(cuen3);
+            tr1.setNum_cuenta_beneficiario(cuen1);
+            tr2.setNum_cuenta_realizante(cuen4);
+            tr2.setNum_cuenta_beneficiario(cuen2);
+            tr3.setNum_cuenta_realizante(cuen3);
+            tr3.setNum_cuenta_beneficiario(cuen4);
+            tr4.setNum_cuenta_realizante(cuen3);
+            tr5.setNum_cuenta_realizante(cuen1);
+            tr6.setNum_cuenta_realizante(cuen4);
+
+            //Se actualizan sus respectivas Sucursales
+            tr1.setSucursal(suc2);
+            tr2.setSucursal(suc3);
+            tr3.setSucursal(suc1);
+            tr4.setSucursal(suc4);
+
+            insertTransaccion(db, tr1);
+            insertTransaccion(db, tr2);
+            insertTransaccion(db, tr3);
+            insertTransaccion(db, tr4);
         } finally {
             db.close();
         }
@@ -127,6 +148,27 @@ public class Ejecucion extends Util {
         db.store(cuenta);
         System.out.println("Almacenado " + cuenta);
     }
+    /**
+     * Inserta en la base de datos la sucursal indicada
+     * 
+     * @param db Objeto que representa la Base de Datos
+     * @param suc Sucursal a insertar en la base de datos
+     */
+    public static void insertSucursal(ObjectContainer db, Sucursal suc){
+        db.store(suc);
+        System.out.println("Almacenado: " + suc);
+    }
+
+    /**
+     * Inserta en la base de datos la Transacción indicada
+     * 
+     * @param db Objeto que representa la Base de Datos
+     * @param trans Transacción a insertar en la base de datos
+     */
+    public static void insertTransaccion(ObjectContainer db, Transacciones trans){
+        db.store(trans);
+        System.out.println("ALmacenado: " + trans);
+    }
 
     /**
      * Modifica el cliente almacenado en la base de datos equivalente a "cliente"
@@ -148,8 +190,8 @@ public class Ejecucion extends Util {
         db.store(encontrado);
     }
 
-    public static void updateCuentaAhorro_client(ObjectContainer db, Cuenta cuenta, Cliente cliente) {
-        Cuenta base = new Cuenta_ahorro(cuenta,((Cuenta_ahorro)cuenta).getInteres());
+    public static void updateCuentaAhorro_client(ObjectContainer db, Cuenta_ahorro cuenta, Cliente cliente) {
+        Cuenta base = new Cuenta_ahorro(cuenta,cuenta.getInteres());
         ObjectSet result = db.queryByExample(base);
         Cuenta_ahorro encontrado = (Cuenta_ahorro) result.next();
         System.out.println("Cuenta a actualizar: " + encontrado);
@@ -158,7 +200,7 @@ public class Ejecucion extends Util {
         db.store(encontrado);
     }
 
-    public static void updateCuentaCorriente_client(ObjectContainer db, Cuenta cuenta, Cliente cliente) {
+    public static void updateCuentaCorriente_client(ObjectContainer db, Cuenta_corriente cuenta, Cliente cliente) {
         Cuenta base = new Cuenta_corriente(cuenta);
         ObjectSet result = db.queryByExample(base);
         Cuenta_corriente encontrado = (Cuenta_corriente) result.next();
