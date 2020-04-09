@@ -1,0 +1,163 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\title{Practica 2 - NTP y DNS}
+\author{Hayk Kocharyan\\%
+	\texttt{Administración de sistemas 2}\\%
+    \texttt{757715@unizar.es}
+}
+
+\date{\today}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\begin{document}
+
+\maketitle
+
+\input{insbox}
+\tableofcontents
+\pagebreak
+\section{Resumen}
+En esta segunda práctica se ha continuado con el despliegue del sistema de la práctica 1.\\
+En este caso se han añadido 2 nuevas máquinas en la subred de la vlan. En esta configuración del sistema tenemos 3 máquinas principales que cumplen los siguientes papeles:
+\begin{itemize}
+	\item \textbf{VM2: } Servidor NTP y Servidor DNS recursivo con caché.
+	\item \textbf{VM3: } Servidor DNS maestro. 
+	\item \textbf{VM3: } Servidor DNS esclavo. 
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.2]{despliegue.png}
+			\caption{Depliegue del sistema}
+\end{figure}
+
+\section{Introducción y Objetivos}
+En primer lugar, se estudió muy detalladamente cada uno de los componentes del sistema a desarrollar, para ello se usó la documentación del manual, además se buscaron difernetes implementaciones de cada componente para ver y entender su uso, y además, para ver detalladamente como se configura cada uno de las máquinas. 
+Los objetivos que se buscaban en esta práctica eran los siguientes:
+\begin{center}
+\begin{itemize}
+	\item \textbf{Configuración servidor DNS maestro.}
+		\begin{enumerate}
+			\item Configurar fichero de configuración de nsd.
+			\item Configurar fichero de zonas de resolución directa.
+			\item Configurar fichero de zonas de resolución inversa.
+			\item Comprobar correcto funcionamiento del demonio.
+		\end{enumerate}
+	\item \textbf{Configuración servidor DNS esclavo.}
+		\begin{enumerate}
+			\item Configurar fichero de configuración de nsd.
+			\item Comprobar correcto funcionamiento del demonio.
+		\end{enumerate}
+	\item \textbf{Configuración servidor DNS recursivo con caché a través de unbound.}
+		\begin{enumerate}
+			\item Configurar fichero de configuración de nsd.
+			\item Configurar fichero de zonas de resolución directa.
+			\item Configurar fichero de zonas de resolución inversa.
+			\item Comprobar correcto funcionamiento del demonio.
+		\end{enumerate}
+	\item \textbf{Configuración servidor ntp.}
+
+\end{itemize}
+\end{center}
+
+\section{Arquitectura}
+Para este sistema tenemos 3 elementos princiaples:
+\begin{itemize}
+	\item\textbf{Servidor ntp y servidor DNS con caché recursivo: } Estas funciones corresponden a la \textbf{MV2}, su función será la de cachear las peticiones que hagan los clientes. Además, acturará como servidor ntp para el resto de máquinas, estas serán clientes.
+	\item\textbf{Servidor DNS maestro: } Esta función la cumplirá la \textbf{MV3}, se encargará de traducir los nombres de dominio a IPs.
+	\item\textbf{Servidor DNS esclavo: } Esta función la desarrolla la \textbf{MV4}, se encargará de ser un backup en caso de fallo del servidor maestro. Esta tambien es útil en el caso de tener una gran cantidad de peticiones, en tal situación se podrían distribuir las peticiones.
+\end{itemize}
+También entran en juego la máquina \textbf{MV1}, la cual hace el papel de router, como vimos en la práctica 1.\\
+Adicionalmente, se ha añadido una nueva máquina \textbf{oAOTRA}, cuyo nombre DNS es \textbf{otro\_servidor}. Esta máquina se añade tras finalizar toda la configuración para comprobar que al introducir una nueva entrada en los ficheros de zonas, se cumple que el DNS es capaz de resolver la traducción de nombres a IPs.
+
+\section{Compresión de elemementos}
+\subsection{Configuración servidores DNS}
+En primer lugar habilitaremos el demonio a través de la modificación del fichero \textbf{rc.conf.local}, para ello incluiremos la entrada \textbf{nsd\_flags=""}, esto se realizará tanto en maestro como en esclavo.
+Para continuar, configuaremos el demonio. Esta configuración que se ve a continuación es igual para ambos servidores DNS, la única diferencia es que se cambia la dirección ip en la entrada \textbf{ip\_address}.\\
+Respecto al resto de la configuración, indicamos el directorio de los ficheros de zonas con \textbf{zonesdir}, incluimos un fichero de log para tratar posibles errores (logfile), le indicamos que solo escucharemos ipv6. \\
+Configuraremos el remote-control para poder usar el comando \textbf{nsd-control}, exigiendo que solo escuche en la red local. Por ultimo, inidcamos la ruta de los ficheros de claves y certificados, estos son generados con nsd-control-setup.\\
+Para terminar, especificamos una key, que en un principio no se ha usado, pero se puede incluir para el control de accesos.
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.3]{nsdcomun.png}
+			\caption{Configuración demonio}
+			\label{fig:nonflat}
+\end{figure}\newpage
+\pagebreak
+Para continuar, crearemos un \textit{"pattern"} con una opciones para asociar a las zonas. \\En la máquina del maestro, el pattern se llamará \textbf{"toslave"} y permitirá notificar al escalvo. También proveerá actualizacion de zonas a la ip indicada, en este caso, debe ser la del esclavo.
+En cambio, en la maquina esclvo, este pattern se llamará \textit{"tomaster"}. Este, permitirá mandar notificaciones al maestro (allow-notify @ipMaestro) y la ip que se incluya tras \textbf{request-xfr} será imprescindible para actualizar el fichero de zonas.\\
+En cuanto a las zonas, definiremos el directo con nombre \textbf{a.ff.es.eu.org}, asignandole el fichero correspondiente, y el inverso, \textbf{a.0.b.6.3.7.0.7.4.0.1.0.0.2.ip6.arpa}. El pattern\textit{ "tomaster"} se asignará a la máquina esclavo y el pattern \textit{"toslave"} se asgina a la máquina maestro.
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.3]{zones.png}
+			\caption{Configuración demonio}
+			\label{fig:nonflat}
+\end{figure}
+\newline
+
+Por último, configuraremos el fichero de zonas en el maestro, tanto el directo como el inverso.\\
+Para el fichero de zonas directo, añadimos nuestro service of authority que es ns1, y además indicamos los dos name servers, ns1 y ns2. Por último, pondremos las entradas de todas nuestras máquinas y sus direcciones ip. 
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.3]{dirinv.png}
+			\caption{Configuración demonio}
+			\label{fig:nonflat}
+\end{figure}
+Para el inverso, será al reves, las entradas comenzarán con la dirección ipv6 al revés y pondremos su registro PTR.\\
+\pagebreak
+Para terminar, con los comandos nsd-checkzone y nsd-checkconf nos asegurarnos de que si tenemos errores. Adicionalmente, se pueden realizar comprobaciones en el fichero de log especificado en la configuración.\\
+Ahora para realizar prubeas, en el fichero \textbf{resolv.conf} incluiremos los nameserver @maestro y @esclavo y probaremos con dig si nos responde correctamente nuestro servidor dns maestro. Para probar que nos responde el esclavo, podemos apagar la máquina maestra o realizar el dig al esclavo ( dig -6 @ipEsclavo dominio ). 
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.3]{dig.png}
+			\caption{Dig con respuesta del servidor maestro 2001:470:736b:aff::3}
+			\label{fig:nonflat}
+\end{figure}
+\subsection{Servidor DNS recursivo con caché}
+Para empezar, modificaremos el fichero rc.conf.local de la MV2 añadiendo unbound\_flags para que el demonio se inicio al encender la máquina.
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.3]{unbound.png}
+			\caption{Configuraación unbound}
+			\label{fig:nonflat}
+\end{figure}
+Para la configuración del unbound, comenzamos indicando en que interface escucharemos y responderemos a los clientes, y permitimos peticiones no recursivas (acces-control) a nuestra máquina desde localhost y desde la subred de nuestra vlan (2001:470:736b:aff::/64). Habilitamos hide-identity y hide-version para que los clientes no conozcan la identidad de nuestro servidor y nuestra versión de unbound.\\
+De nuevo, como con nsd, habilitamos la herramienta unbound-control configurando remote-control.
+Y, por último, añadimos los forward-zone, dejando unicamente el servidor DNS de Hurricane Electrics.\\
+Para probar que nuestra configuración es correcta, ejecutamos unbound-checkconf y lanzamos el demonio con unbound-control start. También añadimos en resolv.conf el \textbf{nameserver ::1} para que las peticiones se realicen a nuestro servidor dns con caché. Tras esto un ping6 google.es debería funcionar y un dig nos deberia devoler una respuesta al servidor dns local.\\
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.3]{google.png}
+			\label{fig:nonflat}
+\end{figure}
+Para terminar con la configuración del dns, en todas las máquinas que usemos (clientes), modificaremos resolv.conf añadiendo el nameserver de la MV2.
+\subsection{NTP}
+Como con los anteriores demonios, habilitamos este añadiendo ntpd\_flags. A continuación, en el fichero /etc/ntpd.conf añadimos las entradas: 
+\begin{center}
+servers 2001:470:0:50::2 \#stratum 1\\
+servers 2001:470:0:2c8::2 \#stratum 2\\
+listen on *\\
+\end{center}
+En el resto de máquinas, es decir, aquellas que necesiten a MV2 como servidor ntp, añadiremos estas entradas:
+\begin{center}
+servers 2001:470:736:aff::2\\
+listen on *\\
+\end{center}
+Para comprobar el correcto funcionamiento se realiza la siguiente prueba desde central:
+\begin{figure}[!h]
+	\centering
+		\includegraphics[scale=0.4]{ntp.png}
+			\label{fig:nonflat}
+\end{figure}
+Podemos ver una correcta sincronización y un offset similar en ambos servidores.
+
+\section{Problemas}
+En esta práctica se han encontrado problemas sobre todo con el DNS principalmente por no saber usar la herramienta dig, pero tras una buena documentación de esta, se consiguieron resolver los problemas generados. \\
+También hubo problemas con el ntp ya que en algunas ocasiones tardaba 30 minutos en sincronizar.
+\end{document}

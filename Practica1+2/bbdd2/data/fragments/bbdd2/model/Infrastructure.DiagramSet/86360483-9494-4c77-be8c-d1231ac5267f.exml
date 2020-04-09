@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="bbdd2" version="4">
+  <OBJECT>
+    <ID name="bbdd2" mc="Infrastructure.DiagramSet" uid="86360483-9494-4c77-be8c-d1231ac5267f"/>
+    <PID name="bbdd2" mc="Standard.Project" uid="b2668a4b-0b98-4e96-9a7d-7ec7e1354818"/>
+    <ATTRIBUTES>
+      <ATT name="Name"><![CDATA[bbdd2]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES></DEPENDENCIES>
+  </OBJECT>
+</EXT>

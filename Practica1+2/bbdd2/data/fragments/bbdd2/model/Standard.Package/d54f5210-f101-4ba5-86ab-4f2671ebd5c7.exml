@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="bbdd2" version="4">
+  <OBJECT>
+    <ID name="bbdd2" mc="Standard.Package" uid="d54f5210-f101-4ba5-86ab-4f2671ebd5c7"/>
+    <PID name="bbdd2" mc="Standard.Project" uid="b2668a4b-0b98-4e96-9a7d-7ec7e1354818"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[bbdd2]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="Cuenta_ahorro" mc="Standard.Class" uid="c591ab6d-00de-4e16-87fa-a903213e0c53"/>
+        <COMPID name="Cliente" mc="Standard.Class" uid="d0a36444-dc77-4570-8143-e8784323929a"/>
+        <COMPID name="Cuenta_corriente" mc="Standard.Class" uid="091d9d35-ed66-4cb7-b70c-2b8db3adc891"/>
+        <COMPID name="Sucursal" mc="Standard.Class" uid="68647645-3978-4627-b390-49637aa1ac93"/>
+        <COMPID name="Operacion" mc="Standard.Class" uid="5613fded-3308-4e61-886a-2580aca44a97"/>
+        <COMPID name="Poseer" mc="Standard.Class" uid="4dfd688a-541c-49db-9ef8-d24fded7e540"/>
+        <COMPID name="Transacciones" mc="Standard.Class" uid="5ba4a420-07be-4fd8-bef6-cde55bb2cdce"/>
+      </COMP>
+      <COMP relation="Product">
+        <COMPID name="practica1" mc="Standard.ClassDiagram" uid="6bb62488-a438-4ab3-8721-f887e956a641"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
