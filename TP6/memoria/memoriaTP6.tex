@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\title{Trabajo Práctico 6 - BASES DE DATOS 2}
+\author{
+  Hayk Kocharyan\\
+  757715@unizar.es
+  \and
+  Pedro Tamargo Allué\\
+  758267@unizar.es
+  \and
+  Jesús Villacampa Sagaste\\
+  755739@unizar.es
+  \and
+  Juan José Tambo Tambo\\
+  755742@unizar.es
+}
+
+\date{\today}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+% Para los codigos
+\usepackage{listings}
+
+\begin{document}
+
+\maketitle
+
+%\input{insbox}
+\tableofcontents
+
+\newpage 
+
+\section{Enunciado}
+Para la realización del trabajo se ha elegido el problema del \emph{Gobierno de Aragón}. El problema proporcionado en el enunciado dice lo siguiente:\\
+
+\emph{``El Gobierno de Aragón quiere gestionar información turística de la región para ofrecerla a través de un sitio web donde los usuarios podrán hacer comentarios y recomendaciones.''}
+\\
+
+Sobre este enunciado podemos sacar los siguientes requisitos:
+\begin{itemize}
+\item El sistema deberá almacenar los usuarios.
+\item El sistema permitirá almacenar comentarios.
+\item El sistema permitirá almacenar recomendaciones.
+\item Al ser un sistema online en el que los usuarios podrán publicar sus comentarios y recomendaciones sobre destinos turísticos de Aragón, será importante que el \emph{SGBD} elegido garantice el control de la concurrencia.
+\item El presupuesto será el menor posible para que el \emph{SGBD} garantice la calidad del servicio.
+\item El sistema deberá ser tolerante a fallos. Priorizaremos la consistencia.
+\item El tiempo de respuesta del sistema debe ser mínimo. \textbf{?}
+\item El \emph{SGBD} elegido deberá ser un \emph{OLTP(Online Transaction Processing)} ya que recibirá muchas operaciones de lectura y escritura por unidad de tiempo.
+\end{itemize}
+
+Dado que \emph{Juan José} es un asco moriremos.\\
+
+
+\end{document}
