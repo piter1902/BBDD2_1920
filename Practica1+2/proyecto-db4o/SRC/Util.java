@@ -12,6 +12,7 @@ public class Util {
         for (Object o : result) {
             System.out.println(o);
         }
+        System.out.println();
     }
 }
 

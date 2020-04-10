@@ -1,19 +1,19 @@
 import java.util.Date;
 
 public abstract class Transacciones {
-    private Date Fecha;
+    protected Date Fecha;
 
-    private String Hora;
+    protected String Hora;
 
-    private int Importe;
+    protected int Importe;
 
-    private String Descripcion;
+    protected String Descripcion;
 
-    private String Num_transaccion;
+    protected String Num_transaccion;
 
-    private Sucursal Sucursal;
+    protected Sucursal Sucursal;
 
-    private Cuenta Num_cuenta_realizante;
+    protected Cuenta Num_cuenta_realizante;
 
     public Transacciones(Date fecha, String hora, int importe, String descripcion, String num_transaccion) {
         Fecha = fecha;
@@ -79,12 +79,5 @@ public abstract class Transacciones {
 
     public void setNum_cuenta_realizante(Cuenta num_cuenta_realizante) {
         Num_cuenta_realizante = num_cuenta_realizante;
-    }
-
-    @Override
-    public String toString() {
-        return "Transacciones [Sucursal=" + Sucursal.getCodigo() + ", Descripcion=" + Descripcion + ", Fecha=" + Fecha + ", Hora="
-                + Hora + ", Importe=" + Importe + ", Num_cuenta_realizante=" + Num_cuenta_realizante.getNum_cuenta()
-                + ", Num_transaccion=" + Num_transaccion + "]";
     }
 }
