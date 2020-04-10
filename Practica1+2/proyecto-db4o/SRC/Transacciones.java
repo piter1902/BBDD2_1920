@@ -1,29 +1,28 @@
 import java.util.Date;
 
-public class Transacciones {
-    private Date Fecha;
+public abstract class Transacciones {
+    protected Date Fecha;
 
-    private String Hora;
+    protected String Hora;
 
-    private int Importe;
+    protected int Importe;
 
-    private String Descripcion;
+    protected String Descripcion;
 
-    private String Num_transaccion;
+    protected String Num_transaccion;
 
-    private Sucursal Codigo;
+    protected Sucursal Sucursal;
 
-    private Cuenta Num_cuenta_realizante;
+    protected Cuenta Num_cuenta_realizante;
 
-    public Transacciones(Date fecha, String hora, int importe, String descripcion, String num_transaccion,
-            Sucursal codigo, Cuenta num_cuenta_realizante) {
+    public Transacciones(Date fecha, String hora, int importe, String descripcion, String num_transaccion) {
         Fecha = fecha;
         Hora = hora;
         Importe = importe;
         Descripcion = descripcion;
         Num_transaccion = num_transaccion;
-        Codigo = codigo;
-        Num_cuenta_realizante = num_cuenta_realizante;
+        Sucursal = null;
+        Num_cuenta_realizante = null;
     }
 
     public Date getFecha() {
@@ -66,12 +65,12 @@ public class Transacciones {
         Num_transaccion = num_transaccion;
     }
 
-    public Sucursal getCodigo() {
-        return Codigo;
+    public Sucursal getSucursal() {
+        return Sucursal;
     }
 
-    public void setCodigo(Sucursal codigo) {
-        Codigo = codigo;
+    public void setSucursal(Sucursal Sucursal) {
+        this.Sucursal = Sucursal;
     }
 
     public Cuenta getNum_cuenta_realizante() {

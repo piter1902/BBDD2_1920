@@ -5,29 +5,26 @@ import java.util.Objects;
 
 public abstract class Cuenta {
 
-    protected int Num_cuenta;
+    private int Num_cuenta;
 
-    protected String IBAN;
+    private String IBAN;
 
-    protected Date Fecha_creacion;
+    private Date Fecha_creacion;
 
-    protected int Saldo;
+    private int Saldo;
 
-    protected List Clientes;
+    private List<Cliente> Clientes = new ArrayList<Cliente> ();
 
-    public Cuenta(int num_cuenta, String iBAN, Date fecha_creacion, int saldo) {
+   
+    public Cuenta(int num_cuenta, String iBAN, Date fecha_creacion, int saldo, List<Cliente> clientes) {
         Num_cuenta = num_cuenta;
         IBAN = iBAN;
         Fecha_creacion = fecha_creacion;
         Saldo = saldo;
-        Clientes = new ArrayList();
+        Clientes = clientes;
     }
-
-    public Cuenta(Cuenta cuen_base) {
-        this(cuen_base.getNum_cuenta(), cuen_base.getIBAN(), cuen_base.getFecha_creacion(), cuen_base.getSaldo());
-    }
-
-    public Cuenta() {
+    
+    public Cuenta(){
     }
 
     public int getNum_cuenta() {
@@ -90,8 +87,7 @@ public abstract class Cuenta {
             return false;
         }
         Cuenta cuenta = (Cuenta) o;
-        return Num_cuenta == cuenta.Num_cuenta && Objects.equals(IBAN, cuenta.IBAN)
-                && Objects.equals(Fecha_creacion, cuenta.Fecha_creacion) && Saldo == cuenta.Saldo;
+        return Num_cuenta == cuenta.Num_cuenta && Objects.equals(IBAN, cuenta.IBAN) && Objects.equals(Fecha_creacion, cuenta.Fecha_creacion) && Saldo == cuenta.Saldo;
     }
 
     @Override
@@ -99,29 +95,17 @@ public abstract class Cuenta {
         return Objects.hash(Num_cuenta, IBAN, Fecha_creacion, Saldo);
     }
 
-    public List getClientes() {
+    public List<Cliente> getClientes() {
         return Clientes;
     }
 
-    public void setClientes(List clientes) {
+    public void setClientes(List<Cliente> clientes) {
         Clientes = clientes;
     }
 
-    public void addCliente(Cliente cliente) {
-        Clientes.add(cliente);
-    }
-
-    public String printClientes(){
-        List<String> resultado = new ArrayList<String>();
-        for(Object c : Clientes){
-            Cliente cli = (Cliente)c;
-            resultado.add(cli.getNombre());
-        }
-        return resultado.toString();
-    }
     @Override
     public String toString() {
-        return "Cuenta [Clientes=" + printClientes() + " , Fecha_creacion=" + Fecha_creacion + ", IBAN=" + IBAN
+        return "Cuenta [Clientes=" + Clientes + ", Fecha_creacion=" + Fecha_creacion + ", IBAN=" + IBAN
                 + ", Num_cuenta=" + Num_cuenta + ", Saldo=" + Saldo + "]";
     }
 

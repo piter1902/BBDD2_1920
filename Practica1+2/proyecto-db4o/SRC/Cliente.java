@@ -1,18 +1,22 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Cliente {
-    public String DNI;
+    private String DNI;
 
-    public String Nombre;
+    private String Nombre;
 
-    public String Apellido;
+    private String Apellido;
 
-    public int Edad;
+    private int Edad;
 
-    public String Direccion;
+    private String Direccion;
 
-    public int Telefono;
+    private int Telefono;
 
-    public String Email;
+    private String Email;
+
+    private List Cuentas;
 
     public Cliente(String dNI, String nombre, String apellido, int edad, String direccion, int telefono, String email) {
         DNI = dNI;
@@ -22,6 +26,17 @@ public class Cliente {
         Direccion = direccion;
         Telefono = telefono;
         Email = email;
+        Cuentas = new ArrayList();
+    }
+    /**
+     * Constructor de cliente a partir de otro objeto cliente.
+     * Es utilizado para poder hacer Query sin errores. 
+     * 
+     * @param c_base
+     */
+    public Cliente(Cliente c_base) {
+        this(c_base.getDNI(), c_base.getNombre(), c_base.getApellido(), c_base.getEdad(), c_base.getDireccion(),
+                c_base.getTelefono(), c_base.getEmail());
     }
 
     public String getDNI() {
@@ -78,6 +93,28 @@ public class Cliente {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    public List getCuentas() {
+        return Cuentas;
+    }
+
+    public void addCuenta(Cuenta cuenta) {
+        Cuentas.add(cuenta);
+    }
+
+    public String printCuentas(){
+        List<Integer> resultado = new ArrayList<Integer>();
+        for(Object c : Cuentas){
+            Cuenta cuen = (Cuenta)c;
+            resultado.add(cuen.getNum_cuenta());
+        }
+        return resultado.toString();
+    }
+    @Override
+    public String toString() {
+        return "Cliente [Apellido=" + Apellido + ", Cuentas= " + printCuentas() + ", DNI=" + DNI + ", Direccion=" + Direccion
+                + ", Edad=" + Edad + ", Email=" + Email + ", Nombre=" + Nombre + ", Telefono=" + Telefono + "]";
     }
 
 }

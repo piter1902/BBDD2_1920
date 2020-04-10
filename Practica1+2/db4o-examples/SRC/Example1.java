@@ -6,12 +6,12 @@
 import java.io.*;
 import com.db4o.*;
 
-public class Ejeccucion extends Util {
+public class Example1 extends Util {
 
     final static String DB_FOLDER = "./DB-FILES";
     //final static String DB_FOLDER = System.getProperty("user.home");
     
-    final static String DB_FILE = "banco.db4o";
+    final static String DB_FILE = "formula1.db4o";
     
     final static String DB4OFILENAME = DB_FOLDER + "/" + DB_FILE;
 	    
@@ -22,9 +22,6 @@ public class Ejeccucion extends Util {
         ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded
                 .newConfiguration(), DB4OFILENAME);
         try {
-            cl1 = new Cliente("17159233Z", "Pedro", "Tamargo", 20, "C/ Jose Antonio Primo de Rivera", 656293327, "pedroTamargo@gmail.com");
-            
-
             storeFirstPilot(db);
             storeSecondPilot(db);
             retrieveAllPilots(db);
@@ -47,7 +44,7 @@ public class Ejeccucion extends Util {
             db.close();
         }
     }
-
+    
     public static void storeFirstPilot(ObjectContainer db) {
         Pilot pilot1 = new Pilot("Michael Schumacher", 100);
         db.store(pilot1);
