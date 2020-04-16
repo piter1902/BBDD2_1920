@@ -57,12 +57,7 @@ $Configuracion->Network->Adapter2->Host-only Adapter (Name: vboxnet0).$
 Para que aparezca vboxnet0:\\
 $File->Host Network Adapter->create$
 \\
-Una vez realizado lo anterior, desde la máquina virtual, se debe configurar el archivo /etc/network/interfaces y modificar la interfaz eth1 de la siguiente manera:\\
-\begin{figure}[h!]
-	\centering
-		\includegraphics[scale=1.5]{images/interfacesred.png}
-			\caption{Depliegue del sistema}
-\end{figure}
+Una vez realizado lo anterior, desde la máquina virtual, se debe configurar el archivo /etc/network/interfaces y modificar la interfaz eth1 de la manera ilustrada en la Figura \ref{FIG:interfacesRED}.
 
 
 \section{Instalación y administración básica de los SGBD}
@@ -78,27 +73,28 @@ de manera automática que se cumplen ciertas precondiciones. Nuestra máquina no
 /tmp.\\
 Al intentarlo ejecutar la terminal nos muestra ciertos errores de formateo:
 
-\begin{itemize}
-    \item ./orarun.sh: 186:  [: true: unexpected operator
-    \item ./orarun.sh: 848:  [: unexpected operator
-    \item ./orarun.sh: 864:  [: unexpected operator
-    \item ./orarun.sh: 882:  [: unexpected operator
-    \item ./orarun.sh: 903:  [: true: unexpected operator
-    \item ./orarun.sh: 1052: [: unexpected operator
-    \item ./orarun.sh: 1057: [: unexpected operator
-    \item ./orarun.sh: 1075: [: unexpected operator
-    \item ./orarun.sh: 1085: [: unexpected operator
-    \item ./orarun.sh: 1115: [: unexpected operator
-    \item ./orarun.sh: 1143: [: unexpected operator
-    \item ./orarun.sh: 1189: [: unexpected operator
-    \item ./orarun.sh: 139:  [: unexpected operator
-    \item ./orarun.sh: 139:  [: unexpected operator
-    \item ./orarun.sh: 1228: [: unexpected operator
-    \item ./orarun.sh: 1284: [: unexpected operator
-    \item ./orarun.sh: 1342: [: unexpected operator
-    \item ./orarun.sh: 1426: [: unexpected operator
-    \item ./orarun.sh: 1451: [: unexpected operator
-\end{itemize}
+\begin{lstlisting}[language=bash]
+	./orarun.sh: 186: [: true: unexpected operator
+	./orarun.sh: 186: [: true: unexpected operator
+	./orarun.sh: 848: [: unexpected operator
+	./orarun.sh: 864: [: unexpected operator
+	./orarun.sh: 882: [: unexpected operator
+	./orarun.sh: 903: [: true: unexpected operator
+	./orarun.sh: 1052: [: unexpected operator
+	./orarun.sh: 1057: [: unexpected operator
+	./orarun.sh: 1075: [: unexpected operator
+	./orarun.sh: 1085: [: unexpected operator
+	./orarun.sh: 1115: [: unexpected operator
+	./orarun.sh: 1143: [: unexpected operator
+	./orarun.sh: 1189: [: unexpected operator
+	./orarun.sh: 139: [: unexpected operator
+	./orarun.sh: 139: [: unexpected operator
+	./orarun.sh: 1228: [: unexpected operator
+	./orarun.sh: 1284: [: unexpected operator
+	./orarun.sh: 1342: [: unexpected operator
+	./orarun.sh: 1426: [: unexpected operator
+	./orarun.sh: 1451: [: unexpected operator
+\end{lstlisting}
 
 Al inspeccionar el archivo orarun.sh no se encuentra ningún problema. Al buscar en Internet la única explicación que se encuentra es que estamos instalando
 Oracle en una distro no certificada para ello.
@@ -194,14 +190,9 @@ Con \emph{db4o}, un \emph{SGBD} orientado a objetos, no se requiere instalación
 
 Para el diseño de la Base de Datos especificada en el enunciado se ha utilizado el siguiente diagrama entidad relación (Figura \ref{FIG:diagramaER}).
 
-También para facilitar el diseño de la base de datos orientada a objetos utilizando \emph{db4o} se ha creado un diagrama de clases \emph{UML} (Figura \ref{}) \textbf{\Huge INSERTAR EL DIAGRAMA UML}.
+También para facilitar el diseño de la base de datos orientada a objetos utilizando \emph{db4o} se ha creado un diagrama de clases \emph{UML} (Figura \ref{FIG:diagramaUML}).
 
-\begin{figure}[h!]
-	\centering
-		\includegraphics[scale=0.2]{images/diagramaer.png}
-			\caption{Diagrama E-R de la Base de Datos a diseñar}
-			\label{FIG:diagramaER}
-\end{figure}
+
 
 \section{Diseño lógico de una base de datos relacional}
 
@@ -222,7 +213,15 @@ Tras la creación de los tipos, procedemos a crear las tablas de los mismos. Ora
 \\
 
 \subsubsection{PostgreSQL}
-Cosas de PostgreSQL
+
+Para la implementación del modelo \emph{OR} utilizando \emph{PostgreSQL} se ha maximizado el uso de la herencia de tablas como mecanismo de relación entre las distintas entidades planteadas en el diagrama \emph{ER} (Figura \ref{FIG:diagramaER}).\\
+Para la traducción de las relaciones \emph{M:N} se han creado entidades específicas \textbf{ya que este \emph{SGBD} no permite la creación de \emph{arrays} sin especificar su tamaño máximo.}\\
+
+\begin{Large}
+	Preguntarse el porque lo hemos traducido tal y como lo hemos traducido.\\
+	
+	Hablar de las limitaciones de PostgreSQL?
+\end{Large}
 \\
 
 \subsubsection{DB2}
@@ -233,11 +232,43 @@ Cosas de DB2
 
 Para la generación de datos y la realización de pruebas se han creado conjuntos de datos para la población y las pruebas de las distintas bases de datos con los gestores seleccionados.\\
 
-\textbf{\Huge RELLENAR ESTO MÁS}
+Para la generación de datos, se han utilizado generadores de códigos de cuenta bancaria e IBAN. Los DNIs y los nombres han sido inventados por los integrante del equipo.
+
+Se han probado consultas que recorrían las relaciones entre las entidades, resolviendo las referencias que aparecían entre las mismas.
+%\textbf{\Huge RELLENAR ESTO MÁS}
 
 \section{Implementación con db4o}
 
+Siguiendo el diagrama \emph{UML} de la Figura \ref{FIG:diagramaUML}, se ha procedido a la creación de las clases \emph{Java} correspondientes. A diferencia de la implementación en el modelo relacional de \emph{Oracle}, no es necesario reflejar las relaciones \emph{M:N} como una nueva entidad, en este caso se utilizarán listas (\emph{List}).\\
+
+Una de las dificultades encontradas en la implementación con \emph{db4o} ha sido el desfase entre versiones de \emph{Java}, por ejemplo en el uso de clases genéricas ya que la Máquina Virtual de \emph{Java} mostraba avisos (\emph{Warnings}) acerca de la instanciación de las clases.
+
+Para la resolución de las dudas surgidas durante la implementación con este \emph{SGBD} se ha recurrido al manual del mismo\footnote{\url{http://www.odbms.org/wp-content/uploads/2013/11/db4o-7.10-tutorial-java.pdf}}.
+
 \section{Comparación de los SGBD}
+
+\section{Apéndice 1: Figuras}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=1.5]{images/interfacesred.png}
+			\caption{Depliegue del sistema}
+		\label{FIG:interfacesRED}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.2]{images/diagramaer.png}
+			\caption{Diagrama E-R de la Base de Datos a diseñar}
+			\label{FIG:diagramaER}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.4]{images/diagramauml.png}
+			\caption{Diagrama de clases UML de la Base de Datos a diseñar}
+			\label{FIG:diagramaUML}
+\end{figure}
 
 
 \end{document}
