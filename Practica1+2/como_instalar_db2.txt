@@ -49,7 +49,7 @@ db2start
 Para conectarnos a la base de datos que hemos creado escribiremos:
 db2 connect to <database_name>
 
-Para crear una tabla podemos hacerlo desde fuera del SGDB escribiendo:
+Para crear una tabla podemos hacerlo desde fuera del shell de DB2 escribiendo:
 db2 create table prueba(id integer not null primary key)
 
 Para mostrar las tablas escribiremos:
