@@ -34,6 +34,9 @@ db2ictr <nombre_instancia>
 Para ver las instancias:
 db2ilist
 
+Para poder ver las bases de datos creadas, se utiliza: 
+>>db2 list db directory
+
 Escogemos 'remote' como la instancia (se ejecutaran todas las acciones sobre esa instancia)
 set db2instance=remote
 

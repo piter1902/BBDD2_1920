@@ -1,3 +1,13 @@
+DROP TABLE Operacion;
+
+DROP TABLE Transferencia;
+
+DROP TABLE Transaccion;
+
+DROP TABLE Sucursal;
+
+DROP TABLE Poseer;
+
 DROP TABLE Cuenta_ahorro;
 
 DROP TABLE Cuenta_corriente;
@@ -6,14 +16,30 @@ DROP TABLE Cuenta;
 
 DROP TABLE Cliente;
 
-ALTER TYPE cuenta_t drop ATTRIBUTE Propietario;
+ALTER TYPE Transferencia_t drop ATTRIBUTE Num_cuenta_beneficiario;
 
-ALTER TYPE cliente_t drop ATTRIBUTE Cuentas;
+DROP TYPE Transferencia_t;
 
-DROP TYPE cuenta_ahorro_t;
+DROP TYPE Operacion_t;
 
-DROP TYPE ciente_corriente_t;
+ALTER TYPE Transaccion_t drop ATTRIBUTE Num_cuenta_realizante;
 
-DROP TYPE cuenta_t;
+ALTER TYPE Transaccion_t drop ATTRIBUTE Sucursal;
 
-DROP TYPE cliente_t;
+DROP TYPE Transaccion_t;
+
+DROP TYPE Sucursal_t;
+
+ALTER TYPE Poseer_t drop ATTRIBUTE DNI;
+
+ALTER TYPE Poseer_t drop ATTRIBUTE Num_cuenta;
+
+DROP TYPE Poseer_t;
+
+DROP TYPE Cuenta_ahorro_t;
+
+DROP TYPE Cuenta_corriente_t;
+
+DROP TYPE Cuenta_t;
+
+DROP TYPE Cliente_t;
