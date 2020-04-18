@@ -28,9 +28,21 @@ CREATE TYPE Cuenta_ahorro_t UNDER Cuenta_t AS
     Interes        int   
 )MODE DB2SQL;
 
+-- CREATE TYPE Cuenta_corriente_t UNDER Cuenta_t AS
+-- (
+--     Para_que_funcione          int
+--     -- Este atributo se lo he añadido para que deje crear la tabla. 
+-- )MODE DB2SQL;
+CREATE TYPE Sucursal_t AS
+(
+    Codigo    varchar(50),
+    Direccion varchar(100),
+    Telefono  int
+)MODE DB2SQL;
+
 CREATE TYPE Cuenta_corriente_t UNDER Cuenta_t AS
 (
-    Prueba          int
+    Sucursal    REF(Sucursal_t)
 )MODE DB2SQL;
 
 -- Bridge type between Cuenta & Cliente
@@ -40,12 +52,6 @@ CREATE TYPE Poseer_t AS
     Num_cuenta     REF(Cuenta_t)
 )MODE DB2SQL;
 
-CREATE TYPE Sucursal_t AS
-(
-    Codigo    varchar(50),
-    Direccion varchar(100),
-    Telefono  int
-)MODE DB2SQL;
 
 CREATE TYPE Transaccion_t AS
 (
@@ -99,10 +105,21 @@ CREATE TABLE Cuenta_ahorro OF Cuenta_ahorro_t UNDER Cuenta
         Interes WITH OPTIONS NOT NULL
     );
 
+CREATE TABLE Sucursal OF Sucursal_t
+(
+    REF IS Oid USER GENERATED,
+    Codigo    WITH OPTIONS NOT NULL,
+    Direccion WITH OPTIONS NOT NULL,
+    -- Telefono  int
+    CONSTRAINT PK_sucursal  PRIMARY KEY (Codigo)
+);
 
 CREATE TABLE Cuenta_corriente OF Cuenta_corriente_t UNDER Cuenta
-    INHERIT SELECT PRIVILEGES;
-
+    INHERIT SELECT PRIVILEGES
+    (
+        Sucursal WITH OPTIONS SCOPE Sucursal
+    );
+    
 CREATE TABLE Poseer OF Poseer_t
 (
     REF IS Oid USER GENERATED,
@@ -115,15 +132,6 @@ CREATE TABLE Poseer OF Poseer_t
     CONSTRAINT  PK_Poseer PRIMARY KEY ( DNI, Num_cuenta )
     -- CONSTRAINT  FK_cliente FOREIGN KEY (DNI) REFERENCES Cliente,
     -- CONSTRAINT  FK_cuenta FOREIGN KEY (Num_cuenta) REFERENCES Cuenta
-);
-
-CREATE TABLE Sucursal OF Sucursal_t
-(
-    REF IS Oid USER GENERATED,
-    Codigo    WITH OPTIONS NOT NULL,
-    Direccion WITH OPTIONS NOT NULL,
-    -- Telefono  int
-    CONSTRAINT PK_sucursal  PRIMARY KEY (Codigo)
 );
 
 CREATE TABLE Transaccion OF Transaccion_t
