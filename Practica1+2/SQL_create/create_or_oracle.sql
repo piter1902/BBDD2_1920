@@ -37,10 +37,6 @@ create or replace type cuentaUdt as object
 /
 
 -- Tipos derivados de cuenta
---create or replace type cuenta_corrienteUdt under cuentaUdt;
-create or replace type cuenta_corrienteUdt;
-/
-
 create or replace type cuenta_ahorroUdt under cuentaUdt
 (
     Interes     int
@@ -50,6 +46,13 @@ create or replace type cuenta_ahorroUdt under cuentaUdt
 -- Sucursal
 --create or replace type sucursalUdt as object;
 create or replace type sucursalUdt;
+/
+
+--create or replace type cuenta_corrienteUdt under cuentaUdt;
+create or replace type cuenta_corrienteUdt under cuentaUdt
+(
+	Sucursal	   ref sucursalUdt
+) final;
 /
 
 -- Transaccion
@@ -117,7 +120,7 @@ CREATE TABLE Cuenta of cuentaUdt
 nested table Propietarios store as PropietariosTabla;
 
 -- Establecemos las reestricciones a las tablas anidadas
-alter table CuentasTabla add(scope for (column_value) is Cuenta);
+alter table CuentasTabla	  add(scope for (column_value) is Cuenta);
 alter table PropietariosTabla add(scope for (column_value) is Cliente);
 
 -- No necesitamos hacer tablas hijas de Cuenta (Cuenta es tablas sustituible)
