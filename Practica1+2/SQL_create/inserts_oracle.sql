@@ -41,6 +41,29 @@ INSERT INTO Cuenta
 VALUES
 (3456789011,'ES1720852066623456789011',TO_DATE('2018-01-1', 'YYYY-MM-DD'), 4310, 'Ahorro');
 
+-- ************************************** "Sucursal"
+INSERT INTO Sucursal
+(Codigo, Direccion, Telefono)
+VALUES
+( 0418,'mi direccion 6', 901232323);
+
+INSERT INTO Sucursal
+(Codigo, Direccion, Telefono)
+VALUES
+( 5801, 'mi calle 4', 901898789);
+
+INSERT INTO Sucursal
+(Codigo, Direccion, Telefono)
+VALUES
+( 6912, 'mi avenida 4', 901354545);
+
+INSERT INTO Sucursal
+(Codigo, Direccion, Telefono)
+VALUES
+( 2066, 'mi pueblo 12', 901897689);
+
+
+
 -- ************************************** "Cuenta_ahorro"
 INSERT INTO Cuenta_Corriente
 (ID_Cuenta, ID_Sucursal)
@@ -63,26 +86,6 @@ INSERT INTO Cuenta_ahorro
 VALUES
 (3456789011, 2);
 
--- ************************************** "Sucursal"
-INSERT INTO Sucursal
-(Codigo, Direccion, Telefono)
-VALUES
-( 0418,'mi direccion 6', 901232323);
-
-INSERT INTO Sucursal
-(Codigo, Direccion, Telefono)
-VALUES
-( 5801, 'mi calle 4', 901898789);
-
-INSERT INTO Sucursal
-(Codigo, Direccion, Telefono)
-VALUES
-( 6912, 'mi avenida 4', 901354545);
-
-INSERT INTO Sucursal
-(Codigo, Direccion, Telefono)
-VALUES
-( 2066, 'mi pueblo 12', 901897689);
 
 
 -- ************************************** "Operacion"
