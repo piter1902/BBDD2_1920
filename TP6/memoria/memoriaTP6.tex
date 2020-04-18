@@ -3,6 +3,7 @@
 \usepackage[margin=0.8in]{geometry}
 \usepackage{graphicx}
 \usepackage{wrapfig}
+\usepackage{eurosym}
 
 \title{Trabajo Práctico 6 - BASES DE DATOS 2}
 \author{
@@ -55,8 +56,29 @@ Sobre este enunciado podemos sacar los siguientes requisitos:
 
 Dado que \emph{Juan José} es un asco moriremos.\\
 
-Tendremos diferentes oficinas base, en concreto 3, una por provincia. Varios funcionarios tendrán acceso al sistema de información. También tendrán acceso a este sistema usuarios, estos pueden consultar la web con sus diferentes contenidos,comentar publicaciones, realizar publicaciones recomendado sus experiencias.
 
-El trafico en la web no será muy elevado, se estima unos 10.000 usuarios a la semana, 15.000 en alta temporada.
+
+===========\\
+
+Se pretende desarrollar una base de datos para almacenar la información turística de la región de Aragón. Se llevará acabo a través de un sitio web mediante la cual, los usuarios puedan consultar y realizar recomendaciones  de puntos turísticos, así como comentar otras.\\
+Este sistema deberá permitir almacenar usuarios, de los cuales se necesitará nombre y apellidos, correo electrónico, un teléfono de contacto y su municipio de residencia. La página web permitirá realizar publicaciones, recomendaciones y comentarios, por ello este sistema gestor deberá dar soporte a estas funcionalidades. \\
+Se deberá garantizar el acceso concurrente a la base de datos debido a que múltiples usuarios pueden realizar publicaciones y comentarios de manera simultanea.
+Respecto a la garantía de la calidad del servicio primaremos la consistencia de los datos frente a la disponibilidad de la misma.\\
+
+Si fuese necesario se podría utilizar la infraestructura disponible en las ciudades de Huesca y Zaragoza. En cuanto a la  estimación del trafico web será de unos 10.000 usuarios a la semana, 15.000 en alta temporada.\\
+
+Por lo tanto, en base a estos requisitos buscaremos un sistema gestor \textit{OLTP (Online Transaction Processing)} ya que recibirá muchas peticiones de lectura y escritura por unidad de tiempo. Respecto al volumen de datos, el sistema no se prevee que almacene grandes volúmenes de datos, por lo tanto la escalabilidad no es un factor primordial.
+
+Según los datos del presupuesto de turismo proporcionados por el presupuesto de la comunidad de Aragón del año 2020, turismo cuenta con una cantidad de 13.100 \euro \ ( trece mil cien euros ).\\
+ Con estas condiciones suponemos que vamos a contar con un presupuesto similar.
 
 \end{document}
+
+
+
+
+
+
+
+
+
