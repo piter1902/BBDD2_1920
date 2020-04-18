@@ -8,6 +8,14 @@ CREATE TABLE Cuenta
 
 );
 
+CREATE TABLE Sucursal
+(
+ Codigo    int NOT NULL,
+ Direccion varchar(50) NOT NULL,
+ Telefono  int NOT NULL,
+ CONSTRAINT PK_Sucursal PRIMARY KEY (Codigo)
+);
+
 CREATE TABLE Cuenta_Ahorro
 (
     Interes     int NOT NULL,
@@ -16,6 +24,7 @@ CREATE TABLE Cuenta_Ahorro
 
 CREATE TABLE Cuenta_Corriente
 (
+    Codigo int REFERENCES Sucursal ON DELETE CASCADE,
     CONSTRAINT PK_cuenta_corriente PRIMARY KEY (Num_cuenta)
 ) INHERITS (Cuenta);
 
@@ -38,13 +47,6 @@ CREATE TABLE Poseer
     PRIMARY KEY (Num_cuenta, DNI)
 );
 
-CREATE TABLE Sucursal
-(
- Codigo    int NOT NULL,
- Direccion varchar(50) NOT NULL,
- Telefono  int NOT NULL,
- CONSTRAINT PK_Sucursal PRIMARY KEY (Codigo)
-);
 
 CREATE TABLE Transaccion
 (

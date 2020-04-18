@@ -65,7 +65,7 @@ SELECT * FROM Transaccion;
 
 --Inserts de cuentas, de diferente tipo con la misma primary key para comprobar que Postgre no permite heredar restricciones de claves primarias y solo serían claves primarias en el ámbito local de la tabla
 INSERT INTO cuenta VALUES ('9999 9999 9999 9999 9999','ES9831901158168186965622', '12003', '2004/09/17');
-INSERT INTO cuenta_corriente VALUES ('9999 9999 9999 9999 9999','ES9831901158168186965622', '12003', '2004/09/17');
+INSERT INTO cuenta_corriente VALUES ('9999 9999 9999 9999 9999','ES9831901158168186965622', '12003', '2004/09/17','7237');
 INSERT INTO cuenta_ahorro VALUES ('9999 9999 9999 9999 9999','ES9831901158168186965622', '12003', '2004/09/17','5');
 
 --Ahora consultamos la tabla Cuenta, que es la tabla padre y aparecen las tres con la misma clave
