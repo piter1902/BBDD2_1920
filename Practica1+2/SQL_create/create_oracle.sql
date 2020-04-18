@@ -10,9 +10,10 @@ CREATE TABLE Cuenta
 
 -- ************************************** "Cuenta_ahorro"
 
+
 CREATE TABLE Cuenta_ahorro
 (
-    ID_cuenta			int CONSTRAINT PK_CuentaAhorro NOT NULL PRIMARY KEY,
+    ID_Cuenta			int CONSTRAINT PK_CuentaAhorro NOT NULL PRIMARY KEY,
     Interes				int NOT NULL,
     CONSTRAINT FK_idCuenta FOREIGN KEY (ID_cuenta) REFERENCES Cuenta ( Num_cuenta )
 );
@@ -48,6 +49,18 @@ CREATE TABLE Sucursal
     Direccion varchar(100) NOT NULL,
     Telefono  int NOT NULL
 );
+
+
+CREATE TABLE Cuenta_corriente
+(
+    ID_Cuenta           int NOT NULL,
+    ID_Sucursal         int NOT NULL,
+    CONSTRAINT PK_CuentaCorriente PRIMARY KEY (ID_cuenta, ID_sucursal),
+    CONSTRAINT FK_idCuentaCorrput  FOREIGN KEY (ID_cuenta) REFERENCES Cuenta (Num_cuenta),
+    CONSTRAINT FK_idSucursal FOREIGN KEY (ID_sucursal) REFERENCES Sucursal (Codigo)
+);
+
+
 
 -- ************************************** "Transaccion"
 
