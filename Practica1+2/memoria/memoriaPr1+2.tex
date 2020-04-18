@@ -4,37 +4,43 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 
-
-\title{\Huge Practica 1 + 2 - BASES DE DATOS 2}
-\author{
-  Hayk Kocharyan\\
-  757715@unizar.es
-  \and
-  Pedro Tamargo Allué\\
-  758267@unizar.es
-  \and
-  Jesús Villacampa Sagaste\\
-  755739@unizar.es
-  \and
-  Juan José Tambo Tambo\\
-  755742@unizar.es
-}
-
-\date{\today}
-
 \usepackage{natbib}
 \usepackage{graphicx}
 % Para los codigos
 \usepackage{listings}
 \usepackage[spanish]{babel}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+
 
 \begin{document}
 
-\maketitle
-
-%\input{insbox}
-\tableofcontents
+\begin{titlepage}
+	\title{
+		\begin{Huge}
+			Practica 1 + 2 - BASES DE DATOS 2
+		\end{Huge}
+	}
+	\author{
+	  Hayk Kocharyan\\
+	  757715@unizar.es
+	  \and
+	  Pedro Tamargo Allué\\
+	  758267@unizar.es
+	  \and
+	  Jesús Villacampa Sagaste\\
+	  755739@unizar.es
+	  \and
+	  Juan José Tambo Tambo\\
+	  755742@unizar.es
+	}
+	\date{\today}
+	
+	\clearpage\maketitle
+	\thispagestyle{empty}
+	\tableofcontents
+	\listoffigures 
+	
+\end{titlepage}
 
 \newpage 
 
@@ -42,7 +48,7 @@
 Los esfuerzos invertidos por cada integrante del equipo son:
 \begin{itemize}
 \item Hayk:
-\item Juan José:
+\item Juan:
 \item Jesús:
 \item Pedro: 
 \end{itemize}
@@ -186,6 +192,10 @@ Con \emph{db4o}, un \emph{SGBD} orientado a objetos, no se requiere instalación
 
 \section{Comentarios acerca de las licencias}
 
+\begin{Huge}
+	¿RELLENAMOS ESTO CON \LaTeX?
+\end{Huge}
+
 \section{Diseño conceptual de la base de datos}
 
 Para el diseño de la Base de Datos especificada en el enunciado se ha utilizado el siguiente diagrama entidad relación (Figura \ref{FIG:diagramaER}).
@@ -203,6 +213,8 @@ Para la transformación del del Diagrama Entidad-Relación en un modelo relacion
 Las relaciones entre las entidades se han traducido en función de su cardinalidad. Las relaciones \emph{(M:N)} se han traducido en una nueva relación.\\
 
 \textbf{Para la implementación en el SGBD Oracle se han utilizado tablas las tablas especificadas anteriormente y se han establecido las restricciones de integridad referencial a las tablas que hacen referencia a otras. ??}
+
+Por lo tanto, podremos convertir el Diagrama Entidad-Relación (Figura \ref{FIG:diagramaER}) en el Diagrama Relacional (Figura \ref{FIG:diagramaRel}).
 
 \section{Diseño lógico de una base de datos objeto/relacional}
 \subsection{Implementación con el modelo objeto/relacional}
@@ -225,7 +237,14 @@ Para la traducción de las relaciones \emph{M:N} se han creado entidades especí
 \\
 
 \subsubsection{DB2}
-Cosas de DB2
+
+Para la implementación con \emph{DB2} se ha seguido un planteamiento muy similar al de \emph{Oracle}. Se han creado tipos (\emph{UDT}) para las distintas entidades del Diagrama Entidad-Relación (Figura \ref{FIG:diagramaER}). Tras la creación de los tipos de datos se han creado las tablas tipadas.\\
+A diferencia de \emph{Oracle}, este \emph{SGBD} tiene la capacidad de permitir la herencia entre tablas. De esta forma se han creado tantas tablas como tipos se han definido anteriormente.\\
+Una diferencia con 
+\begin{Large}
+	(Comprobar si esto es así)
+\end{Large}
+el estándar \emph{SQL:1999} la cláusula \emph{SCOPE} no garantiza la integridad referencial entre las tablas, por lo tanto se deben utilizar restricciones de clave ajena (\emph{Foreign key}) para garantizarla\footnote{\url{https://www.ibm.com/support/knowledgecenter/SSEPGG_11.5.0/com.ibm.db2.luw.admin.structypes.doc/doc/c0006594.html}}.
 \\
 
 \section{Generación de datos y pruebas}
@@ -247,20 +266,28 @@ Para la resolución de las dudas surgidas durante la implementación con este \e
 
 \section{Comparación de los SGBD}
 
+\newpage
 \section{Apéndice 1: Figuras}
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=1.5]{images/interfacesred.png}
-			\caption{Depliegue del sistema}
+			\caption{Interfaz de red para el acceso vía SSH}
 		\label{FIG:interfacesRED}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[scale=0.2]{images/diagramaer.png}
+		\includegraphics[scale=0.5]{images/diagramaer.png}
 			\caption{Diagrama E-R de la Base de Datos a diseñar}
 			\label{FIG:diagramaER}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[scale=0.6]{images/diagramaRelacional.jpg}
+			\caption{Diagrama del modelo relacional de la Base de Datos a diseñar}
+			\label{FIG:diagramaRel}
 \end{figure}
 
 \begin{figure}[h!]
