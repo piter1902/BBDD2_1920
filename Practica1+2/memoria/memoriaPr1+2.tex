@@ -49,7 +49,7 @@ Los esfuerzos invertidos por cada integrante del equipo son:
 \begin{itemize}
 \item Hayk:
 \begin{itemize}
-\item 
+\item Scripts de creación de tablas y población en \emph{Oracle}: 3 horas.
 \end{itemize}
 
 \item Juanjo:
@@ -60,12 +60,15 @@ Los esfuerzos invertidos por cada integrante del equipo son:
 
 \item Jesús:
 \begin{itemize}
-\item 
+\item Traducción del diagrama \emph{ER} a modelo relacional: 2 horas.
+\item Scripts de creación de tablas de \emph{PostgreSQL}: 3 horas.
+\item Diagrama de clases \emph{UML} para el modelo orientado a objetos: 1 hora.
 \end{itemize}
 
 \item Pedro: 
 \begin{itemize}
-\item Instalación de \emph{DB2} y \emph{Oracle} en las máquinas virtuales: 3 horas.
+\item Instalación de \emph{DB2}, \emph{PostgreSQL} y \emph{Oracle} en las máquinas virtuales: 3 horas.
+\item Digitalización del diagrama \emph{ER}: 1 hora.
 \item Scripts de creación de las tablas en \emph{Oracle}, en el modelo relacional y en el modelo objeto-relacional: 4 horas.
 \item Memoria de la práctica: 2 horas.
 \end{itemize}
@@ -209,11 +212,7 @@ Para mostrar las tablas escribiremos:
 
 Con \emph{db4o}, un \emph{SGBD} orientado a objetos, no se requiere instalación ya que se ejecuta desde un fichero \emph{.jar} proporcionado junto con el enunciado de la práctica.
 
-\section{Comentarios acerca de las licencias}
-
-\begin{Huge}
-	¿RELLENAMOS ESTO CON \LaTeX?
-\end{Huge}
+%\section{Comentarios acerca de las licencias}
 
 \section{Diseño conceptual de la base de datos}
 
@@ -280,13 +279,10 @@ Para la resolución de las dudas surgidas durante la implementación con este \e
 Tras la realización de la práctica se ha comparado el funcionamiento de los distintos \emph{SGBD} con los distintos modelos que se han estudiado.\\
 Dado que el modelo \emph{O-R} es un modelo nuevo para el equipo se han podido comparar la funcionalidades respecto al modelo relacional. Una de las mayores ventajas que se han observado en el modelo \emph{O-R} es la capacidad de realizar herencias entre los tipos, debido a que reduce la complejidad de la traducción del diagrama \emph{ER} extendido.\\
 También, en el \emph{SGBD} de \emph{Oracle}, se ha observado la utilidad de que no existan jerarquías de tablas tipadas, ya que esto reduce considerablemente el número de tablas que se han de gestionar.\\
-\begin{Huge}
-	JESUS AYÚDAME A DECIR ALGO BUENO DE POSTGRESQL.
-\end{Huge}
 
-\begin{Huge}
-	JJ AYÚDAME A DECIR ALGO BUENO DE DB2.
-\end{Huge}
+Con el gestor de \emph{PostgreSQL}, se ha tomado como un aspecto negativo las limitaciones en el mecanismo de herencia. Este gestor no mantiene las restricciones de clave primaria y las de clave ajena en la herencia entre dos tablas. También durante el proceso de poblado de la base de datos la carencia de ``enrutamiento automático'' en las sentencias \emph{INSERT} hizo la tarea más tediosa.\\
+
+En cuanto al gestor \emph{DB2}, un punto a favor del mismo, como en \emph{Oracle}, es la herencia entre tipos definidos por el usuario (\emph{UDT}), pero a diferencia de este, \emph{DB2} permite la herencia entre tablas, un mecanismo muy útil a la hora de insertar elementos y realizar consultas. También, la facilidad de ejecutar una operación de dereferencia (\emph{deref()} en \emph{Oracle}), ya que el acceso a los campos en el objeto referenciado se hace mediante el operador $"->"$, recordando a los punteros de lenguajes como \emph{C} o \emph{C++}.\\
 
 Sobre el modelo \emph{Orientado a Objetos}, se ha utlilizado el gestor \emph{db4o}. Este \emph{SGBD} utiliza lenguaje \emph{Java} para almacenar los objetos. Una ventaja de este gestor es que permite almacenar los objetos de como tal, proveyendo una \emph{API} para la persistencia de los datos en ficheros (\emph{.db4o}).
 
