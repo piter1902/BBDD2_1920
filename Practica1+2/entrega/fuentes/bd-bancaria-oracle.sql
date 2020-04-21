@@ -34,7 +34,7 @@ CREATE TABLE Cuenta_ahorro
 (
     ID_Cuenta			int CONSTRAINT PK_CuentaAhorro NOT NULL PRIMARY KEY,
     Interes				int NOT NULL,
-    CONSTRAINT FK_idCuenta FOREIGN KEY (ID_cuenta) REFERENCES Cuenta ( Num_cuenta )
+    CONSTRAINT FK_idCuenta FOREIGN KEY (ID_cuenta) REFERENCES Cuenta ( Num_cuenta ) on delete cascade
 );
 
 -- ************************************** "Cliente"
@@ -50,15 +50,6 @@ CREATE TABLE Cliente
     Email     varchar(50) NULL
 );
 
--- ************************************** "Cuenta_corriente"
-
--- CREATE TABLE Cuenta_corriente
--- (
---     Num_cuenta     int CONSTRAINT PK_CuentaC NOT NULL PRIMARY KEY,
---     IBAN           varchar(40) NOT NULL,
---     Fecha_creacion date NOT NULL,
---     Saldo          int NOT NULL
--- );
 
 -- ************************************** "Sucursal"
 
@@ -69,6 +60,7 @@ CREATE TABLE Sucursal
     Telefono  int NOT NULL
 );
 
+-- ************************************** "Cuenta_corriente"
 
 CREATE TABLE Cuenta_corriente
 (
@@ -98,22 +90,7 @@ CREATE TABLE Transaccion
     CONSTRAINT FK_95 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
 );
 
--- CREATE INDEX "fkIdx_76" ON "Operacion"
--- (
---  "Num_cuenta_realizante"
--- );
 
--- CREATE INDEX "fkIdx_83" ON "Operacion"
--- (
---  "Num_cuenta_beneficiario"
--- );
-
--- CREATE INDEX "fkIdx_95" ON "Operacion"
--- (
---  "Codigo"
--- );
-
--- Estos indices de momento no los creamos
 -- ************************************** "Poseer"
 
 CREATE TABLE Poseer
@@ -124,21 +101,6 @@ CREATE TABLE Poseer
     CONSTRAINT FK_37 FOREIGN KEY ( DNI ) REFERENCES Cliente ( DNI ),
     CONSTRAINT FK_41 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta ( Num_cuenta )
 );
-
--- CREATE INDEX "fkIdx_37" ON "Poseer"
--- (
---  "DNI"
--- );
-
--- CREATE INDEX "fkIdx_41" ON "Poseer"
--- (
---  "Num_cuenta"
--- );
-
--- CREATE INDEX "fkIdx_47" ON "Poseer"
--- (
---  "Num_cuenta"
--- );
 
 
 -- ************************************** "Operacion"
@@ -157,12 +119,3 @@ CREATE TABLE Operacion
     CONSTRAINT FK_92 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
 );
 
--- CREATE INDEX "fkIdx_76" ON "Transaccion"
--- (
---  "Num_cuenta_realizante"
--- );
-
--- CREATE INDEX "fkIdx_92" ON "Transaccion"
--- (
---  "Codigo"
--- );
