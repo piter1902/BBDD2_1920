@@ -30,7 +30,7 @@ public class Ejecucion extends Util {
         new File(DB4OFILENAME).delete();
 
         //Creamos una nueva configuración, en la que hacemos que los DELETE y UPDATE sean en cascada
-        EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+        com.db4o.config.EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
         config.common().objectClass(Cliente.class).cascadeOnUpdate(true);
         config.common().objectClass(Cliente.class).cascadeOnDelete(true);
         config.common().objectClass(Cuenta.class).cascadeOnUpdate(true);
@@ -152,7 +152,7 @@ public class Ejecucion extends Util {
             //Obtenemos las cuentas de determinados clientes
             retreiveCuentasFromClient(db, "Hayk");
             retreiveCuentasFromClient(db, "Pedro");
-            
+
             // Obtenemos los clientes que poseen una cuenta cuyo número de cuenta es el
             // indicado
             retreiveTransaccionFromCuenta(db, 1287376372, true);
@@ -179,7 +179,7 @@ public class Ejecucion extends Util {
 
     /**
      * Inserta en la base de datos el cliente indicado
-     * 
+     *
      * @param db     Objeto que representa la Base de Datos
      * @param client Cliente a insertar en la base
      */
@@ -190,7 +190,7 @@ public class Ejecucion extends Util {
 
     /**
      * Inserta en la base de datos la cuenta indicada
-     * 
+     *
      * @param db     Objeto que representa la Base de Datos
      * @param cuenta Cuenta a insertar en la base de datos
      */
@@ -201,7 +201,7 @@ public class Ejecucion extends Util {
 
     /**
      * Inserta en la base de datos la sucursal indicada
-     * 
+     *
      * @param db  Objeto que representa la Base de Datos
      * @param suc Sucursal a insertar en la base de datos
      */
@@ -212,7 +212,7 @@ public class Ejecucion extends Util {
 
     /**
      * Inserta en la base de datos la Transacción indicada
-     * 
+     *
      * @param db    Objeto que representa la Base de Datos
      * @param trans Transacción a insertar en la base de datos
      */
@@ -225,11 +225,11 @@ public class Ejecucion extends Util {
      * Modifica el cliente almacenado en la base de datos equivalente a "cliente"
      * añadiendo "cuenta" a la lista de cuentas del mismo. Inserta el objeto
      * modificado en la base
-     * 
+     *
      * @param db      Objeto que representa la Base de Datos
      * @param cliente Cliente a modificar
      * @param cuenta  Cuenta a añadir en la lista de cuentas del cliente
-     * 
+     *
      */
     public static void updateClient_cuenta(ObjectContainer db, Cliente cliente, Cuenta cuenta) {
         Cliente base = new Cliente(cliente);
@@ -280,7 +280,7 @@ public class Ejecucion extends Util {
         listResult(result);
     }
     /**
-     * 
+     *
      * @param db Objeto que representa la base de datos
      * @param num_cuenta Número de cuenta
      * @param verbose Si True, muestra por pantalla el resultado de la consulta
@@ -289,9 +289,9 @@ public class Ejecucion extends Util {
     public static List retreiveTransaccionFromCuenta(ObjectContainer db, int num_cuenta, Boolean verbose){
        List<Transacciones> resultados = db.query(new com.db4o.query.Predicate<Transacciones>(){
            public boolean match(Transacciones tran){
-               return (tran.getNum_cuenta_realizante().getNum_cuenta() == num_cuenta || 
+               return (tran.getNum_cuenta_realizante().getNum_cuenta() == num_cuenta ||
                        ((Transferencia)tran).getNum_cuenta_beneficiario().getNum_cuenta() == num_cuenta);
-               
+
            }
        });
        if (verbose){
@@ -309,14 +309,14 @@ public class Ejecucion extends Util {
                     return ((Cliente)c).getNombre() == name;
                 }
                 return false;
-            }    
+            }
         });
         System.out.println("Mostrando las cuentas del cliente " + name + "...");
         listResult(resultados);
     }
     /**
      * Muestra todas las sucursales en las que ha operado la cuenta indicada
-     * 
+     *
      * @param db Objeto que representa la Base de Datos
      * @param num_cuenta Número de la cuenta
      */
@@ -334,32 +334,32 @@ public class Ejecucion extends Util {
      * public static void storeSecondPilot(ObjectContainer db) { Pilot pilot2 = new
      * Pilot("Rubens Barrichello", 99); db.store(pilot2);
      * System.out.println("Stored " + pilot2); }
-     * 
+     *
      * public static void retrieveAllPilotQBE(ObjectContainer db) { Pilot proto =
      * new Pilot(null, 0); ObjectSet result = db.queryByExample(proto);
      * listResult(result); }
-     * 
+     *
      * public static void retrieveAllPilots(ObjectContainer db) { ObjectSet result =
      * db.queryByExample(Pilot.class); listResult(result); }
-     * 
+     *
      * public static void retrievePilotByName(ObjectContainer db) { Pilot proto =
      * new Pilot("Michael Schumacher", 0); ObjectSet result =
      * db.queryByExample(proto); listResult(result); }
-     * 
+     *
      * public static void retrievePilotByExactPoints(ObjectContainer db) { Pilot
      * proto = new Pilot(null, 100); ObjectSet result = db.queryByExample(proto);
      * listResult(result); }
-     * 
+     *
      * public static void updatePilot(ObjectContainer db) { ObjectSet result =
      * db.queryByExample(new Pilot("Michael Schumacher", 0)); Pilot found = (Pilot)
      * result.next(); found.addPoints(11); db.store(found);
      * System.out.println("Added 11 points for " + found); retrieveAllPilots(db); }
-     * 
+     *
      * public static void deleteFirstPilotByName(ObjectContainer db) { ObjectSet
      * result = db.queryByExample(new Pilot("Michael Schumacher", 0)); Pilot found =
      * (Pilot) result.next(); db.delete(found); System.out.println("Deleted " +
      * found); retrieveAllPilots(db); }
-     * 
+     *
      * public static void deleteSecondPilotByName(ObjectContainer db) { ObjectSet
      * result = db.queryByExample(new Pilot("Rubens Barrichello", 0)); Pilot found =
      * (Pilot) result.next(); db.delete(found); System.out.println("Deleted " +
