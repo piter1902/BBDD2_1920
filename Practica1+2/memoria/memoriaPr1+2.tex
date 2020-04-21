@@ -227,13 +227,8 @@ Tras la creación de los tipos, procedemos a crear las tablas de los mismos. Ora
 \subsubsection{PostgreSQL}
 
 Para la implementación del modelo \emph{OR} utilizando \emph{PostgreSQL} se ha maximizado el uso de la herencia de tablas como mecanismo de relación entre las distintas entidades planteadas en el diagrama \emph{ER} (Figura \ref{FIG:diagramaER}).\\
-Para la traducción de las relaciones \emph{M:N} se han creado entidades específicas \textbf{ya que este \emph{SGBD} no permite la creación de \emph{arrays} sin especificar su tamaño máximo.}\\
-
-\begin{Large}
-	Preguntarse el porque lo hemos traducido tal y como lo hemos traducido.\\
-	
-	Hablar de las limitaciones de PostgreSQL?
-\end{Large}
+Para la traducción de las relaciones \emph{M:N} se han creado entidades específicas ya que, a pesar de que si se han utilizado referencias, en este gestor la propiedad del modelo OR que se ha buscado explotar es la herencia. Otros gestores como Oracle no la poseen y en el diseño referente a este gestor ya se han explotado otras características como son los tipos, tablas tipadas o arrays, por tanto no se considera primordial explotarlas también en PostgreSQL y centrar esfuerzos en observar todo lo que ofrece la herencia.\\
+Se han observado ciertas limitaciones a la hora de la realización de pruebas, mediante inserciones y consultas que se explican en el propio documento de pruebas a través de comentarios.\\
 \\
 
 \subsubsection{DB2}
