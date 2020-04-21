@@ -78,9 +78,17 @@ insert into Transaccion values (3, 00009418575377349236, obtenerRefCuenta(000094
 -- insert Transferencia
 insert into Transaccion values (transferenciaUdt(4, 00009418575377349236, obtenerRefCuenta(00009418575377349236), TO_DATE('28/01/2020', 'DD/MM/YYYY'), '12:12', 1000, 'Descripcion necesaria', 3, obtenerRefSucursal(3), obtenerRefCuenta(68635266387780010337), 68635266387780010337));
 insert into Transaccion values (transferenciaUdt(5, 65638313471099711491, obtenerRefCuenta(65638313471099711491), TO_DATE('31/01/2020', 'DD/MM/YYYY'), '12:12', 10000, 'Descripcion necesaria', 3, obtenerRefSucursal(3), obtenerRefCuenta(68635266387780010337), 68635266387780010337));
--- select p.num_cuenta_realizante, treat(value(p) as transferenciaUdt).destinatario, p.importe from transaccion p where value(p) is of (transferenciaUdt);
 
 -- insert Operacion
 insert into Transaccion values (operacionUdt(6, 68635266387780010337, obtenerRefCuenta(68635266387780010337), TO_DATE('19/02/2020', 'DD/MM/YYYY'), '00:25', 10, 'Descripcion necesaria', 3, obtenerRefSucursal(3), 'ingreso'));
 insert into Transaccion values (operacionUdt(7, 00009418575377349236, obtenerRefCuenta(00009418575377349236), TO_DATE('15/03/2020', 'DD/MM/YYYY'), '20:55', 55, 'Descripcion necesaria', 3, obtenerRefSucursal(3), 'retirada'));
--- select p.num_cuenta_realizante, treat(value(p) as operacionUdt).tipo, p.importe from transaccion p where value(p) is of (operacionUdt);
+
+
+-- Borramos las funciones creadas
+drop function obtenerRefCuenta;
+drop function obtenerRefSucursal;
+drop function obtenerRefCliente;
+
+-- Consultas
+select p.num_cuenta_realizante, treat(value(p) as operacionUdt).tipo, p.importe from transaccion p where value(p) is of (operacionUdt);
+select p.num_cuenta_realizante, treat(value(p) as transferenciaUdt).destinatario, p.importe from transaccion p where value(p) is of (transferenciaUdt);
