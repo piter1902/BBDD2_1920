@@ -28,9 +28,9 @@ ALTER TYPE Transaccion_t drop ATTRIBUTE Sucursal;
 
 DROP TYPE Transaccion_t;
 
-ALTER TYPE Poseer_t drop ATTRIBUTE DNI;
+ALTER TYPE Poseer_t drop ATTRIBUTE Cliente;
 
-ALTER TYPE Poseer_t drop ATTRIBUTE Num_cuenta;
+ALTER TYPE Poseer_t drop ATTRIBUTE Cuenta;
 
 DROP TYPE Poseer_t;
 

@@ -1,131 +1,161 @@
--- ************************************** "Cuenta_ahorro"
+-- Enlaces de interés:
+-- https://www.ibm.com/support/knowledgecenter/SSEPGG_11.5.0/com.ibm.db2.luw.admin.structypes.doc/doc/t0006634.html
 
-CREATE TABLE Cuenta_ahorro
+-- Creation of types
+-- Los Oids se generan a mano. Para poder generarlos automáticamente, usar GENERATE_UNIQUE()
+
+CREATE TYPE Cliente_t AS
 (
-    Num_cuenta          int CONSTRAINT PK_Cuenta NOT NULL PRIMARY KEY,
-    IBAN                varchar(40) NOT NULL,
-    Fecha_creacion      date NOT NULL,
-    Saldo               int NOT NULL,
-    Interes             int NOT NULL
+    DNI       varchar(10),
+    Nombre    varchar(50),
+    Apellido  varchar(50),
+    Edad      int,
+    Direccion varchar(100),
+    Telefono  int,
+    Email     varchar(50)
+)MODE DB2SQL;
+
+CREATE TYPE Cuenta_t AS
+(
+    Num_cuenta     varchar(40),
+    IBAN           varchar(40),
+    Fecha_creacion date       ,
+    Saldo          int        
+)MODE DB2SQL;
+
+CREATE TYPE Cuenta_ahorro_t UNDER Cuenta_t AS
+(
+    Interes        int   
+)MODE DB2SQL;
+
+CREATE TYPE Sucursal_t AS
+(
+    Codigo    varchar(50),
+    Direccion varchar(100),
+    Telefono  int
+)MODE DB2SQL;
+
+CREATE TYPE Cuenta_corriente_t UNDER Cuenta_t AS
+(
+    Sucursal    REF(Sucursal_t)
+)MODE DB2SQL;
+
+-- Bridge type between Cuenta & Cliente
+CREATE TYPE Poseer_t AS
+(
+    Cliente            REF(Cliente_t),
+    Cuenta     REF(Cuenta_t)
+)MODE DB2SQL;
+
+
+CREATE TYPE Transaccion_t AS
+(
+    Num_transaccion       int,
+    Num_cuenta_realizante REF (Cuenta_t),
+    Fecha                 date,
+    Hora                  varchar(10),
+    Importe               int,
+    Descripcion           varchar(280),
+    Codigo                varchar(50),
+    Sucursal              REF (Sucursal_t)
+)MODE DB2SQL;
+
+CREATE TYPE Transferencia_t UNDER Transaccion_t AS
+(
+    Num_cuenta_beneficiario     REF (Cuenta_t )
+)MODE DB2SQL;
+
+CREATE TYPE Operacion_t UNDER Transaccion_t AS
+(
+    Tipo                VARCHAR(10)
+)MODE DB2SQL;
+
+-- Creation of tables
+
+CREATE TABLE Cliente OF Cliente_t
+(
+    REF         IS Oid USER GENERATED,
+    DNI         WITH OPTIONS NOT NULL,
+    Nombre      WITH OPTIONS NOT NULL,
+    Apellido    WITH OPTIONS NOT NULL,
+    Edad        WITH OPTIONS NOT NULL,
+    Direccion   WITH OPTIONS NOT NULL,
+    Telefono    WITH OPTIONS NOT NULL,
+    CONSTRAINT PK_cliente PRIMARY KEY ( DNI )
 );
 
--- ************************************** "Cliente"
-
-CREATE TABLE Cliente
+CREATE TABLE Cuenta OF Cuenta_t
 (
-    DNI       varchar(10) CONSTRAINT PK_Cliente NOT NULL PRIMARY KEY,
-    Nombre    varchar(50) NOT NULL,
-    Apellido  varchar(50) NOT NULL,
-    Edad      int NOT NULL,
-    Direccion varchar(100) NOT NULL,
-    Telefono  int NOT NULL,
-    Email     varchar(50) NULL
+    REF IS Oid USER GENERATED,
+    Num_cuenta     WITH OPTIONS NOT NULL,
+    IBAN           WITH OPTIONS NOT NULL,
+    Fecha_creacion WITH OPTIONS NOT NULL,
+    Saldo          WITH OPTIONS NOT NULL,
+    CONSTRAINT PK_cuenta PRIMARY KEY ( Num_cuenta )
 );
 
--- ************************************** "Cuenta_corriente"
+CREATE TABLE Cuenta_ahorro OF Cuenta_ahorro_t UNDER Cuenta
+    INHERIT SELECT PRIVILEGES
+    (
+        Interes WITH OPTIONS NOT NULL
+    );
 
-CREATE TABLE Cuenta_corriente
+CREATE TABLE Sucursal OF Sucursal_t
 (
-    Num_cuenta     int CONSTRAINT PK_Cuenta NOT NULL PRIMARY KEY,
-    IBAN           varchar(40) NOT NULL,
-    Fecha_creacion date NOT NULL,
-    Saldo          int NOT NULL
+    REF IS Oid USER GENERATED,
+    Codigo    WITH OPTIONS NOT NULL,
+    Direccion WITH OPTIONS NOT NULL,
+    -- Telefono  int
+    CONSTRAINT PK_sucursal  PRIMARY KEY (Codigo)
 );
 
--- ************************************** "Sucursal"
-
-CREATE TABLE Sucursal
+CREATE TABLE Cuenta_corriente OF Cuenta_corriente_t UNDER Cuenta
+    INHERIT SELECT PRIVILEGES
+    (
+        Sucursal WITH OPTIONS SCOPE Sucursal
+    );
+    
+CREATE TABLE Poseer OF Poseer_t
 (
-    Codigo    varchar(50) CONSTRAINT PK_Sucursal NOT NULL PRIMARY KEY,
-    Direccion varchar(100) NOT NULL,
-    Telefono  int NOT NULL
+    REF IS Oid USER GENERATED,
+    Cliente            WITH OPTIONS SCOPE Cliente,
+    Cliente            WITH OPTIONS NOT NULL,    
+    Cuenta             WITH OPTIONS SCOPE Cuenta,
+    Cuenta             WITH OPTIONS NOT NULL,
+
+    -- Constraint necesarios para integridad referencial
+    CONSTRAINT  PK_Poseer PRIMARY KEY ( Cliente, Cuenta )
+    -- CONSTRAINT  FK_cliente FOREIGN KEY (DNI) REFERENCES Cliente,
+    -- CONSTRAINT  FK_cuenta FOREIGN KEY (Num_cuenta) REFERENCES Cuenta
 );
 
--- ************************************** "Operacion"
-
-CREATE TABLE Operacion
+CREATE TABLE Transaccion OF Transaccion_t
 (
-    Num_transaccion         int NOT NULL,
-    Num_cuenta_realizante   int NOT NULL,
-    Num_cuenta_beneficiario int NOT NULL,
-    Fecha                   date NOT NULL,
-    Hora                    varchar(10) NOT NULL,
-    Importe                 int NOT NULL,
-    Descripcion             varchar(280) NULL,
-    Codigo                  varchar(50) NOT NULL,
-    CONSTRAINT PK_Transaccion PRIMARY KEY (Num_transaccion, Num_cuenta_realizante, Num_cuenta_beneficiario ),
-    CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
-    CONSTRAINT FK_83 FOREIGN KEY ( Num_cuenta_beneficiario ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
-    CONSTRAINT FK_95 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
+    REF IS Oid USER GENERATED,
+    Num_transaccion       WITH OPTIONS NOT NULL,
+    Num_cuenta_realizante WITH OPTIONS SCOPE Cuenta,
+    -- Num_cuenta_realizante WITH OPTIONS NOT NULL,
+    Fecha                 WITH OPTIONS NOT NULL,
+    Hora                  WITH OPTIONS NOT NULL,
+    Importe               WITH OPTIONS NOT NULL,
+    Descripcion           WITH OPTIONS NOT NULL,
+    Codigo                WITH OPTIONS NOT NULL,
+    Sucursal              WITH OPTIONS SCOPE Sucursal,
+    -- Sucursal              WITH OPTIONS NOT NULL,
+    CONSTRAINT  PK_transaccion PRIMARY KEY (Num_transaccion)
+    -- CONSTRAINT  FK_cuenta_realizante FOREIGN KEY (Num_cuenta_realizante) REFERENCES Cuenta,
+    -- CONSTRAINT FK_sucursal  FOREIGN KEY (Sucursal) REFERENCES Sucursal
 );
 
--- CREATE INDEX "fkIdx_76" ON "Operacion"
--- (
---  "Num_cuenta_realizante"
--- );
+CREATE TABLE Transferencia OF Transferencia_t UNDER Transaccion
+    INHERIT SELECT PRIVILEGES
+    (
+        Num_cuenta_beneficiario WITH OPTIONS SCOPE Cuenta
+        -- CONSTRAINT  FK_cuenta_beneficiario FOREIGN KEY (Num_cuenta_beneficiario) REFERENCES Cuenta
+    );
 
--- CREATE INDEX "fkIdx_83" ON "Operacion"
--- (
---  "Num_cuenta_beneficiario"
--- );
-
--- CREATE INDEX "fkIdx_95" ON "Operacion"
--- (
---  "Codigo"
--- );
-
--- Estos indices de momento no los creamos
--- ************************************** "Poseer"
-
-CREATE TABLE Poseer
-(
-    DNI        varchar(10) NOT NULL,
-    Num_cuenta int NOT NULL,
-    CONSTRAINT PK_Poseer PRIMARY KEY ( DNI, Num_cuenta ),
-    CONSTRAINT FK_37 FOREIGN KEY ( DNI ) REFERENCES Cliente ( DNI ),
-    CONSTRAINT FK_41 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
-    CONSTRAINT FK_47 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta_corriente ( Num_cuenta )
-);
-
--- CREATE INDEX "fkIdx_37" ON "Poseer"
--- (
---  "DNI"
--- );
-
--- CREATE INDEX "fkIdx_41" ON "Poseer"
--- (
---  "Num_cuenta"
--- );
-
--- CREATE INDEX "fkIdx_47" ON "Poseer"
--- (
---  "Num_cuenta"
--- );
-
-
--- ************************************** "Transaccion"
-
-CREATE TABLE Transaccion
-(
-    Num_transaccion       int NOT NULL,
-    Num_cuenta_realizante int NOT NULL,
-    Fecha                 date NOT NULL,
-    Hora                  varchar(10) NOT NULL,
-    Importe               int NOT NULL,
-    Descripcion           varchar(280) NULL,
-    Tipo                  varchar(10) NOT NULL,
-    Codigo                varchar(50) NOT NULL,
-    CONSTRAINT PK_Transaccion PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
-    CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) REFERENCES Cuenta_ahorro ( Num_cuenta ),
-    CONSTRAINT FK_92 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
-);
-
--- CREATE INDEX "fkIdx_76" ON "Transaccion"
--- (
---  "Num_cuenta_realizante"
--- );
-
--- CREATE INDEX "fkIdx_92" ON "Transaccion"
--- (
---  "Codigo"
--- );
+CREATE TABLE Operacion OF Operacion_t UNDER Transaccion
+    INHERIT SELECT PRIVILEGES
+    (
+        Tipo WITH OPTIONS NOT NULL
+    );
