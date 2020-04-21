@@ -48,7 +48,8 @@
 Los esfuerzos invertidos por cada integrante del equipo son:
 \begin{itemize}
 \item Hayk:
-\item Juan:
+\item Juanjo: Instalación db2 y Oracle en máquinas virtuales: 5 horas.\\
+			Scripts de creación de tablas y población de base en DB4o y DB2: 7 horas.
 \item Jesús:
 \item Pedro: 
 \end{itemize}
@@ -233,12 +234,9 @@ Se han observado ciertas limitaciones a la hora de la realización de pruebas, m
 
 \subsubsection{DB2}
 
-Para la implementación con \emph{DB2} se ha seguido un planteamiento muy similar al de \emph{Oracle}. Se han creado tipos (\emph{UDT}) para las distintas entidades del Diagrama Entidad-Relación (Figura \ref{FIG:diagramaER}). Tras la creación de los tipos de datos se han creado las tablas tipadas.\\
+Para la implementación con \emph{DB2} se ha seguido un planteamiento muy similar al de \emph{Oracle}. Se han creado tipos (\emph{UDT}) para las distintas entidades del Diagrama Entidad-Relación (Figura \ref{FIG:diagramaER}). Tras la creación de los tipos de datos se han creado las tablas tipadas. Para poder representar las relaciones \emph{N:M}, ha sido necesario crear tablas intermedias, que contienen una referencia a las tablas que participan en la relación.\\
 A diferencia de \emph{Oracle}, este \emph{SGBD} tiene la capacidad de permitir la herencia entre tablas. De esta forma se han creado tantas tablas como tipos se han definido anteriormente.\\
 Una diferencia con 
-\begin{Large}
-	(Comprobar si esto es así)
-\end{Large}
 el estándar \emph{SQL:1999} la cláusula \emph{SCOPE} no garantiza la integridad referencial entre las tablas, por lo tanto se deben utilizar restricciones de clave ajena (\emph{Foreign key}) para garantizarla\footnote{\url{https://www.ibm.com/support/knowledgecenter/SSEPGG_11.5.0/com.ibm.db2.luw.admin.structypes.doc/doc/c0006594.html}}.
 \\
 
