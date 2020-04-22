@@ -30,3 +30,6 @@ Un esquema de datos
 ---
 **¿CÓMO SON LAS TABLAS?**
 	- **SOLUCIÓN**: Consultar el _catálogo_ de la base de datos.
+
+### Pistas:
+- Updatable views
