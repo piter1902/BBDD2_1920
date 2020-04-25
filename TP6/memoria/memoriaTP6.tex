@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{eurosym}
+\usepackage[hidelinks]{hyperref}
 
 \title{Trabajo Práctico 6 - BASES DE DATOS 2}
 \author{
@@ -40,38 +41,68 @@
 Para la realización del trabajo se ha elegido el problema del \emph{Gobierno de Aragón}. El problema proporcionado en el enunciado dice lo siguiente:\\
 
 \emph{``El Gobierno de Aragón quiere gestionar información turística de la región para ofrecerla a través de un sitio web donde los usuarios podrán hacer comentarios y recomendaciones.''}
-\\
+\\\\
+Por lo tanto la expansión del enunciado es la siguiente:\\
 
-Sobre este enunciado podemos sacar los siguientes requisitos:
+Se pretende desarrollar una base de datos para almacenar la información turística de la región de Aragón. Se llevará acabo a través de un sitio web mediante la cual, los usuarios puedan consultar y realizar recomendaciones  de puntos turísticos, así como comentar otras. También, este sistema deberá permitir almacenar usuarios. Ya que  la página web permitirá realizar publicaciones, recomendaciones y comentarios se almacenarán en la base de datos.\\
+Se deberá garantizar el acceso concurrente a la base de datos debido a que múltiples usuarios pueden realizar publicaciones y comentarios de manera simultánea.
+Respecto a la garantía de la calidad del servicio primaremos la consistencia de los datos frente a la disponibilidad de la misma.\\
+En relación a la  estimación del trafico web, será de unos \textbf{10.000} usuarios a la semana, \textbf{15.000} en alta temporada.\\
+
+Por lo mencionado anteriormente, este sistema gestor deberá garantizar una buena interoperabilidad con los lenguajes de programación utilizados en este proyecto. \\
+
+Si fuese necesario se podría utilizar la infraestructura disponible en las ciudades de Huesca y Zaragoza.
+
+Por ello, en base a estos requisitos buscaremos un sistema gestor \textit{OLTP (Online Transaction Processing)} ya que un gestor OLAP está enfocado para en el análisis. Respecto al volumen de datos, el sistema no se prevee que almacene grandes volúmenes de datos, por lo tanto la escalabilidad no es un factor primordial.
+
+Según los datos del presupuesto de turismo proporcionados por el presupuesto de la comunidad de Aragón del año 2020 \textbf{insertar referencia aquí}, turismo cuenta con una cantidad de 13.100 \euro \ ( trece mil cien euros ).\\
+Con estas condiciones suponemos que vamos a contar con un presupuesto similar.\\
+
+Dado que el Gobierno de Aragón es una entidad pública se buscará el uso de un SGBD consolidado, y que ofrezca buen soporte en el tiempo. \\\\
+
+
+\textbf{IMPORTANTE}
 \begin{itemize}
-\item El sistema deberá almacenar los usuarios.
-\item El sistema permitirá almacenar comentarios.
-\item El sistema permitirá almacenar recomendaciones.
-\item Al ser un sistema online en el que los usuarios podrán publicar sus comentarios y recomendaciones sobre destinos turísticos de Aragón, será importante que el \emph{SGBD} elegido garantice el control de la concurrencia.
-\item El presupuesto será el menor posible para que el \emph{SGBD} garantice la calidad del servicio.
-\item El sistema deberá ser tolerante a fallos. Priorizaremos la consistencia.
-\item El tiempo de respuesta del sistema debe ser mínimo. \textbf{?}
-\item El \emph{SGBD} elegido deberá ser un \emph{OLTP(Online Transaction Processing)} ya que recibirá muchas operaciones de lectura y escritura por unidad de tiempo.
+\item SO soportado
+\item Soporte y popularidad del producto
+\item Adecuación al dominio requerido (a que está orientado y eso)
+\item Presupuesto, Costes, Licencias... 
+\item Escalabilidad 
+\item Soporte para concurrencia
+\item CAP
+\item Experiencia previa del usuario  \textbf{para la conclusión}
+\item Disponibilidad de herramientas para soporte (consultas, admin, copias..)
+\item Calidad del soporte ante fallos y problemas
+\item Casos similares de nuestro ámbito 
+\item Gestores ya en uso \textbf{para la conclusión}
+\item Opiniones de otros usuarios \textbf{\url{https://www.trustradius.com/} pagina para mirar opiniones}
+\item Mismo vendedor aka reducción de costes \textbf{para conclusión}
 \end{itemize}
 
-Dado que \emph{Juan José} es un asco moriremos.\\
 
-
-
-===========\\
-
-Se pretende desarrollar una base de datos para almacenar la información turística de la región de Aragón. Se llevará acabo a través de un sitio web mediante la cual, los usuarios puedan consultar y realizar recomendaciones  de puntos turísticos, así como comentar otras.\\
-Este sistema deberá permitir almacenar usuarios, de los cuales se necesitará nombre y apellidos, correo electrónico, un teléfono de contacto y su municipio de residencia. La página web permitirá realizar publicaciones, recomendaciones y comentarios, por ello este sistema gestor deberá dar soporte a estas funcionalidades. \\
-Se deberá garantizar el acceso concurrente a la base de datos debido a que múltiples usuarios pueden realizar publicaciones y comentarios de manera simultanea.
-Respecto a la garantía de la calidad del servicio primaremos la consistencia de los datos frente a la disponibilidad de la misma.\\
-
-Si fuese necesario se podría utilizar la infraestructura disponible en las ciudades de Huesca y Zaragoza. En cuanto a la  estimación del trafico web será de unos 10.000 usuarios a la semana, 15.000 en alta temporada.\\
-
-Por lo tanto, en base a estos requisitos buscaremos un sistema gestor \textit{OLTP (Online Transaction Processing)} ya que recibirá muchas peticiones de lectura y escritura por unidad de tiempo. Respecto al volumen de datos, el sistema no se prevee que almacene grandes volúmenes de datos, por lo tanto la escalabilidad no es un factor primordial.
-
-Según los datos del presupuesto de turismo proporcionados por el presupuesto de la comunidad de Aragón del año 2020, turismo cuenta con una cantidad de 13.100 \euro \ ( trece mil cien euros ).\\
- Con estas condiciones suponemos que vamos a contar con un presupuesto similar.
-
+\section{SGBD}
+\subsection{Oracle}
+\textbf{pedro}
+\subsection{MySQL}
+\textbf{hayk}
+\subsection{PostgreSQL}
+\textbf{chus}
+\subsection{DB2}
+\textbf{tambo}
+\subsection{Microsoft SQL Server}
+\textbf{pedro}
+\subsection{Microsoft Access}
+\textbf{chus}
+\subsection{Caché}
+\textbf{hayk}
+\subsection{VoltDB}
+\textbf{chus}
+\subsection{Cassandra}
+\textbf{pedro}
+\subsection{MongoDB}
+\textbf{tambo}
+\subsection{HBase}
+\textbf{hayk}
 \end{document}
 
 
