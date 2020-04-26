@@ -1,0 +1,66 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[hidelinks]{hyperref} 
+\usepackage{eurosym}
+
+\begin{document}
+
+\begin{titlepage}
+\title{
+\begin{Huge}
+\textbf{Análisis de Oracle, Cassandra y SQL Server}
+\end{Huge}
+}
+\author{Pedro Tamargo}
+\date{\today}
+\maketitle
+\tableofcontents
+
+\end{titlepage}
+
+
+\newpage
+
+\section{Oracle}
+
+\emph{Oracle} es un sistema gestor de bases de datos multimodelo (soporta modelo relacional y modelo objeto relacional), perteneciente a la compañía \emph{Oracle Corporation} \cite{WIKI:1} . En 1977 fue fundada la compañía \emph{SDL (Software Development Laboratories)}, este \emph{SGBD} proviene de un proyecto financiado por la \emph{CIA} para diseñar un sistema especial de bases de datos con código clave \emph{``Oracle''} \cite{WIKI:2}. Los fundadores de \emph{SDL} habían leido un artículo en la revista \emph{IBM research} donde se describía una versión preliminar de \emph{SQL} basado en el artículo de \emph{E. F. Codd\footnote{\url{https://es.wikipedia.org/wiki/Edgar_Frank_Codd}}}, donde propone el \emph{modelo relacional}. En 1984, \emph{SDL} adopta el nombre de \emph{Oracle Corporation}.\\
+
+En su versión 19, la instalación de este \emph{SGBD} se puede realizar \emph{on-premise} (en los servidores de la empresa) o en el \emph{cloud} de \emph{Oracle}. Si elegimos la opción \emph{on-premise}, los sistemas operativos en los que es posible instalar este \emph{SGBD} son: \emph{Windows}, \emph{Linux} y \emph{Solaris} \cite{ORA:1}.\\
+
+\emph{Oracle} es una de las bases de datos líderes del mercado en bases de datos operacionales \cite{GART:1}. Cuenta con mucha documentación disponible desde su página web\footnote{\url{https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/index.html}} y además cuenta con una comunidad muy activa en la resolución de incidencias y dudas en páginas como \emph{StackOverflow} \cite{STO:1}.\\
+
+El dominio de aplicación de este \emph{SGBD} se encuentra desde el desarrollo de aplicaciones hasta servicios de almacenes de datos \cite{ORA:2}. 
+\textbf{{\LARGE Algo sobre el ámbito principal? No sé cual es y nadie dice nada.}}\\
+
+El sistema de licenciamiento de este \emph{SGBD} depende del número de usuarios y el número de procesadores que tenga el servidor donde se ha de instalar. Para cada \emph{``Processor License''} se aplica el \emph{``Core factor''}\footnote{\url{http://www.oracle.com/us/corporate/contracts/processor-core-factor-table-070634.pdf}} y ese es el número de \emph{``Processor Licenses''} necesarios. Para el cálculo de \emph{``Named User Licenses''} se aplicará el máximo entre:
+
+\begin{itemize}
+\item $ProcessorLicenses * CoreFactor * NumUserMinimun$
+\item $NumUsuarios + NumDispositvos$
+\end{itemize}
+
+Donde, $NumUserMinimun$ se corresponde con el número de usuarios mínimos por cada \emph{``Processor License''} \cite{ORA:3}. Los precios de \emph{``Processor License''} y \emph{``Named User Licenses''} en la versión \emph{Enterprise Edition} se corresponden con: 47500\$ y 950\$ \cite{ORA:4}. El resto de funcionalidades no añadidas, como las de almacenes de datos, se adquieren por separado. \\
+
+En el tema de escalabilidad, \emph{Oracle} cuenta con \emph{RAC (Real Application Cluster)}, una tecnología que permite escalar una base de datos a un cluster de servidores ejecutando multiples instancias sobre una misma base de datos de manera transparente al usuario, aprovechando los recursos del clúster. \cite{ORA:5} \\
+
+El control de la concurrencia en este \emph{SGBD} se realiza mediante los mecanismos de bloqueo del mismo para garantizar la consistencia de los datos entre transacciones. \emph{Oracle} se encarga de gestionar los mecanismos de bloqueo automáticamente, de tal forma que no es necesario que el usuario escriba el bloqueo de forma explícita.\cite{ORA:6}
+Los mecanismos de bloqueo utilizados por este \emph{SGBD} se dividen en dos grupos, bloqueos exclusivos y bloqueos compartidos. \cite{ORA:7} \\
+
+Para el desarrollo con este \emph{SGBD} se puede utilizar el driver \emph{ODBC} (o \emph{JDBC} si se usa \emph{Java}) desde la propia página de la compañía. \\
+El uso de herramientas de soporte complementarias como puede ser \emph{DBeaver\footnote{\url{https://dbeaver.io/}}} y otras opciones de apoyo al desarrollo es posible configurando (si fuera necesario) el driver de conexión a la base de datos. \\
+Las copias de seguridad se pueden realizar utilizando la herramienta \emph{RMAN}. Esta herramienta es específica para las bases de datos \emph{Oracle} y permite realizar copias de seguridad sobre las bases de datos y realizar una vuelta a una versión estable si disponemos de una copia de seguridad \cite{ORA:8}. \\
+
+El soporte técnico de este \emph{SGBD} se adquiere por separado, y se relaciona con cada uno de los productos adquiridos. \cite{ORA:4} \textbf{{\LARGE COMPROBAR ESTO}}
+
+\newpage
+
+\bibliography{bibliografia}
+\bibliographystyle{ieeetr}  % Cambiar por abbrv si da problemas
+
+
+\end{document}
