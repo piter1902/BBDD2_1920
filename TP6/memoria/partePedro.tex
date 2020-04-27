@@ -18,11 +18,17 @@
 }
 \author{Pedro Tamargo}
 \date{\today}
-\maketitle
+
+
+\clearpage\maketitle
+\thispagestyle{empty}
 \tableofcontents
 
-\end{titlepage}
+\addcontentsline{toc}{section}{Agradecimientos}
+\section*{Agradecimientos}
+Muchas gracias a \textbf{\textit{Juan José Tambo Tambo}}. Tus padres no son primos pero eres \textbf{{\Large MUY}} tonto.
 
+\end{titlepage}
 
 \newpage
 
@@ -67,9 +73,9 @@ El soporte técnico de este \emph{SGBD} se adquiere por separado, y se relaciona
 
 Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{Cassandra} se graduó como un proyecto de \emph{Apache Incubator} en 2010, y desde entonces ha liberado 11 versiones. Sigue manteniendo de forma activa 3 de ellas. \cite{AP:5} \\
 
-El dominio de aplicación de \emph{Cassandra} se corresponde con el de entornos distribuidos donde se puede sacrificar la \emph{consistencia} de los datos frente a la disponibilidad y a la tolerancia a particiones de red (Teorema CAP). Se centra en la disponibilidad y la escalabilidad lineal, es decir, se mejora el rendimiento en relación al número de nodos que se encuentran en la red \cite{WIKI:5}. Esta orientado a entornos donde no existe un nodo maestro, es decir, entornos totalmente distribuidos donde los nodos se comunican por una red \emph{P2P}.\\
+El dominio de aplicación de \emph{Cassandra} se corresponde con el análisis de datos en entornos distribuidos donde se puede sacrificar la \emph{consistencia} de los datos frente a la disponibilidad y a la tolerancia a particiones de red (Teorema CAP). Se centra en la disponibilidad y la escalabilidad lineal, es decir, se mejora el rendimiento en relación al número de nodos que se encuentran en la red \cite{WIKI:5}. Esta orientado a entornos donde no existe un nodo maestro, es decir, entornos totalmente distribuidos donde los nodos se comunican por una red \emph{P2P}.\\
 
-Este software se distribuye bajo una licencia \emph{Apache 2}, es una licencia open-source que implica que se puede utilizar par cualquier propósito de forma gratuita. La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas. \cite{WIKI:6}\\
+Este software se distribuye bajo una licencia \emph{Apache 2}, es una licencia open-source que implica que se puede utilizar para cualquier propósito de forma gratuita. La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas. \cite{WIKI:6}\\
 
 A diferencia de los gestores de bases de datos relacionales, \emph{Cassandra} no sigue las propiedades de transacciones \emph{ACID}, pero en su lugar ofrece transacciones \emph{atómicas}, \emph{aisladas} y transacciones \emph{persistentes} con \emph{consistencia eventual} o modificable, es decir, el usuario puede decidir el nivel de exigencia que quiere fijar sobre la consistencia de una transacción. \cite{DS:1} \\
 
@@ -79,10 +85,25 @@ Para la administración de los nodos de un clúster, \emph{Cassandra} provee la 
 
 El soporte técnico de este sistema no lo realiza \emph{Apache}, si no que recae sobre empresas de terceros. Por ejemplo, \emph{DataStax\footnote{\url{https://www.datastax.com/}}} ofrece servicios profesionales, servicio técnico y despliegues de este \emph{SGBD}. \cite{APW:1}\\
 
+\section{Apache HBase}
+
+\emph{HBase} es sistema gestor de bases de datos \emph{NoSQL}, con almacenamiento basado en columnas. Fue desarrollado por \emph{Powerset\footnote{\emph{Powerset} es una compañía norteamericana que desarrolló un motor de búsqueda con lenguaje natural.\cite{WIKI:7}}} para procesar grandes cantidades de datos para realizar las búsquedas con lenguaje natural. Actualmente es un proyecto de alto nivel de \emph{Apache Software Foundation}. \cite{WIKI:8}\\
+\emph{Apache HBase} provee la capa superior del sistema de ficheros de \emph{Apache Hadoop\footnote{\emph{Apache Hadoop} es un framework de software que permite a las aplicaciones trabajar con miles de nodos y petabytes de datos.\cite{WIKI:9}}}, está inspirado en \emph{Google BigTable\footnote{\emph{BigTable} es un sistema gestor de bases de datos creado por \emph{Google} con las características de ser distribuido, de alta eficiencia y con licencia privativa.\cite{WIKI:10}}} y el sistema de ficheros de \emph{Google}.\\
+
+Al estar programado con \emph{Java}, \emph{Apache HBase} es una solución multiplataforma, aunque desde la documentación del \emph{SGBD} no recomiendan utilizar \emph{Windows} en entornos de producción. Uno de los prerequisitos para utilizar este sistema es tener \emph{JDK} instalado (recomiendan \emph{JDK8}). \cite{AP:6}\\
+
+\emph{Apache HBase} es un \emph{SGBD} orientado al procesamiento de grandes cantidades de datos, es decir, está orientado al análisis de datos (\emph{OLAP}).\\
+
+Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{HBase} es un proyecto de alto nivel de \emph{Apache}. Su última versión estable se liberó en abril de 2006. \cite{WIKI:8} \\
+
+\emph{HBase} se distribuye bajo una licencia \emph{Apache 2}, que, como se ha explicado anteriormente, permite la utilización del software para cualquier propósito de forma gratuita. \textbf{\textit{La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas.}} \textbf{{\Large Esto se puede quitar si eso}.} \cite{WIKI:6}\\
+
+Utilización de esto con herramientas JDBC $->$  Mirar Apache Phoenix y la wiki de Apache HBase.\\
+
 
 \newpage
 
-
+\addcontentsline{toc}{section}{Referencias}
 \bibliography{bibliografia}
 \bibliographystyle{ieeetr}  % Cambiar por abbrv si da problemas
 
