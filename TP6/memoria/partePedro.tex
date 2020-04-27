@@ -55,28 +55,30 @@ Para el desarrollo con este \emph{SGBD} se puede utilizar el driver \emph{ODBC} 
 El uso de herramientas de soporte complementarias como puede ser \emph{DBeaver\footnote{\url{https://dbeaver.io/}}} y otras opciones de apoyo al desarrollo es posible configurando (si fuera necesario) el driver de conexión a la base de datos. \\
 Las copias de seguridad se pueden realizar utilizando la herramienta \emph{RMAN}. Esta herramienta es específica para las bases de datos \emph{Oracle} y permite realizar copias de seguridad sobre las bases de datos y realizar una vuelta a una versión estable si disponemos de una copia de seguridad \cite{ORA:8}. \\
 
-El soporte técnico de este \emph{SGBD} se adquiere por separado, y se relaciona con cada uno de los productos adquiridos. \cite{ORA:4} \textbf{{\LARGE COMPROBAR ESTO}}
+El soporte técnico de este \emph{SGBD} se adquiere por separado, y se relaciona con cada uno de los productos adquiridos. \cite{ORA:4} \textbf{{\LARGE COMPROBAR ESTO}}\\
+
+\newpage 
 
 \section{Apache Cassandra}
 
-\emph{Cassandra} es un sistema gestor de bases de datos \emph{NoSQL (Not Only SQL)}, con almacenamiento basado en columnas. Fue creado desarrollado por \emph{Avinash Lakshman}, uno de los autores de \emph{Amazon's Dynamo\footnote}{\emph{Amazon's Dynamo} un conjunto de técnicas que juntas pueden formar un sistema de almacenamiento estructurado de alta disponibilidad o un depósito de datos distribuidos.\cite{WIKI:3}} por \emph{Facebook} como un proyecto para mejorar la búsqueda en la bandeja de entrada de la plataforma. En 2008, \emph{Facebook} liberó a \emph{Cassandra} como un proyecto open-source en \emph{Google Code}\footnote{\emph{Google Code} fue una plataforma que proveía control de versiones, seguimiento de incidencias para proyectos open-source. Actualmente se encuentra en modo se solo lectura desde Agosto de 2015. \cite{WIKI:4} }. En Marzo de 2009, \emph{Apache} acogió este proyecto, transformándolo en un proyecto de \emph{Apache Incubator} (proyecto en la que los proyectos open-source se pueden convertir en nuevos proyectos de alto nivel de la fundación \emph{Apache} \cite{AP:1}). En Febrero de 2010 se graduó como un proyecto de alto nivel. \cite{WIKI:5}\\
+\emph{Cassandra} es un sistema gestor de bases de datos \emph{NoSQL (Not Only SQL)}, con almacenamiento basado en columnas. Fue creado desarrollado por \emph{Avinash Lakshman}, uno de los autores de \emph{Amazon's Dynamo\footnote{\emph{Amazon's Dynamo} un conjunto de técnicas que juntas pueden formar un sistema de almacenamiento estructurado de alta disponibilidad o un depósito de datos distribuidos.\cite{WIKI:3}}} por \emph{Facebook} como un proyecto para mejorar la búsqueda en la bandeja de entrada de la plataforma. En 2008, \emph{Facebook} liberó a \emph{Cassandra} como un proyecto open-source en \emph{Google Code}\footnote{\emph{Google Code} fue una plataforma que proveía control de versiones, seguimiento de incidencias para proyectos open-source. Actualmente se encuentra en modo se solo lectura desde Agosto de 2015. \cite{WIKI:4}}. En Marzo de 2009, \emph{Apache} acogió este proyecto, transformándolo en un proyecto de \emph{Apache Incubator} (proyecto en la que los proyectos open-source se pueden convertir en nuevos proyectos de alto nivel de la fundación \emph{Apache} \cite{AP:1}). En Febrero de 2010 se graduó como un proyecto de alto nivel. \cite{WIKI:5}\\
 
 \emph{Cassandra}, al estar programado sobre \emph{Java}, es multiplataforma, es decir, se puede instalar sobre cualquier sistema operativo siempre que cuente con \emph{Java (recomiendan la última versión de Java 8)}. La opción más habitual es utilizar un servidor con SO \emph{Linux}. \cite{AP:2}\\
 
-Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{Cassandra} se graduó como un proyecto de \emph{Apache Incubator} en 2010, y desde entonces ha liberado 11 versiones. Sigue manteniendo de forma activa 3 de ellas.\\
+Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{Cassandra} se graduó como un proyecto de \emph{Apache Incubator} en 2010, y desde entonces ha liberado 11 versiones. Sigue manteniendo de forma activa 3 de ellas. \cite{AP:5} \\
 
 El dominio de aplicación de \emph{Cassandra} se corresponde con el de entornos distribuidos donde se puede sacrificar la \emph{consistencia} de los datos frente a la disponibilidad y a la tolerancia a particiones de red (Teorema CAP). Se centra en la disponibilidad y la escalabilidad lineal, es decir, se mejora el rendimiento en relación al número de nodos que se encuentran en la red \cite{WIKI:5}. Esta orientado a entornos donde no existe un nodo maestro, es decir, entornos totalmente distribuidos donde los nodos se comunican por una red \emph{P2P}.\\
 
 Este software se distribuye bajo una licencia \emph{Apache 2}, es una licencia open-source que implica que se puede utilizar par cualquier propósito de forma gratuita. La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas. \cite{WIKI:6}\\
 
-Hablo otra vez de la escalabilidad?
+A diferencia de los gestores de bases de datos relacionales, \emph{Cassandra} no sigue las propiedades de transacciones \emph{ACID}, pero en su lugar ofrece transacciones \emph{atómicas}, \emph{aisladas} y transacciones \emph{persistentes} con \emph{consistencia eventual} o modificable, es decir, el usuario puede decidir el nivel de exigencia que quiere fijar sobre la consistencia de una transacción. \cite{DS:1} \\
 
-Soporte para concurrencia en el enlace: \url{https://docs.datastax.com/en/cassandra-oss/2.1/cassandra/dml/dml_about_transactions_c.html}
-y la wiki de apache cassandra ->  característocas principales.
+La herramienta de realización de consultas es \emph{CQLSH}, una herramienta de línea de comandos para interactuar con \emph{Cassandra} utilizando \emph{CQL (Cassandra Query Language)} \cite{AP:3}, un lenguaje para la realización de consultas y manipulación de los datos muy similar a \emph{SQL}. \cite{WIKI:5} \\
+Existen drivers (\emph{ODBC} y \emph{JDBC (Java)}) con los cuales podemos realizar el acceso a la base de datos utilizando distintos lenguajes de programación, tales como: \emph{Java}, \emph{Python}, \emph{NodeJS (JavaScript)}, \emph{Dart}, \emph{C++}... \cite{AP:4} \\
+Para la administración de los nodos de un clúster, \emph{Cassandra} provee la herramienta \emph{Nodetool}. Esta herramienta brinda la capacidad de realizar tareas de administración sobre los nodos (añadir un nodo a un clúster, modificar la configuración de un nodo...) tanto como las herramientas necesarias para realizar una monitorización sobre el mismo. \cite{WIKI:5} \\
 
-Herramientas de soporte consulta y tal... cqsl, Nodetool.. Mirar la wiki: \url{https://es.wikipedia.org/wiki/Apache_Cassandra#Administraci\%C3\%B3n_y_Monitoreo}
+El soporte técnico de este sistema no lo realiza \emph{Apache}, si no que recae sobre empresas de terceros. Por ejemplo, \emph{DataStax\footnote{\url{https://www.datastax.com/}}} ofrece servicios profesionales, servicio técnico y despliegues de este \emph{SGBD}. \cite{APW:1}\\
 
-Soporte. Supongo que utilizando Datastax si que tendraś.
 
 \newpage
 
