@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{eurosym}
+\usepackage[hidelinks]{hyperref}
+
+
+
+
+\begin{document}
+\section{MySQL}
+MySQL es un sistema gestor de bases de datos relaciones de código abierto. 
+Es un software gratuito y libre bajo los términos de GNU\footnote{General Public License}. MySQL también se encuentra bajo licencias cerradas como es la de Oracle, quien adquirió a Sun Microsystems, uno de los primero propietarios de MySQL. Tras esta adquisición surgió MariaDB otro RDBMS \footnote{Relational Database Manager System} que surgió debido a la privatización de MySQL.\\
+
+El MySQL es la base de datos de software libre más popular del mundo para distribuir de modo económico aplicaciones web o e-commerce, procesamiento de transacción online y base de datos integrada confiables.  Es una base de datos integrada, segura para transacción, de conformidad con las propiedades ACID, rollback, recuperación de fallas y traba al nivel de fila. MySQL proporciona facilidad de uso, posibilidad de dimensionamiento y alto desempeño, así como un paquete completo de drivers de base de datos y herramientas visuales para ayudarles a los desarrolladores y DBAs a crear y gestionar sus aplicaciones MySQL. 
+Entre las funcionalidades mas importantes cabe destacar: 
+\begin{itemize}
+\item  Capacidad de dimensionamiento para atender a las demandas de cargas de datos y usuarios en crecimiento exponencial.
+\item  Clusters de replicación con auto-recuperación para mejorar la escalabilidad, el desempeño y la disponibilidad.
+\item  Cambios en el esquema online para satisfacer exigencias de negocio que se cambian constantemente.
+\item Monitorización a nivel aplicación y consumo de recursos.
+\item  Acceso a SQL y NoSQL para realizar consultas y operaciones simples y rápidas de Valor de Clave.
+\item Tolerancia a la implementación en diferentes SO.
+\item  Interoperabilidad de Big Data usando MySQL como la fuente de datos operativa para Hadoop y Cassandra. \cite{guiaenterprise}
+\item Ofrece módulos PAM para autentificación y otros para encriptación.
+\end{itemize}
+
+\cite{10web}\\
+Cuando hablamos de escalabilidad mysql ofrece esta solución a través de diferentes métodos. Permite replicación sobre diferentes nodos para distribuir la carga de trabajo. Trata con IDs en las transacciones para facilitar la conmutación por error y la creación de topologías de replicación en anillo. Usa esclavos con multiprocesos para garantizar la disponibilidad, además que son cash-safe, es decir, permiten recuperarse ante fallos. Finalmente ofrece la herramienta de particionado MySql Fabric para distribuir los datos en diferentes servidores.\\
+Otro de los pilares fundamentales es la concurrencia. MySQL ofrece un mecanismo de hilos con un buen \textbf{\textit{throughput}}. Provee un hilo por conexión y este hilo no se reasigna hasta que la conexión no acaba, además este método es escalable. Con este mecanismo es suficiente para la mayoria de webs, sin embargo, si se va a tratar con mucho tráfico es recomendable usar la versión enterprise que es ofertada con un \textbf{\textit{Pool de Threads}}. Con esta última funcionalidad el gestor nos provee grupos de thread en función de la demanda, es útil una vez sobrepasamos las 256 conexiones simultaneas a la base de datos.
+El control de la concurrencia se realiza en dos niveles, primero a nivel servidor y segundo a nivel almacenamiento. Cuenta con bloqueos de lectura y escritura con gran transparencia. Destacar que tiene bloqueos a nivel de tablas y de filas, esta última ofrece la mayor concurrencia posible, sin embargo, es la menos eficiente. 
+
+
+MySQL está disponible en diferentes SO como son: Linux, Windows, Oracle Solaris,  macOS, FreeBSD entre muchas otras
+Además ofrece conectores para todos los lenguajes clave de desarrollo que incluyenPHP, Perl, Python, Java, C, C++, C\#, Ruby, Node.js y Go. Cabe destacar que si optamos por la opción de MySQL enterprise podemos acceder a una amplia gama de herramientas de Oracle. 
+En cuanto a comunidad cuenta con un buen apoyo. En StackOverflow, podemos ver que existen mas de medio millón de consultas respecto a MySQL y con una tasa de "no respuestas" menor del 10%.
+Podemos destacar que MySQL cuenta con el soporte de Oracle, ya que este gestor dedicado mas al ámbito de web es fundamental para Oracle para que pueda completar su catálogo. Solo con observar que la versión 5.0 fue un versión con bastantes criticas que evolucinó a la versión 5.5 con bastante popularidad, siendo esta la primera version bajo el liderazgo de Oracle.
+
+
+
+MySQL es usado por grandes empresas como 
+ \href{https://blog.twitter.com/engineering/en_us/a/2013/new-tweets-per-second-record-and-how.html}{Twitter }, 
+\href{https://www.theregister.co.uk/2013/06/27/facebook_tao/}{Facebook},
+ \href{http://highscalability.com/blog/2012/3/26/7-years-of-youtube-scalability-lessons-in-30-minutes.html}{YouTube},
+  PayPal, Yahoo, Linkedin, Ticketmaster...
+
+
+
+
+
+
+
+
+\textbf{podemos decir que a los user de oracle les da buen acoplameitno entre bases oracle-MySQL}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+\end{document}
