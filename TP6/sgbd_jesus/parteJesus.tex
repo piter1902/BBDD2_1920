@@ -1,0 +1,69 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[hidelinks]{hyperref} 
+\usepackage{eurosym}
+\usepackage{verbatim} % comentarios
+
+\begin{document}
+
+\begin{titlepage}
+\title{
+\begin{Huge}
+\textbf{Análisis de PostgreSQL, Microsoft Access y VoltDB}
+\end{Huge}
+}
+\author{Jesús Villacampa}
+\date{\today}
+
+
+\clearpage\maketitle
+\thispagestyle{empty}
+\tableofcontents
+
+
+\end{titlepage}
+
+\newpage
+
+\section{PostgreSQL}
+\emph{PostgreSQL}, también llamado \emph{Postgres}, es un sistema de gestión de bases de datos relacional orientado a objetos y de código abierto. Como muchos otros proyectos de código abierto, el desarrollo de \emph{PostgreSQL}  no es manejado por una empresa o persona, sino que es dirigido por una comunidad de desarrolladores que trabajan de forma desinteresada, altruista, libre o apoyados por organizaciones comerciales. Dicha comunidad es denominada \emph{PGDG \footnote{PostgreSQL Global Development Group}}. \cite{WIKI:1}\\
+
+\emph{PostgreSQL} está publicado bajo \emph{PostgreSQL License}, una licencia \emph{Open Source} , similar a \emph{BSD \footnote{\url{https://es.wikipedia.org/wiki/Licencia_BSD}}} o \emph{MIT \footnote{\url{https://es.wikipedia.org/wiki/Licencia_MIT}}}.\cite{POST:1}\\
+
+
+Uno de los puntos fuertes de \emph{Postgres} es el cumplimiento de las propiedades ACID\footnote{Atomicity, Consistency, Isolation y Durability (Atomicidad, Consistencia, Aislamiento y Durabilidad en castellano)} y su gestión de la concurrencia. Aseguran que una lectura nunca bloquea escrituras y viceversa. Esto se consigue a través de un mecanismo llamado \emph{MVCC \footnote{Multi Version Concurrency Control}}. Cada transacción en \emph{Postgres} obtiene una ID de transacción llamada \emph{XID}. Esto incluye transacciones de una sola declaración, como insertar, actualizar o eliminar, así como envolver explícitamente un grupo de declaraciones juntas a través de BEGIN-COMMIT. Cuando comienza una transacción, \emph{Postgres} incrementa un \emph{XID} y lo asigna a la transacción actual.\cite{DEV:1}\\
+
+Independientemente de la plataforma y la arquitectura que usemos, \emph{PostgreSQL} está disponible para los diferentes SO, \emph{Unix}, \emph{Linux} y \emph{Windows}, en 32 y 64 bits. Ésto hace de \emph{PostgreSQL} un sistema multiplataforma y también hace que sea más rentable con instalaciones a gran escala. Además tiene más de 20 años de desarrollo activo y en constante mejora. No se han presentado nunca caídas de la base de datos. Ésto es debido a su capacidad de establecer un entorno de alta disponibilidad gracias a \emph{Hot-Standby\footnote{Hot-Standby nos permite que los clientes puedan realizar consultas de solo lectura mientras que los servidores están en modo de recuperación o espera. Así podemos hacer tareas de mantenimiento o recuperación sin bloquear completamente el sistema\cite{TODOPOST:2}}}. \cite{TODOPOST:1} \\
+
+\emph{Postgres} está diseñado para ambientes de alto volumen, lo que hace que la velocidad de respuesta en inserciones o actualizaciones pueda parecer lenta en comparación con bases de datos de pequeño tamaño.\cite{TODOPOST:3}\\
+
+Otro aspecto muy importante a tener en cuenta a la hora de elegir \emph{SGBD} es el soporte que proporcionan. En el caso de \emph{PostgreSQL} no cuenta con soporte en línea o telefónico. Sin embargo, cuenta con foros oficiales donde usuarios exponen sus dudas y son los propios usuarios de la comunidad los que responden. Cabe resaltar que esta comunidad de usuarios es una de las más activas del mercado. Además, también ofrece soporte empresarial como \emph{EnterpriseDB\footnote{\url{https://www.enterprisedb.com}}} o \emph{TodoPostgreSQL\footnote{\url{https://todopostgresql.com/}}}.\cite{TODOPOST:3} \\
+
+\emph{Postgres} es uno de los gestores con más soporte y recorrido en el mercado, y por tanto, cuenta con una herramienta administración llamada \emph{pgAdmin} (desde 2016 en la versión pgAdmin4), que facilita la gestión y administración de bases de datos ya sea mediante instrucciones SQL o con ayuda de un entorno gráfico. Permite acceder a todas las funcionalidades de la base de datos; consulta, manipulación y gestión de datos, incluso opciones avanzadas como manipulación del motor de replicación \emph{Slony-I\footnote {Slony-I es un sistema asíncrono de replicación maestro-esclavo para PostgreSQL , que proporciona soporte para conexión en cascada y conmutación por error . Asíncrono significa que cuando una transacción de base de datos se ha comprometido con el servidor maestro, todavía no se garantiza que esté disponible en esclavos. La conexión en cascada significa que las réplicas se pueden crear (y actualizar) a través de otras réplicas, es decir, no necesitan conectarse directamente al maestro.\cite{SLO:1}}}. A parte de este entorno de escritorio, también existen otras herramientas como \emph{psql} (cliente de consola) o \emph{PhpPgAdmin} (entorno web).\cite{PG:1}
+
+\newpage 
+
+\section{Microsoft Access}
+\emph{Microsoft Access} es un sistema de gestión de bases de datos incluido en el paquete ofimático denominado \emph{Microsoft Office}, sucesor de \emph{Embedded Basic}. \emph{Access} es un gestor de datos que utiliza los conceptos de bases de datos relacionales y pueden manejarse por medio de consultas e informes. Está adaptado para recopilar datos de otras utilidades como \emph{Excel} o \emph{SharePoint}. A partir del 22 de septiembre de 2015 la versión más nueva es \emph{Access 2016}. \cite{ACC:1} \\
+
+Los requisitos para la utilización de este gestor son un sistema operativo \emph{Windows 10}, un procesador de 2 núcleos a 1'6GHz, una memoria RAM de 2GB, un espacio libre en disco duro de 4 GB y una cuenta Microsoft \cite{ACC:2}. El precio para adquirir una licencia para 1 PC de \emph{Access} es de 135€. \cite{ACC:3} \\
+
+
+
+\newpage
+\section{VoltDB}
+
+
+\newpage
+
+\addcontentsline{toc}{section}{Referencias}
+\bibliography{bibliografia}
+\bibliographystyle{ieeetr}  % Cambiar por abbrv si da problemas
+
+
+\end{document}
