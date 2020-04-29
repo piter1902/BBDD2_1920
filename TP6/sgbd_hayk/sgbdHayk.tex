@@ -20,7 +20,7 @@ Entre las funcionalidades podemos destacar por ejemplo la capacidad de redimensi
 Otra de las funcionalidades destacables es el poder cambiar el esquema online para satisfacer exigencias de negocio que se cambian constantemente. Este gestor también ofrece herramientas de motorización (a nivel aplicación y consumo de recursos) y de autentificación mediante PAM y encriptación.
 Otra característica fundamental es el acceso tanto SQL como NoSQL para realizar consultar y operaciones simples y rápidas de Clave-Valor. Finalmente destacar que ofrece soporte en difernetes SO desde Linux, hasta Windows, pasando por FreeBSD y MacOS\\
 
-Cuando hablamos de escalabilidad MySQL ofrece esta solución a través de diferentes métodos. Permite replicación sobre diferentes nodos para distribuir la carga de trabajo. También trata con IDs en las transacciones para facilitar la conmutación por error y la creación de topologías de replicación en anillo. Respecto a los esclavos, son multiprocesos para garantizar la disponibilidad, además que son cash-safe, es decir, permiten recuperarse ante fallos. Finalmente ofrece la herramienta de particionado MySQL Fabric para distribuir los datos en diferentes servidores.\cite{lock}\\
+Cuando hablamos de escalabilidad MySQL ofrece esta solución a través de diferentes métodos. Permite replicación sobre diferentes nodos para distribuir la carga de trabajo. También trata con IDs en las transacciones para facilitar la conmutación por error y la creación de topologías de replicación en anillo. Respecto a los suscriptor, son multiprocesos para garantizar la disponibilidad, además que son cash-safe, es decir, permiten recuperarse ante fallos. Finalmente ofrece la herramienta de particionado MySQL Fabric para distribuir los datos en diferentes servidores.\cite{lock}\\
 
 Otro de los pilares fundamentales es la concurrencia. MySQL ofrece un mecanismo de hilos con un buen \textbf{\textit{throughput}}. Provee un hilo por conexión y este hilo no se reasigna hasta que la conexión no acaba, además este método es escalable. Con este mecanismo es suficiente para la mayoria de webs, sin embargo, si se va a tratar con mucho tráfico es recomendable usar la versión enterprise que es ofertada con un \textbf{\textit{Pool de Threads}}. Con esta última funcionalidad el gestor nos provee grupos de thread en función de la demanda, es útil una vez sobrepasamos las 256 conexiones simultaneas a la base de datos.
 El control de la concurrencia se realiza en dos niveles, primero a nivel servidor y segundo a nivel almacenamiento. Cuenta con bloqueos de lectura y escritura con gran transparencia. Destacar que tiene bloqueos a nivel de tablas y de filas, esta última ofrece la mayor concurrencia posible, sin embargo, es la menos eficiente. \cite{enterprise}\\
@@ -56,6 +56,30 @@ Cuando  se habla de disponibilidad, Caché ofrece grandes ventajas. La primera d
 Podemos añadir otras funcionalidades que usa para mejorar la disponibilidad como es el \textit{Database Mirroring} (que consiste en replicar en un disco a parte en tiempo real), \textit{ECP distribuido}, y los \textit{Failover Clusters}.
 
 
+\section{Microsoft SQL Server}
+%https://en.wikipedia.org/wiki/Microsoft_SQL_Server#Architecture
+
+Es un gestor de bases relacional desarrollado por Microsoft. Este gestor dispone de diferentes ediciones como es el \textit{Enterprise}, que a parte de proporcionar el gestor, añade una serie de servicios y herramientas. La edición \textit{standard} que incluye el gestor y una serie de servicios mas básicos y con limitación en el soporte de nodos del cluster. Otra de las versiones a destacar es Azure, que ofrece el servicio de este gestor pero como un \textit{PaaS}.\\
+La arquitectura que usan se basa en una capa externa que actúa como interfaz. Todas las operaciones que pueden ser invocadas en SQL Server se comunican a través de \textit{Tabular Data Stream (TDS)}, este protocolo de nivel aplicación se encargará de transferir los datos entre cliente y servidor.\\
+
+Microsoft SQL Server alamacena tablas con columnas tipadas, al igual que permite el uso y definición de UDTs. El lenguaje de consulta que se usa no es SQL sino una variante, T-SQL. Este expande SQL incluyendo programación \begin{Huge} \textbf{procedimental} \end{Huge}.\\
+
+Una de las ventajas que tiene este gestor es la cantidad de servicios que ofrece, como por ejemplo, \textit{servicio de Broker}, \textit{servicio de análisis}, \textit{SQLCMD }(permite ejecución de consultas desde terminal), y un \textit{servicio de replicación}. Respecto al servicio de replicación incluye replicación transaccional, replicación por mezcla (cambios tanto en publicador como suscriptor, y luego se sincronizan de manera cruzada), y replicación por instantánea (se realiza una copia de la base y los suscriptores replican estos datos). \\
+
+En cuanto a soporte de lenguajes, ofrece drivers para muchos, desde Java, C++ hasta Ruby, en \hyperref{https://docs.microsoft.com/en-us/sql/connect/homepage-sql-connection-programming?view=sql-server-ver15}{este link} podemos encontrar todos.\\
+
+
+Como es de esperar es un gestor que garantiza las propiedades ACID en las transacciones.\\
+%https://docs.microsoft.com/en-us/sql/odbc/reference/develop-app/concurrency-types?view=sql-server-ver15
+Para garantizar una alta disponibilidad nos ofrece replicación, envios de log, \textit{mirroring}, \textit{clustering} y una funcionalidad llamada \textit{allwaysON Avilability Groups.}\\
+Para la replicación usa una serie de \textit{jobs}, donde interactuan un \textit{publicador(publisher)}, un \textit{distribuidor}, y un \textit{suscriptor(subscriber)}.\\
+El log se lleva a cabo a través de tareas que realizan transacciones del log con copias de la base desde un \textit{primario} a un \textit{secundario}, al igual que con el servicio de \textit{mirroring}.\\
+El clustering cosiste en que los diferentes servicios en funcionamiento realizan almacenamiento en diferentes putos compartidos que son altamente fiables.\\
+Por último el servicio de AllwaysON consiste en realizar copias en diferentes \textit{grupos de disponibildiad} que creamos, estos grupos realizan la conmutación por error conjuntamente.\\
+
+Respecto a concurrencia ofrece tres tipos de soluciones para . La primera es \textit{solo lectura}, permite leer pero no actualizar o borrar. Sin embargo, el gestor puede que realice bloqueos a nivel de filas para reforzar ciertas operaciones, también es capaz de realizar bloques de lectura en lugar de escritura. La segunda es a través del \textit{locking}, el cursor usa el menor nivel de bloqueos que garantiza poder garantizar actualizaciones y borrados en el conjunto de datos. Esta opción mencionada ofrece baja concurrencia pero mayor operabilidad. Por último tenemos, la \textit{concurrencia optimista}, consiste en actualizar o borrar solo si tras la última lectura no han sido cambiados. Esta última solución ofrece gran concurrencia pero no asegura las modificaciones.\\
+%https://www.microsoft.com/es-es/sql-server/sql-server-2019-pricing#ft3
+Respecto al coste de las licencias, la versión \textit{Enterprise} tiene su coste de licencia por núcleos, su precio inicial es de 13.000 euros en adelante. La versión \textit{Standard} tiene un coste de 3.000 euros y al igual que el anterior es en función al número de núcleos. Destacar que ambos comienzan con un total de dos núcleos. Para terminar, destacar que dispone de una licencia Express para bbdd rápidas con coste gratuito, y de una licencia de desarrollador con limitaciones de uso y almacenamiento también sin coste.
 
 
 
