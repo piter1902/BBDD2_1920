@@ -100,10 +100,10 @@ Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía s
 
 Sobre la escalabilidad, este \emph{SGBD} está orientado a un entorno distribuido. Al igual que \emph{Apache Cassandra}, está orientado a la escalabilidad lineal, es decir, el rendimiento del sistema mejora de manera lineal respecto al número de nodos del sistema. \cite{AP:7} \\
 
+A diferencia de los \emph{SGBD} relacionales, \emph{HBase} provee transacciones \emph{ACID} a nivel de fila. Para ello hace uso de mecanismos de bloqueo por filas \emph{(row level lock)} y un sistema de control de la concurrencia multiversión \cite{BAP:1}\cite{QL:1}. Es un mecanismo que utilizan los \emph{SGBD} relacionales para permitir la concurrencia, es decir, el sistema gestor almacena distintas versiones del objeto con el que se esta trabajando mientras alguien esté trabajando con alguna de ellas. \cite{WIKI:12} \\
 
-
-Utilización de esto con herramientas JDBC $->$  Mirar Apache Phoenix y la wiki de Apache HBase.\\
-
+Para el acceso a este \emph{SGDB}, desde la página web, nos proporcionan una serie de conectores. También, podemos realizar el <acceso utilizando \emph{SQL} existe \emph{Apache Phoenix\footnote{\emph{Apache Phoenix} es una base de datos de código abierto, masivamente paralela con soporte \emph{OLTP} para \emph{Hadoop} utilizando \emph{HBase} como servicio de almacenamiento. \cite{WIKI:11}}}, que proporciona una capa de acceso a \emph{HBase} asi como el acceso con drivers \emph{JDBC} y e integración con herramientas de inteligencia de negocio \cite{WIKI:8}. \\
+Para la realización de tareas como las copias de seguridad, \emph{Apache HBase} provee herramientas integradas para ello. Esta copia de seguridad se guardará automáticamente en la ubicación especificada, pudiendo ser el propio \emph{HDFS} donde está desplegada la máquina, otro \emph{HDFS} de otro centro de datos, o un servicio en cloud compatible con \emph{HDFS}. \cite{AP:8}\\
 
 \newpage
 
