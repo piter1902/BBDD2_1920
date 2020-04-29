@@ -32,6 +32,13 @@ Se puede obtener de forma gratuita bajo la licencia de código abierto  \emph{AG
 Entre las principales características del gestor\cite{WIKI:2}, se puede destacar la capacidad de consultas \emph{ad hoc}, con búsqueda por campos, consulta de rangos y expresiones regulares; Su capacidad de indexar cualquier campo en un documento\footnote{Los índices son almacenados en una estructura Árbol-B} y crear índices secundarios, aumentando la eficiencia de las consultas\cite{MDB:1}; Soporta la replicación \emph{primario-copia}, siendo cada grupo de los mismos un \emph{replica set}\footnote{Un \emph{replica set} es un grupo de procesos \emph{mongod} que mantienen en mismo conjunto de datos.\cite{MDB:2}}; La posibilidad de escalar horizontalmente, utilizando \emph{Sharding}\footnote{Método para distribuir datos a través de múltiples máquinas}, permitiendo añadir nuevos nodos al sistema mientras está en funcionamiento.\cite{MDB:3};  Mediante \emph{GridFS}\footnote{Especificación para almacenar y consultar archivos que superan el límite de tamaño de documentos \emph{BSON} de 18 \emph{MB}.\cite{MDB:4}}, \emph{MongoDB} puede ser utilizado como un sistema de archivos con balanceo de carga y tolerante a fallos, aprovechando las características de \emph{MongoDB}. Por último, permite realizar consultas con \emph{JavaScript}\cite{MDB:5}, enviándolas a la base de datos para que sean ejecutadas.\\
 
 Mongo no garantizaba las propiedades \emph{ACID} multidocumento hasta su versión 4.0 (enteriormente se cumplían para un solo documento), aunque posee las siguientes limitaciones\cite{WIKI:3}: 
+
+\begin{itemize}
+	\item Bloquea la base a nivel de documento en las escrituras, impidiendo realizar operaciones de escritura concurrentes en el mismo documento. 
+	\item El gestor retorna tras escribir en al menos una réplica, lo que no basta para garantizar la durabilidad ni la verificabilidad.\cite{MDB:9}
+	\item Si supera los 100 GB de datos, aparecen problemas de rendimiento.\cite{MDB:10}
+\end{itemize}
+
 El gestor posee drivers oficiales para diferentes lenguajes de programación: \emph{C, C++, C}\#, \emph{/.NET, Java, JavaScript, Node.js, Perl, PHP, Python, Ruby, Scala, Delphi} y \emph{C++ Builder.}\\
 
 Un apartado importante de MongoDB es \emph{Mongo Shell}\cite{MDB:6}, una interfaz interactiva en \emph{JavaScript} mediante la cual se puede consultar y modificar datos e incluso realizar operaciones de administración. Puede ser utilizado en \emph{Windows, macOS} o \emph{Linux}, lo que convierte a \emph{MongoDB} en un gestor multiplataforma.\\
@@ -40,7 +47,17 @@ Un apartado importante de MongoDB es \emph{Mongo Shell}\cite{MDB:6}, una interfa
 
 Además, el gestor posee una gran serie guías para cada una de sus funcionalidades en su página web\cite{MDB:8}, así como un soporte técnico al que se contactar mediante correo o vía telefónica\footnote{https://www.mongodb.com/contact}.
 
+\newpage
 
+\section{DB2}
+
+\emph{IBM DB2} es un gestor de bases de datos relacional orientada a empresas capaz de gestionar datos estructurados y no estructurados en entornos públicos, privados y locales.\cite{DB2:1} Actualmente es una marca comercial, propiedad de \emph{IBM}, aunque posee una versión gratuita, \emph{DB2 Express-C}\cite{DB2:2}, que permite desarrollar aplicaciones con las funcionalidades básicas de \emph{DB2}.
+
+Entre sus principales características destacan la capacidad de manejar objetos de hasta 2 GB, definición de funciones y datos/tipos por parte del usuario, mecanismos para garantizar la integridad referencial, \emph{SQL} recursivo\footnote{https://geeks.ms/jirigoyen/2009/05/22/recursividad-con-sql-server/}, tratamiento de archivos multimedia, procesamiento paralelo, commit en dos fases y \emph{backup} on-line y offline.\\
+
+EL gestor utiliza \emph{prueXML}\footnote{Función de almacenamiento XML nativo.} para almacenar documentos en formato \emph{XML}, para realizar operaciones y búsquedas dentro del mismo e integrarlo con búsquedas relacionales.\cite{WIKI:4} De esta manera se puede realizar consultas de tipos de datos no tradicionales.\\
+
+Permite la conexión directa de una aplicación escrita en \emph{Java}con la base de datos utilizando JDBC,  pudiendo ser una base local o remota.\cite{DB2:3}
 
 \addcontentsline{toc}{section}{Referencias}
 \bibliography{bibliografia}
