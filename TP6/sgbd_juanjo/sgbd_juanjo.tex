@@ -1,0 +1,49 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[hidelinks]{hyperref} 
+\usepackage{eurosym}
+
+\begin{document}
+	
+\begin{titlepage}
+\title{
+\begin{Huge}
+\textbf{Análisis de MongoDB y DB2}
+\end{Huge}
+}
+
+\author{Juan José Tambo Tambo}
+\date{\today}
+
+\end{titlepage}
+
+\newpage
+
+\section{MongoDB}
+
+\emph{MongoDB} es un sistema de base de datos \emph{NoSQL}, orientado a documentos y de código abierto. Los datos se almacenan en estructuras de tipo \emph{BSON}\footnote{Especificación similar a \emph{JSON}} con un esquema dinámico, facilitando y agilizando la integración de los datos en determinadas aplicaciones.\\
+Se puede obtener de forma gratuita bajo la licencia de código abierto  \emph{AGPL}\footnote{Licencia pública general de Affero de \emph{GNU}}. También ofrece una licencia comercial que incluye distintas características como integración con \emph{SASL, LADP} o \emph{Kerberos}.\cite{WIKI:1}\\
+
+Entre las principales características del gestor\cite{WIKI:2}, se puede destacar la capacidad de consultas \emph{ad hoc}, con búsqueda por campos, consulta de rangos y expresiones regulares; Su capacidad de indexar cualquier campo en un documento\footnote{Los índices son almacenados en una estructura Árbol-B} y crear índices secundarios, aumentando la eficiencia de las consultas\cite{MDB:1}; Soporta la replicación \emph{primario-copia}, siendo cada grupo de los mismos un \emph{replica set}\footnote{Un \emph{replica set} es un grupo de procesos \emph{mongod} que mantienen en mismo conjunto de datos.\cite{MDB:2}}; La posibilidad de escalar horizontalmente, utilizando \emph{Sharding}\footnote{Método para distribuir datos a través de múltiples máquinas}, permitiendo añadir nuevos nodos al sistema mientras está en funcionamiento.\cite{MDB:3};  Mediante \emph{GridFS}\footnote{Especificación para almacenar y consultar archivos que superan el límite de tamaño de documentos \emph{BSON} de 18 \emph{MB}.\cite{MDB:4}}, \emph{MongoDB} puede ser utilizado como un sistema de archivos con balanceo de carga y tolerante a fallos, aprovechando las características de \emph{MongoDB}. Por último, permite realizar consultas con \emph{JavaScript}\cite{MDB:5}, enviándolas a la base de datos para que sean ejecutadas.\\
+
+Mongo no garantizaba las propiedades \emph{ACID} multidocumento hasta su versión 4.0 (enteriormente se cumplían para un solo documento), aunque posee las siguientes limitaciones\cite{WIKI:3}: 
+El gestor posee drivers oficiales para diferentes lenguajes de programación: \emph{C, C++, C}\#, \emph{/.NET, Java, JavaScript, Node.js, Perl, PHP, Python, Ruby, Scala, Delphi} y \emph{C++ Builder.}\\
+
+Un apartado importante de MongoDB es \emph{Mongo Shell}\cite{MDB:6}, una interfaz interactiva en \emph{JavaScript} mediante la cual se puede consultar y modificar datos e incluso realizar operaciones de administración. Puede ser utilizado en \emph{Windows, macOS} o \emph{Linux}, lo que convierte a \emph{MongoDB} en un gestor multiplataforma.\\
+
+\emph{MongoDB} proporciona una serie de productos en la nube para poder almacenar y gestionar instancias del mismo, como lo son \emph{MongoDB Stitch, MongoDB Atlas Data Lake} o \emph{MongoDB Cloud Manager}, entre otros.\cite{MDB:7}
+
+Además, el gestor posee una gran serie guías para cada una de sus funcionalidades en su página web\cite{MDB:8}, así como un soporte técnico al que se contactar mediante correo o vía telefónica\footnote{https://www.mongodb.com/contact}.
+
+
+
+\addcontentsline{toc}{section}{Referencias}
+\bibliography{bibliografia}
+\bibliographystyle{ieeetr}
+
+\end{document}
