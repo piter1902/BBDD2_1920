@@ -162,3 +162,11 @@ CCC                  NOT NULL CHAR(20)
 ---
 
 # VISTAS
+"INFOTRANSFERENCIAS"
+(
+   SELECT OpTransferencia.CCC AS "cuenta ordenante", OpTransferencia.CuentaDestino AS "cuenta receptora", Operacion.fechaOp AS "fecha", Operacion.horaOp AS "hora", Operacion.cantidadOp AS "transferido", Cuenta.titular AS "beneficiario"
+   FROM OpTransferencia LEFT OUTER JOIN Cuenta ON OpTransferencia.CuentaDestino = Cuenta.CCC, Operacion
+   WHERE (Operacion.CCC = OpTransferencia.CCC) AND (Operacion.numOp = OpTransferencia.numOp)
+)
+
+-> Aqui lo que hace es: mirar si la cuenta de destino pertenece a una cuenta (porque no lo comprueba de otra forma) y el where es la condición de "JOIN", se está asegurando que las operaciones de transferencia este esten en cuenta y que todas las operaciones de transferencia estén en operación.
