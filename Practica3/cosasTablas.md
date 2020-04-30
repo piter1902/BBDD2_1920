@@ -96,10 +96,11 @@ Nombre                    ?Nulo?   Tipo
 CCC                       NOT NULL CHAR(20)
 SUCURSAL_CODOFICINA       NOT NULL NUMBER(4)
 ### Constraints
-"CONSTRAINT_NAME"   	"COLUMN_NAME"	  "CONSTRAINT_TYPE"	"SEARCH_CONDITION"	"REFERENCES_TABLE"
-"CUENTAAHORROFK"	   "CCC"	          "R"	                                	"CUENTA"
-"SYS_C009480"        "TIPOINTERES"  	"C"              	"""TIPOINTERES"" IS NOT NULL
-"SYS_C009481"	       "CCC"          	"P"		
+"CONSTRAINT_NAME"	            "COLUMN_NAME"	        "CONSTRAINT_TYPE"	"SEARCH_CONDITION"	"REFERENCES_TABLE"
+"CUENTACORRIENTEOFICINAFK"  	"SUCURSAL_CODOFICINA"	"R"	                                    "SUCURSAL"
+"CUENTACORRIENTEPKFK"	        "CCC"	                "R"	                                    "CUENTA"
+"SYS_C009486"	                "SUCURSAL_CODOFICINA"	"C"	                """SUCURSAL_CODOFICINA"" IS NOT NULL	
+"SYS_C009487"	                "CCC"	                "P"
 ---
 - OPERACION
 ### Estructura
