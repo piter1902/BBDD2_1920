@@ -8,7 +8,12 @@ NUMERO        NOT NULL    NUMBER(38)
 PISO          NOT NULL    VARCHAR2(20)
 CIUDAD        NOT NULL    VARCHAR2(20)
 ### Constraints
-**NA**
+"CONSTRAINT_NAME"	"COLUMN_NAME"	"CONSTRAINT_TYPE"	"SEARCH_CONDITION"	"REFERENCES_TABLE"
+"DIRECCIONPK"	    "ID_DIRECCION"	"P"	
+"SYS_C009454"	    "CALLE"	        "C"	                """CALLE"" IS NOT NULL	
+"SYS_C009455"	    "NUMERO"	    "C"	                """NUMERO"" IS NOT NULL	
+"SYS_C009456"	    "PISO"	        "C"	                """PISO"" IS NOT NULL	
+"SYS_C009457"	    "CIUDAD"	    "C"	                """CIUDAD"" IS NOT NULL	
 ---
 - CODPOSTAL
 ### Estructura
@@ -17,7 +22,12 @@ CALLE        NOT NULL VARCHAR2(60)
 CIUDAD       NOT NULL VARCHAR2(20)
 CODPOSTAL    NOT NULL NUMBER(38)
 ### Constraints
-**NA**
+"CONSTRAINT_NAME"	"COLUMN_NAME"	"CONSTRAINT_TYPE"	"SEARCH_CONDITION"	"REFERENCES_TABLE"
+"CODPOSTALPK"	    "CIUDAD"	    "P"	
+"CODPOSTALPK"	    "CALLE"	        "P"	
+"SYS_C009459"	    "CALLE"	        "C"	                """CALLE"" IS NOT NULL	
+"SYS_C009460"	    "CIUDAD"	    "C"	                """CIUDAD"" IS NOT NULL	
+"SYS_C009461"	    "CODPOSTAL"	    "C"	                """CODPOSTAL"" IS NOT NULL
 ---
 - TITULAR
 ### Estructura
