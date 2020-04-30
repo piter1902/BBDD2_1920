@@ -127,13 +127,13 @@ TIPOOPEFECTIVO            NOT NULL CHAR(8)
 SUCURSAL_CODOFICINA       NOT NULL NUMBER(4)
 CCC                       NOT NULL CHAR(20)
 ### Constraints
-"CONSTRAINT_NAME"   	"COLUMN_NAME"	  "CONSTRAINT_TYPE"	"SEARCH_CONDITION"	"REFERENCES_TABLE"
-"OPERACIONFK"	        "CCC"         	"R"	                                 	"CUENTA"
-"OPERACIONPK"	        "NUMOP"	        "P"		
-"OPERACIONPK"	        "CCC"	          "P"		
-"SYS_C009490"       	"FECHAOP"      	"C"	              """FECHAOP"" IS NOT NULL
-"SYS_C009491"	        "HORAOP"	      "C"	              """HORAOP"" IS NOT NULL
-"SYS_C009492"	        "CANTIDADOP"	  "C"              	"""CANTIDADOP"" IS NOT NULL
+"CONSTRAINT_NAME"	"COLUMN_NAME"	        "CONSTRAINT_TYPE"	"SEARCH_CONDITION"	"REFERENCES_TABLE"
+"OPEFECTIVOFK"	    "NUMOP"	                "R"	                                    "OPERACION"
+"OPEFECTIVOFK"	    "CCC"	                "R"	                                    "OPERACION"
+"OPEFECTIVOPK"	    "NUMOP"	                "P"	                
+"OPEFECTIVOPK"	    "CCC"	                "P"	                
+"SYS_C009495"	    "TIPOOPEFECTIVO"    	"C"	                """TIPOOPEFECTIVO"" IS NOT NULL	
+"SYS_C009496"	    "SUCURSAL_CODOFICINA"	"C"	                """SUCURSAL_CODOFICINA"" IS NOT NULL
 ---
 - OPTRANSFERENCIA
 ### Estructura
