@@ -51,13 +51,23 @@ Además, el gestor posee una gran serie guías para cada una de sus funcionalida
 
 \section{DB2}
 
-\emph{IBM DB2} es un gestor de bases de datos relacional orientada a empresas capaz de gestionar datos estructurados y no estructurados en entornos públicos, privados y locales.\cite{DB2:1} Actualmente es una marca comercial, propiedad de \emph{IBM}, aunque posee una versión gratuita, \emph{DB2 Express-C}\cite{DB2:2}, que permite desarrollar aplicaciones con las funcionalidades básicas de \emph{DB2}.
+\emph{IBM DB2} es un gestor de bases de datos relacional orientada a empresas capaz de gestionar datos estructurados y no estructurados en entornos públicos, privados y locales.\cite{DB2:1} Actualmente es una marca comercial, propiedad de \emph{IBM}, aunque posee una versión gratuita, \emph{DB2 Express-C}\cite{DB2:2}, que permite desarrollar aplicaciones con las funcionalidades básicas de \emph{DB2}.\\
 
 Entre sus principales características destacan la capacidad de manejar objetos de hasta 2 GB, definición de funciones y datos/tipos por parte del usuario, mecanismos para garantizar la integridad referencial, \emph{SQL} recursivo\footnote{https://geeks.ms/jirigoyen/2009/05/22/recursividad-con-sql-server/}, tratamiento de archivos multimedia, procesamiento paralelo, commit en dos fases y \emph{backup} on-line y offline.\\
+Además permite la conexión directa de una aplicación escrita en \emph{Java}con la base de datos utilizando JDBC,  pudiendo ser una base local o remota.\cite{DB2:3}\\
 
-EL gestor utiliza \emph{prueXML}\footnote{Función de almacenamiento XML nativo.} para almacenar documentos en formato \emph{XML}, para realizar operaciones y búsquedas dentro del mismo e integrarlo con búsquedas relacionales.\cite{WIKI:4} De esta manera se puede realizar consultas de tipos de datos no tradicionales.\\
+El gestor utiliza \emph{prueXML}\footnote{Función de almacenamiento XML nativo.} para almacenar documentos en formato \emph{XML}, para realizar operaciones y búsquedas dentro del mismo e integrarlo con búsquedas relacionales.\cite{WIKI:4} De esta manera se puede realizar consultas de tipos de datos no tradicionales. Además utiliza un sistema multiprocesador \emph{SMP} simétrico y un sistema de procesador paralelo masivo, lo que permite su alto rendimiento. \\
 
-Permite la conexión directa de una aplicación escrita en \emph{Java}con la base de datos utilizando JDBC,  pudiendo ser una base local o remota.\cite{DB2:3}
+Se trata de un sistema altamente escalable al dar soporte a volúmenes de datos de \emph{petabytes} y acelerar las consultas, pudiendo escalar desde un \emph{laptop} a \emph{clusters} de servidores empresariales paralelos.\cite{DB2:4}.
+Asimismo, \emph{DB2} ofrece múltiples opciones de despliegue (híbrido, \emph{on premise}, cloud), lo que da soporte a un amplio rango de cargas de trabajo.
+
+\emph{DB2} utiliza un sistema de \emph{commit-rollback} diferente a otros gestores. Todos cambios en la base se almacenan en el \emph{Log Buffer}, el cual escribe en disco cuando se realiza un \emph{commit}. Un \emph{commit} no es correcto hasta que se ha copiado toda información en disco.\cite{DB2:5}\\
+
+Las plataformas que admite el gestor son \emph{AIX, HP-UX, UNIX, Linux, Solaris y Windows}, además de poseer una versión para \emph{Z/OS}\footnote{Sistema actual de las computadoras de \emph{IBM}}, la cual está optimizada para \emph{SOA, CRM} y almacenamiento de datos.\cite{DB2:6}\\
+
+Por último, el gestor ofrece una serie de herramientas de administración, gestión de rendimiento, recuperación, réplicas y aplicaciones. La mayoría de estas herramientas proporcionan una interfaz gráfica de usuario (\emph{GUI}) y una interfaz \emph{ISPF}\footnote{Interactive System Productivity Facility} que permiten al usuario realizar la mayoría de tareas de \emph{DB2} de forma interactiva.\cite{DB2:7}
+
+\newpage
 
 \addcontentsline{toc}{section}{Referencias}
 \bibliography{bibliografia}
