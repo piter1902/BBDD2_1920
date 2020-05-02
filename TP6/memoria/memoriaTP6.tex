@@ -79,6 +79,163 @@ Dado que el Gobierno de Aragón es una entidad pública se buscará el uso de un
 \item Mismo vendedor aka reducción de costes \textbf{para conclusión}
 \end{itemize}
 
+\section{SGBD}
+
+\subsection{Oracle}
+
+\emph{Oracle} es un sistema gestor de bases de datos multimodelo (soporta modelo relacional y modelo objeto relacional), perteneciente a la compañía \emph{Oracle Corporation} \cite{WIKI:1} . En 1977 fue fundada la compañía \emph{SDL (Software Development Laboratories)}, este \emph{SGBD} proviene de un proyecto financiado por la \emph{CIA} para diseñar un sistema especial de bases de datos con código clave \emph{``Oracle''} \cite{WIKI:2}. Los fundadores de \emph{SDL} habían leido un artículo en la revista \emph{IBM research} donde se describía una versión preliminar de \emph{SQL} basado en el artículo de \emph{E. F. Codd\footnote{\url{https://es.wikipedia.org/wiki/Edgar_Frank_Codd}}}, donde propone el \emph{modelo relacional}. En 1984, \emph{SDL} adopta el nombre de \emph{Oracle Corporation}.\\
+
+En su versión 19, la instalación de este \emph{SGBD} se puede realizar \emph{on-premise} (en los servidores de la empresa) o en el \emph{cloud} de \emph{Oracle}. Si elegimos la opción \emph{on-premise}, los sistemas operativos en los que es posible instalar este \emph{SGBD} son: \emph{Windows}, \emph{Linux} y \emph{Solaris} \cite{ORA:1}.\\
+
+\emph{Oracle} es una de las bases de datos líderes del mercado en bases de datos operacionales \cite{GART:1}. Cuenta con mucha documentación disponible desde su página web\footnote{\url{https://docs.oracle.com/en/database/oracle/oracle-database/19/lnpls/index.html}} y además cuenta con una comunidad muy activa en la resolución de incidencias y dudas en páginas como \emph{StackOverflow} \cite{STO:1}.\\
+
+El dominio de aplicación de este \emph{SGBD} se encuentra desde el desarrollo de aplicaciones hasta servicios de almacenes de datos \cite{ORA:2}. 
+\textbf{{\LARGE Algo sobre el ámbito principal? No sé cual es y nadie dice nada.}}\\
+
+El sistema de licenciamiento de este \emph{SGBD} depende del número de usuarios y el número de procesadores que tenga el servidor donde se ha de instalar. Para cada \emph{``Processor License''} se aplica el \emph{``Core factor''}\footnote{\url{http://www.oracle.com/us/corporate/contracts/processor-core-factor-table-070634.pdf}} y ese es el número de \emph{``Processor Licenses''} necesarios. Para el cálculo de \emph{``Named User Licenses''} se aplicará el máximo entre:
+
+\begin{itemize}
+\item $ProcessorLicenses * CoreFactor * NumUserMinimun$
+\item $NumUsuarios + NumDispositvos$
+\end{itemize}
+
+Donde, $NumUserMinimun$ se corresponde con el número de usuarios mínimos por cada \emph{``Processor License''} \cite{ORA:3}. Los precios de \emph{``Processor License''} y \emph{``Named User Licenses''} en la versión \emph{Enterprise Edition} se corresponden con: 47500\$ y 950\$ \cite{ORA:4}. El resto de funcionalidades no añadidas, como las de almacenes de datos, se adquieren por separado. \\
+
+En el tema de escalabilidad, \emph{Oracle} cuenta con \emph{RAC (Real Application Cluster)}, una tecnología que permite escalar una base de datos a un cluster de servidores ejecutando multiples instancias sobre una misma base de datos de manera transparente al usuario, aprovechando los recursos del clúster. \cite{ORA:5} \\
+
+El control de la concurrencia en este \emph{SGBD} se realiza mediante los mecanismos de bloqueo del mismo para garantizar la consistencia de los datos entre transacciones. \emph{Oracle} se encarga de gestionar los mecanismos de bloqueo automáticamente, de tal forma que no es necesario que el usuario escriba el bloqueo de forma explícita.\cite{ORA:6}
+Los mecanismos de bloqueo utilizados por este \emph{SGBD} se dividen en dos grupos, bloqueos exclusivos y bloqueos compartidos. \cite{ORA:7} \\
+
+Para el desarrollo con este \emph{SGBD} se puede utilizar el driver \emph{ODBC} (o \emph{JDBC} si se usa \emph{Java}) desde la propia página de la compañía. \\
+El uso de herramientas de soporte complementarias como puede ser \emph{DBeaver\footnote{\url{https://dbeaver.io/}}} y otras opciones de apoyo al desarrollo es posible configurando (si fuera necesario) el driver de conexión a la base de datos. \\
+Las copias de seguridad se pueden realizar utilizando la herramienta \emph{RMAN}. Esta herramienta es específica para las bases de datos \emph{Oracle} y permite realizar copias de seguridad sobre las bases de datos y realizar una vuelta a una versión estable si disponemos de una copia de seguridad \cite{ORA:8}. \\
+
+El soporte técnico de este \emph{SGBD} se adquiere por separado, y se relaciona con cada uno de los productos adquiridos. \cite{ORA:4} \textbf{{\LARGE COMPROBAR ESTO}}\\
+
+\subsection{PostgreSQL}
+\emph{PostgreSQL}, también llamado \emph{Postgres}, es un sistema de gestión de bases de datos relacional orientado a objetos y de código abierto. Como muchos otros proyectos de código abierto, el desarrollo de \emph{PostgreSQL}  no es manejado por una empresa o persona, sino que es dirigido por una comunidad de desarrolladores que trabajan de forma desinteresada, altruista, libre o apoyados por organizaciones comerciales. Dicha comunidad es denominada \emph{PGDG \footnote{PostgreSQL Global Development Group}}. \cite{POST:2}\\
+
+\emph{PostgreSQL} está publicado bajo \emph{PostgreSQL License}, una licencia \emph{Open Source} , similar a \emph{BSD \footnote{\url{https://es.wikipedia.org/wiki/Licencia_BSD}}} o \emph{MIT \footnote{\url{https://es.wikipedia.org/wiki/Licencia_MIT}}}.\cite{POST:1}\\
+
+
+Uno de los puntos fuertes de \emph{Postgres} es el cumplimiento de las propiedades ACID\footnote{Atomicity, Consistency, Isolation y Durability (Atomicidad, Consistencia, Aislamiento y Durabilidad en castellano)} y su gestión de la concurrencia. Aseguran que una lectura nunca bloquea escrituras y viceversa. Esto se consigue a través de un mecanismo llamado \emph{MVCC \footnote{Multi Version Concurrency Control}}. Cada transacción en \emph{Postgres} obtiene una ID de transacción llamada \emph{XID}. Esto incluye transacciones de una sola declaración, como insertar, actualizar o eliminar, así como envolver explícitamente un grupo de declaraciones juntas a través de BEGIN-COMMIT. Cuando comienza una transacción, \emph{Postgres} incrementa un \emph{XID} y lo asigna a la transacción actual.\cite{DEV:1}\\
+
+Independientemente de la plataforma y la arquitectura que usemos, \emph{PostgreSQL} está disponible para los diferentes SO, \emph{Unix}, \emph{Linux} y \emph{Windows}, en 32 y 64 bits. Ésto hace de \emph{PostgreSQL} un sistema multiplataforma y también hace que sea más rentable con instalaciones a gran escala. Además tiene más de 20 años de desarrollo activo y en constante mejora. No se han presentado nunca caídas de la base de datos. Ésto es debido a su capacidad de establecer un entorno de alta disponibilidad gracias a \emph{Hot-Standby\footnote{Hot-Standby nos permite que los clientes puedan realizar consultas de solo lectura mientras que los servidores están en modo de recuperación o espera. Así podemos hacer tareas de mantenimiento o recuperación sin bloquear completamente el sistema\cite{TODOPOST:2}}}. \cite{TODOPOST:1} \\
+
+\emph{Postgres} está diseñado para ambientes de alto volumen, lo que hace que la velocidad de respuesta en inserciones o actualizaciones pueda parecer lenta en comparación con bases de datos de pequeño tamaño.\cite{TODOPOST:3}\\
+
+Otro aspecto muy importante a tener en cuenta a la hora de elegir \emph{SGBD} es el soporte que proporcionan. En el caso de \emph{PostgreSQL} no cuenta con soporte en línea o telefónico. Sin embargo, cuenta con foros oficiales donde usuarios exponen sus dudas y son los propios usuarios de la comunidad los que responden. Cabe resaltar que esta comunidad de usuarios es una de las más activas del mercado. Además, también ofrece soporte empresarial como \emph{EnterpriseDB\footnote{\url{https://www.enterprisedb.com}}} o \emph{TodoPostgreSQL\footnote{\url{https://todopostgresql.com/}}}.\cite{TODOPOST:3} \\
+
+\emph{Postgres} es uno de los gestores con más soporte y recorrido en el mercado, y por tanto, cuenta con una herramienta administración llamada \emph{pgAdmin} (desde 2016 en la versión pgAdmin4), que facilita la gestión y administración de bases de datos ya sea mediante instrucciones SQL o con ayuda de un entorno gráfico. Permite acceder a todas las funcionalidades de la base de datos; consulta, manipulación y gestión de datos, incluso opciones avanzadas como manipulación del motor de replicación \emph{Slony-I\footnote {Slony-I es un sistema asíncrono de replicación maestro-esclavo para PostgreSQL , que proporciona soporte para conexión en cascada y conmutación por error . Asíncrono significa que cuando una transacción de base de datos se ha comprometido con el servidor maestro, todavía no se garantiza que esté disponible en esclavos. La conexión en cascada significa que las réplicas se pueden crear (y actualizar) a través de otras réplicas, es decir, no necesitan conectarse directamente al maestro.\cite{SLO:1}}}. A parte de este entorno de escritorio, también existen otras herramientas como \emph{psql} (cliente de consola) o \emph{PhpPgAdmin} (entorno web).\cite{PG:1}
+
+\subsection{DB2}
+
+\emph{IBM DB2} es un gestor de bases de datos relacional orientada a empresas capaz de gestionar datos estructurados y no estructurados en entornos públicos, privados y locales.\cite{DB2:1} Actualmente es una marca comercial, propiedad de \emph{IBM}, aunque posee una versión gratuita, \emph{DB2 Express-C}\cite{DB2:2}, que permite desarrollar aplicaciones con las funcionalidades básicas de \emph{DB2}.\\
+
+Entre sus principales características destacan la capacidad de manejar objetos de hasta 2 GB, definición de funciones y datos/tipos por parte del usuario, mecanismos para garantizar la integridad referencial, \emph{SQL} recursivo\footnote{https://geeks.ms/jirigoyen/2009/05/22/recursividad-con-sql-server/}, tratamiento de archivos multimedia, procesamiento paralelo, commit en dos fases y \emph{backup} on-line y offline.\\
+Además permite la conexión directa de una aplicación escrita en \emph{Java}con la base de datos utilizando JDBC,  pudiendo ser una base local o remota.\cite{DB2:3}\\
+
+El gestor utiliza \emph{pureXML}\footnote{Función de almacenamiento XML nativo.} para almacenar documentos en formato \emph{XML}, para realizar operaciones y búsquedas dentro del mismo e integrarlo con búsquedas relacionales.\cite{WIKI:16} De esta manera se puede realizar consultas de tipos de datos no tradicionales. Además utiliza un sistema multiprocesador \emph{SMP} simétrico y un sistema de procesador paralelo masivo, lo que permite su alto rendimiento. \\
+
+Se trata de un sistema altamente escalable al dar soporte a volúmenes de datos de \emph{petabytes} y acelerar las consultas, pudiendo escalar desde un \emph{laptop} a \emph{clusters} de servidores empresariales paralelos.\cite{DB2:4}.
+Asimismo, \emph{DB2} ofrece múltiples opciones de despliegue (híbrido, \emph{on premise}, cloud), lo que da soporte a un amplio rango de cargas de trabajo.
+
+\emph{DB2} utiliza un sistema de \emph{commit-rollback} diferente a otros gestores. Todos cambios en la base se almacenan en el \emph{Log Buffer}, el cual escribe en disco cuando se realiza un \emph{commit}. Un \emph{commit} no es correcto hasta que se ha copiado toda información en disco.\cite{DB2:5}\\
+
+Las plataformas que admite el gestor son \emph{AIX, HP-UX, UNIX, Linux, Solaris y Windows}, además de poseer una versión para \emph{Z/OS}\footnote{Sistema actual de las computadoras de \emph{IBM}}, la cual está optimizada para \emph{SOA, CRM} y almacenamiento de datos.\cite{DB2:6}\\
+
+Por último, el gestor ofrece una serie de herramientas de administración, gestión de rendimiento, recuperación, réplicas y aplicaciones. La mayoría de estas herramientas proporcionan una interfaz gráfica de usuario (\emph{GUI}) y una interfaz \emph{ISPF}\footnote{Interactive System Productivity Facility} que permiten al usuario realizar la mayoría de tareas de \emph{DB2} de forma interactiva.\cite{DB2:7}
+
+\subsection{Access}
+\emph{Microsoft Access} es un sistema de gestión de bases de datos incluido en el paquete ofimático denominado \emph{Microsoft Office}, sucesor de \emph{Embedded Basic}. \emph{Access} es un gestor de datos que utiliza los conceptos de bases de datos relacionales y pueden manejarse por medio de consultas e informes. Está adaptado para recopilar datos de otras utilidades como \emph{Excel} o \emph{SharePoint}. A partir del 22 de septiembre de 2015 la versión más nueva es \emph{Access 2016}. \cite{ACC:1} \\
+
+Los requisitos para la utilización de este gestor son un sistema operativo \emph{Windows 10}, un procesador de 2 núcleos a 1'6GHz, una memoria RAM de 2GB, un espacio libre en disco duro de 4 GB y una cuenta Microsoft \cite{ACC:2}. El precio para adquirir una licencia para 1 PC de \emph{Access} es de 135\euro. \cite{ACC:3} \\
+
+Las bases de datos \emph{access} son útiles para pequeñas y medianas empresas o departamentos individuales, ya que cuentan con una capacidad limitada. Cualquier sector cuyo uso vaya más allá de las 2 GB descubrirá sus limitaciones \cite{ACC:4}. Para evitar esta limitación de tamaño, se puede crear vínculos a tablas de otras bases de datos de \emph{Access}. Puede crear vínculos a tablas de varios archivos de base de datos, cada uno de los cuales puede tener hasta 2 gigabytes de tamaño. \cite{ACC:5}\\
+
+\emph{Microsoft Access} ofrece consultas parametrizadas \footnote{Se denominan consultas paramétricas a aquellas consultas, normalmente de selección, que bajo un campo por el que se desea establecer un criterio de filtrado, en vez de implicar a valores constantes que hacen que dicha consulta al ser ejecutada siempre realice "lo mismo", se implique a campos (especificados entre corchetes [ ]) a los cuales se les asignan valores diferentes para cada ejecución de la consulta (normalmente serán solicitados al usuario mediante una ventana en pantalla).\cite{ACC:7}}. Estas consultas y tablas \emph{Access} se pueden referenciar desde otros programas como \emph{VB6 \footnote{Visual Basic 6.0}} y \emph{.NET} a través de \emph{DAO} o \emph{ADO}. \cite{ACC:6}\\
+
+También está el formato de base de datos \emph{Jet \footnote{Jet es un motor de bases de datos que permitiría mantener los archivos .mdb a través de ODBC \cite{ACC:8}}}, que puede contener la aplicación y los datos en un archivo. Esto hace muy conveniente para distribuir la aplicación completa a otro usuario, que puede ejecutarla en entornos desconectados. \cite{ACC:6}\\
+
+El límite técnico de las bases de datos \emph{access} es de 255 usuarios al mismo tiempo, pero el límite real es entre 10 y 80 usuarios dependiendo del tipo aplicación. \cite{ACC:4}\\
+
+\subsection{VoltDB}
+\emph{VoltDB} es una base de datos en memoria diseñada por Michael Stonebraker, Sam Madden y Daniel Abadi. Es un \emph{RDBMS \footnote{Sistema de gestión de bases de datos relacionales }} compatible con ACID que utiliza una arquitectura de nada compartido \footnote{Una arquitectura de nada compartido es una arquitectura de computación distribuida en la que cada solicitud de actualización es satisfecha por un solo nodo (procesador / memoria / unidad de almacenamiento). La intención es eliminar la contención entre nodos. Los nodos no comparten (acceso independiente) memoria o almacenamiento \cite{VOLT:1}}. Incluye tanto ediciones empresariales como comunitarias. La edición comunitaria está licenciada bajo la \emph{GNU Affero General Public License}. \cite{VOLT:2}\\
+
+\emph{VoltDB} es una base de datos relacional \emph{NewSQL \footnote{NewSQL es una clase de sistemas de gestión de bases de datos relacionales que buscan proporcionar la escalabilidad de los sistemas NoSQL para cargas de trabajo de procesamiento de transacciones en línea (OLTP) mientras mantienen las garantías ACID de un sistema de base de datos tradicional. \cite{VOLT:3}}} que admite acceso \emph{SQL} desde procedimientos almacenados Java precompilados . La unidad de transacción es el procedimiento almacenado, escrito en Java intercalado con SQL. \emph{VoltDB} se basa en la partición horizontal hasta el subproceso de hardware individual para escalar, k-safety (replicación síncrona) para proporcionar una alta disponibilidad y una combinación de instantáneas continuas y registro de comandos para una mayor durabilidad (recuperación de fallos).\cite{VOLT:2}\\
+
+Una gran desventaja de este \emph{SGBD} es que solo se ejecuta en \emph{Linux} y \emph{Mac}, y por tanto para su utilización en \emph{Windows} haría falta un despliegue en \emph{contenedores docker} o la utilización de máquinas virtuales. \cite{VOLT:4} \\
+
+El punto clave de \emph{VoltDB} es su velocidad. Puede procesar hasta 45 veces mas transacciones por segundo que otros gestores tradicionales como \emph{MySQL}, \emph{Oracle} y \emph{PostgreSQL}. \emph{VoltDB} procesó 53.000 transacciones por segundo (TPS) frente a las 1.155 de otros \emph{DBMS} sobre hardware idéntico. \cite{VOLT:5} Debido a esto, se debe ejecutar en servidores ricos en memoria multi-core y aunque esté disponible de manera gratuita bajo la licencia \emph{GPL} ofrecen un precio de suscripción anual es de 15 dólares por año para una configuración de cuatro servidores.\\
+
+\emph{VoltDB} permite operacionalizar \emph{modelos ML}. \emph{VoltDB} convierte automáticamente el \emph{modelo ML} en un proceso ejecutable como una función definida por el usuario (UDF), que puede implementarse en un entorno de producción. El modelo integrado ingiere / entrena continuamente datos nuevos / históricos para mantenerse actualizado y relevante. El ML en la base de datos le permite tomar decisiones inteligentes y procesables en tiempo real con una latencia muy baja en la transmisión de datos. \cite{VOLT:6}\\
+
+\emph{VoltDB} se ejecuta en un entorno distribuido en contenedores. Hasta ahora, orquestar bases de datos SQL en \emph{Kubernetes\footnote{Kubernetes es un sistema de código libre para la automatización del despliegue, ajuste de escala y manejo de aplicaciones en contenedores que fue originalmente diseñado por Google y donado a la Cloud Native Computing Foundation. Soporta diferentes entornos para la ejecución de contenedores, incluido Docker. \cite{VOLT:7}}} había sido muy desafiante, ya que los sistemas de bases de datos operacionales tienen estado y no pueden ser acelerados o reducidos en cualquier momento. Los desarrollos recientes aseguran la orquestación de contenedores con Kubernetes, convirtiendo muchas tareas tediosas y complejas en algo tan simple como un archivo de configuración declarativo, y permitiendo una implementación continua y frecuente. \cite{VOLT:6}\\
+
+\subsection{Apache Cassandra}
+
+\emph{Cassandra} es un sistema gestor de bases de datos \emph{NoSQL (Not Only SQL)}, con almacenamiento basado en columnas. Fue creado desarrollado por \emph{Avinash Lakshman}, uno de los autores de \emph{Amazon's Dynamo\footnote{\emph{Amazon's Dynamo} un conjunto de técnicas que juntas pueden formar un sistema de almacenamiento estructurado de alta disponibilidad o un depósito de datos distribuidos.\cite{WIKI:3}}} por \emph{Facebook} como un proyecto para mejorar la búsqueda en la bandeja de entrada de la plataforma. En 2008, \emph{Facebook} liberó a \emph{Cassandra} como un proyecto open-source en \emph{Google Code}\footnote{\emph{Google Code} fue una plataforma que proveía control de versiones, seguimiento de incidencias para proyectos open-source. Actualmente se encuentra en modo se solo lectura desde Agosto de 2015. \cite{WIKI:4}}. En Marzo de 2009, \emph{Apache} acogió este proyecto, transformándolo en un proyecto de \emph{Apache Incubator} (proyecto en la que los proyectos open-source se pueden convertir en nuevos proyectos de alto nivel de la fundación \emph{Apache} \cite{AP:1}). En Febrero de 2010 se graduó como un proyecto de alto nivel. \cite{WIKI:5}\\
+
+\emph{Cassandra}, al estar programado sobre \emph{Java}, es multiplataforma, es decir, se puede instalar sobre cualquier sistema operativo siempre que cuente con \emph{Java (recomiendan la última versión de Java 8)}. La opción más habitual es utilizar un servidor con SO \emph{Linux}. \cite{AP:2}\\
+
+Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{Cassandra} se graduó como un proyecto de \emph{Apache Incubator} en 2010, y desde entonces ha liberado 11 versiones. Sigue manteniendo de forma activa 3 de ellas. \cite{AP:5} \\
+
+El dominio de aplicación de \emph{Cassandra} se corresponde con el análisis de datos en entornos distribuidos donde se puede sacrificar la \emph{consistencia} de los datos frente a la disponibilidad y a la tolerancia a particiones de red (Teorema CAP). Se centra en la disponibilidad y la escalabilidad lineal, es decir, se mejora el rendimiento en relación al número de nodos que se encuentran en la red \cite{WIKI:5}. Esta orientado a entornos donde no existe un nodo maestro, es decir, entornos totalmente distribuidos donde los nodos se comunican por una red \emph{P2P}.\\
+
+Este software se distribuye bajo una licencia \emph{Apache 2}, es una licencia open-source que implica que se puede utilizar para cualquier propósito de forma gratuita. La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas. \cite{WIKI:6}\\
+
+A diferencia de los gestores de bases de datos relacionales, \emph{Cassandra} no sigue las propiedades de transacciones \emph{ACID}, pero en su lugar ofrece transacciones \emph{atómicas}, \emph{aisladas} y transacciones \emph{persistentes} con \emph{consistencia eventual} o modificable, es decir, el usuario puede decidir el nivel de exigencia que quiere fijar sobre la consistencia de una transacción. \cite{DS:1} \\
+
+La herramienta de realización de consultas es \emph{CQLSH}, una herramienta de línea de comandos para interactuar con \emph{Cassandra} utilizando \emph{CQL (Cassandra Query Language)} \cite{AP:3}, un lenguaje para la realización de consultas y manipulación de los datos muy similar a \emph{SQL}. \cite{WIKI:5} \\
+Existen drivers (\emph{ODBC} y \emph{JDBC (Java)}) con los cuales podemos realizar el acceso a la base de datos utilizando distintos lenguajes de programación, tales como: \emph{Java}, \emph{Python}, \emph{NodeJS (JavaScript)}, \emph{Dart}, \emph{C++}... \cite{AP:4} \\
+Para la administración de los nodos de un clúster, \emph{Cassandra} provee la herramienta \emph{Nodetool}. Esta herramienta brinda la capacidad de realizar tareas de administración sobre los nodos (añadir un nodo a un clúster, modificar la configuración de un nodo...) tanto como las herramientas necesarias para realizar una monitorización sobre el mismo. \cite{WIKI:5} \\
+
+El soporte técnico de este sistema no lo realiza \emph{Apache}, si no que recae sobre empresas de terceros. Por ejemplo, \emph{DataStax\footnote{\url{https://www.datastax.com/}}} ofrece servicios profesionales, servicio técnico y despliegues de este \emph{SGBD}. \cite{APW:1}\\
+
+\subsection{MongoDB}
+
+\emph{MongoDB} es un sistema de base de datos \emph{NoSQL}, orientado a documentos y de código abierto. Los datos se almacenan en estructuras de tipo \emph{BSON}\footnote{Especificación similar a \emph{JSON}} con un esquema dinámico, facilitando y agilizando la integración de los datos en determinadas aplicaciones.\\
+Se puede obtener de forma gratuita bajo la licencia de código abierto  \emph{AGPL}\footnote{Licencia pública general de Affero de \emph{GNU}}. También ofrece una licencia comercial que incluye distintas características como integración con \emph{SASL, LADP} o \emph{Kerberos}.\cite{WIKI:13}\\
+
+Entre las principales características del gestor\cite{WIKI:14}, se puede destacar la capacidad de consultas \emph{ad hoc}, con búsqueda por campos, consulta de rangos y expresiones regulares; Su capacidad de indexar cualquier campo en un documento\footnote{Los índices son almacenados en una estructura Árbol-B} y crear índices secundarios, aumentando la eficiencia de las consultas\cite{MDB:1}; Soporta la replicación \emph{primario-copia}, siendo cada grupo de los mismos un \emph{replica set}\footnote{Un \emph{replica set} es un grupo de procesos \emph{mongod} que mantienen en mismo conjunto de datos.\cite{MDB:2}}; La posibilidad de escalar horizontalmente, utilizando \emph{Sharding}\footnote{Método para distribuir datos a través de múltiples máquinas}, permitiendo añadir nuevos nodos al sistema mientras está en funcionamiento.\cite{MDB:3};  Mediante \emph{GridFS}\footnote{Especificación para almacenar y consultar archivos que superan el límite de tamaño de documentos \emph{BSON} de 18 \emph{MB}.\cite{MDB:4}}, \emph{MongoDB} puede ser utilizado como un sistema de archivos con balanceo de carga y tolerante a fallos, aprovechando las características de \emph{MongoDB}. Por último, permite realizar consultas con \emph{JavaScript}\cite{MDB:5}, enviándolas a la base de datos para que sean ejecutadas.\\
+
+Mongo no garantizaba las propiedades \emph{ACID} multidocumento hasta su versión 4.0 (enteriormente se cumplían para un solo documento), aunque posee las siguientes limitaciones\cite{WIKI:15}: 
+
+\begin{itemize}
+	\item Bloquea la base a nivel de documento en las escrituras, impidiendo realizar operaciones de escritura concurrentes en el mismo documento. 
+	\item El gestor retorna tras escribir en al menos una réplica, lo que no basta para garantizar la durabilidad ni la verificabilidad.\cite{MDB:9}
+	\item Si supera los 100 GB de datos, aparecen problemas de rendimiento.\cite{MDB:10}
+\end{itemize}
+
+El gestor posee drivers oficiales para diferentes lenguajes de programación: \emph{C, C++, C}\#, \emph{/.NET, Java, JavaScript, Node.js, Perl, PHP, Python, Ruby, Scala, Delphi} y \emph{C++ Builder.}\\
+
+Un apartado importante de MongoDB es \emph{Mongo Shell}\cite{MDB:6}, una interfaz interactiva en \emph{JavaScript} mediante la cual se puede consultar y modificar datos e incluso realizar operaciones de administración. Puede ser utilizado en \emph{Windows, macOS} o \emph{Linux}, lo que convierte a \emph{MongoDB} en un gestor multiplataforma.\\
+
+\emph{MongoDB} proporciona una serie de productos en la nube para poder almacenar y gestionar instancias del mismo, como lo son \emph{MongoDB Stitch, MongoDB Atlas Data Lake} o \emph{MongoDB Cloud Manager}, entre otros.\cite{MDB:7}
+
+Además, el gestor posee una gran serie guías para cada una de sus funcionalidades en su página web\cite{MDB:8}, así como un soporte técnico al que se contactar mediante correo o vía telefónica\footnote{https://www.mongodb.com/contact}.
+
+\subsection{Apache HBase}
+
+\emph{HBase} es sistema gestor de bases de datos \emph{NoSQL}, con almacenamiento basado en columnas. Fue desarrollado por \emph{Powerset\footnote{\emph{Powerset} es una compañía norteamericana que desarrolló un motor de búsqueda con lenguaje natural.\cite{WIKI:7}}} para procesar grandes cantidades de datos para realizar las búsquedas con lenguaje natural. Actualmente es un proyecto de alto nivel de \emph{Apache Software Foundation}. \cite{WIKI:8}\\
+\emph{Apache HBase} provee la capa superior del sistema de ficheros de \emph{Apache Hadoop\footnote{\emph{Apache Hadoop} es un framework de software que permite a las aplicaciones trabajar con miles de nodos y petabytes de datos.\cite{WIKI:9}}}, está inspirado en \emph{Google BigTable\footnote{\emph{BigTable} es un sistema gestor de bases de datos creado por \emph{Google} con las características de ser distribuido, de alta eficiencia y con licencia privativa.\cite{WIKI:10}}} y el sistema de ficheros de \emph{Google}.\\
+
+Al estar programado con \emph{Java}, \emph{Apache HBase} es una solución multiplataforma, aunque desde la documentación del \emph{SGBD} no recomiendan utilizar \emph{Windows} en entornos de producción. Uno de los prerequisitos para utilizar este sistema es tener \emph{JDK} instalado (recomiendan \emph{JDK8}). \cite{AP:6}\\
+
+\emph{Apache HBase} es un \emph{SGBD} orientado al procesamiento de grandes cantidades de datos, es decir, está orientado al análisis de datos (\emph{OLAP}).\\
+
+Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{HBase} es un proyecto de alto nivel de \emph{Apache}. Su última versión estable se liberó en abril de 2006. \cite{WIKI:8} \\
+
+\emph{HBase} se distribuye bajo una licencia \emph{Apache 2}, que, como se ha explicado anteriormente, permite la utilización del software para cualquier propósito de forma gratuita. \textbf{\textit{La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas.}} \textbf{{\Large Esto se puede quitar si eso}.} \cite{WIKI:6}\\
+
+Sobre la escalabilidad, este \emph{SGBD} está orientado a un entorno distribuido. Al igual que \emph{Apache Cassandra}, está orientado a la escalabilidad lineal, es decir, el rendimiento del sistema mejora de manera lineal respecto al número de nodos del sistema. \cite{AP:7} \\
+
+A diferencia de los \emph{SGBD} relacionales, \emph{HBase} provee transacciones \emph{ACID} a nivel de fila. Para ello hace uso de mecanismos de bloqueo por filas \emph{(row level lock)} y un sistema de control de la concurrencia multiversión \cite{BAP:1}\cite{QL:1}. Es un mecanismo que utilizan los \emph{SGBD} relacionales para permitir la concurrencia, es decir, el sistema gestor almacena distintas versiones del objeto con el que se esta trabajando mientras alguien esté trabajando con alguna de ellas. \cite{WIKI:12} \\
+
+Para el acceso a este \emph{SGDB}, desde la página web, nos proporcionan una serie de conectores. También, podemos realizar el <acceso utilizando \emph{SQL} existe \emph{Apache Phoenix\footnote{\emph{Apache Phoenix} es una base de datos de código abierto, masivamente paralela con soporte \emph{OLTP} para \emph{Hadoop} utilizando \emph{HBase} como servicio de almacenamiento. \cite{WIKI:11}}}, que proporciona una capa de acceso a \emph{HBase} asi como el acceso con drivers \emph{JDBC} y e integración con herramientas de inteligencia de negocio \cite{WIKI:8}. \\
+Para la realización de tareas como las copias de seguridad, \emph{Apache HBase} provee herramientas integradas para ello. Esta copia de seguridad se guardará automáticamente en la ubicación especificada, pudiendo ser el propio \emph{HDFS} donde está desplegada la máquina, otro \emph{HDFS} de otro centro de datos, o un servicio en cloud compatible con \emph{HDFS}. \cite{AP:8}\\
+
+
 
 \section{SGBD}
 \subsection{Oracle}
@@ -103,6 +260,13 @@ Dado que el Gobierno de Aragón es una entidad pública se buscará el uso de un
 \textbf{tambo}
 \subsection{HBase}
 \textbf{hayk}
+
+\newpage
+
+\addcontentsline{toc}{section}{Referencias}
+\bibliography{bibliografia}
+\bibliographystyle{abbrv} 
+
 \end{document}
 
 
