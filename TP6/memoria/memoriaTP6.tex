@@ -1,4 +1,4 @@
-\documentclass[10pt]{article}
+\documentclass[3pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.8in]{geometry}
 \usepackage{graphicx}
@@ -10,6 +10,8 @@
 % Para los codigos
 \usepackage{listings}
 \usepackage[spanish]{babel}
+\setlength{\parindent}{0.5cm}
+\linespread{0.9}
 
 \begin{document}
 
@@ -159,7 +161,7 @@ Asimismo, \emph{DB2} ofrece múltiples opciones de despliegue (híbrido, \emph{o
 
 Las plataformas que admite el gestor son \emph{AIX, HP-UX, UNIX, Linux, Solaris y Windows}, además de poseer una versión para \emph{Z/OS}\footnote{Sistema actual de las computadoras de \emph{IBM}}, la cual está optimizada para \emph{SOA, CRM} y almacenamiento de datos.\cite{DB2:6}\\
 
-Por último, el gestor ofrece una serie de herramientas de administración, gestión de rendimiento, recuperación, réplicas y aplicaciones. La mayoría de estas herramientas proporcionan una interfaz gráfica de usuario (\emph{GUI}) y una interfaz \emph{ISPF}\footnote{Interactive System Productivity Facility} que permiten al usuario realizar la mayoría de tareas de \emph{DB2} de forma interactiva.\cite{DB2:7}
+Por último, el gestor ofrece una serie de herramientas de administración, gestión de rendimiento, recuperación, réplicas y aplicaciones. La mayoría de estas herramientas proporcionan una interfaz gráfica de usuario (\emph{GUI}) y una interfaz \emph{ISPF}\footnote{Interactive System Productivity Facility} que permiten al usuario realizar la mayoría de tareas de \emph{DB2} de forma interactiva.\cite{DB2:7}\newpage
 
 \subsection{Microsoft SQL Server}
 
@@ -179,28 +181,26 @@ Respecto a concurrencia ofrece tres tipos de soluciones para mejorarla. La prime
 
 Respecto al coste de las licencias, la versión \emph{Enterprise} tiene su coste de licencia por núcleos, su precio inicial es de 13.000 euros en adelante. La versión \emph{Standard} tiene un coste de 3.000 euros y al igual que el anterior es en función al número de núcleos. Destacar que ambos comienzan con un total de dos núcleos. Para terminar, destacar que dispone de una licencia Express para bbdd rápidas con coste gratuito, y de una licencia de desarrollador con limitaciones de uso y almacenamiento también sin coste.\\
 
-\subsection{Access}
+\subsection{Microsoft Access}
 \emph{Microsoft Access} es un sistema de gestión de bases de datos incluido en el paquete ofimático denominado \emph{Microsoft Office}, sucesor de \emph{Embedded Basic}. \emph{Access} es un gestor de datos que utiliza los conceptos de bases de datos relacionales y pueden manejarse por medio de consultas e informes. Está adaptado para recopilar datos de otras utilidades como \emph{Excel} o \emph{SharePoint}. A partir del 22 de septiembre de 2015 la versión más nueva es \emph{Access 2016}. \cite{ACC:1} \\
 
 Los requisitos para la utilización de este gestor son un sistema operativo \emph{Windows 10}, un procesador de 2 núcleos a 1'6GHz, una memoria RAM de 2GB, un espacio libre en disco duro de 4 GB y una cuenta Microsoft \cite{ACC:2}. El precio para adquirir una licencia para 1 PC de \emph{Access} es de 135\euro. \cite{ACC:3} \\
-
 Las bases de datos \emph{access} son útiles para pequeñas y medianas empresas o departamentos individuales, ya que cuentan con una capacidad limitada. Cualquier sector cuyo uso vaya más allá de las 2 GB descubrirá sus limitaciones \cite{ACC:4}. Para evitar esta limitación de tamaño, se puede crear vínculos a tablas de otras bases de datos de \emph{Access}. Puede crear vínculos a tablas de varios archivos de base de datos, cada uno de los cuales puede tener hasta 2 gigabytes de tamaño. \cite{ACC:5}\\
 
 \emph{Microsoft Access} ofrece consultas parametrizadas \footnote{Se denominan consultas paramétricas a aquellas consultas, normalmente de selección, que bajo un campo por el que se desea establecer un criterio de filtrado, en vez de implicar a valores constantes que hacen que dicha consulta al ser ejecutada siempre realice "lo mismo", se implique a campos (especificados entre corchetes [ ]) a los cuales se les asignan valores diferentes para cada ejecución de la consulta (normalmente serán solicitados al usuario mediante una ventana en pantalla).\cite{ACC:7}}. Estas consultas y tablas \emph{Access} se pueden referenciar desde otros programas como \emph{VB6 \footnote{Visual Basic 6.0}} y \emph{.NET} a través de \emph{DAO} o \emph{ADO}. \cite{ACC:6}\\
-
 También está el formato de base de datos \emph{Jet \footnote{Jet es un motor de bases de datos que permitiría mantener los archivos .mdb a través de ODBC \cite{ACC:8}}}, que puede contener la aplicación y los datos en un archivo. Esto hace muy conveniente para distribuir la aplicación completa a otro usuario, que puede ejecutarla en entornos desconectados. \cite{ACC:6}\\
 
 El límite técnico de las bases de datos \emph{access} es de 255 usuarios al mismo tiempo, pero el límite real es entre 10 y 80 usuarios dependiendo del tipo aplicación. \cite{ACC:4}\\
 
-\subsection{Caché}
-\emph{Caché} es un SGBD comercial que pertenece a \emph{InterSystems}. Está destinado principalmente a servicios de salud, administración, banca, finanzas, gobierno y otros sectores parecidos. \emph{Caché} permite usar la base de datos SQL y orientado a objetos, al igual que permite a los desarrolladores manipular directamente las estructuras de datos almacenados en arrays multidimensionales. \emph{MUMPS} es el lenguaje que inspiró a \emph{Caché}\footnote{https://en.wikipedia.org/wiki/MUMPS}.\cite{wikiCache}\\
+\subsection{InterSystems Caché}
+\emph{Caché} es un SGBD comercial que pertenece a \emph{InterSystems}. Está destinado principalmente a servicios de salud, administración, banca, finanzas, gobierno y otros sectores parecidos. \emph{Caché} permite usar la base de datos SQL y orientado a objetos, al igual que permite a los desarrolladores manipular directamente las estructuras de datos almacenados en arrays multidimensionales. \emph{MUMPS} es el lenguaje que inspiró a \emph{Caché}.\cite{wikiCache}\\
 
-\emph{Caché}\footnote{http://www.intersystems.com/wp-content/uploads/sites/11/CacheTechnologyGuide.pdf} deriva gran parte de su potencial a su arquitectura única. El core de \emph{Caché} es una BBDD que provee los servicios más comunes - incluyendo almacenamiento, concurrencia, transacciones, administración de procesos - necesario para un gestor en condiciones. Sin embargo, donde encontramos lo mejor es en su variedad de modelos de datos, este combina objetos, tablas relacionales y estructuras multidimensionales, todos accediendo a los mismos datos que se describen un única vez. Pero \emph{Caché} no es solo un SGDB, también incluye un servidor de aplicaciones con capacidades de POO.  \\
-Caché proporciona diferentes lenguajes de script para creación y acceso de datos (\emph{Caché ObjectScript}, \emph{Caché Basic}…). Lenguajes como \emph{Java},\emph{ C\#}, \emph{C++} tienen soporte para llamada directa, pero también permite el uso de \emph{ODBC}, \emph{JDBC}, \emph{.Net} e interfaces que provee \emph{Caché} para acceder a la BBDD. Como hemos dicho anteriormente, Caché incluye mas funcionalidades a parte de un SGBD, incorpora herrramientas para desarrollar aplicaciones Web basadas en navegador a través de\emph{ InterSystem Zen} o \emph{Caché Server Pages}. También tiene soporte para aplicaciones que no se basan en web, por ejemplo, aquellas cuya IU está programada en \emph{Java}, \emph{.net},\emph{ C++} o\emph{ C\#}, brindando grandes rendimientos si se implementa el resto de la aplicación con \emph{Caché}. También es compatible con otras tecnologías como Angular a través de la \emph{API Rest}.\\
+\emph{Caché} deriva gran parte de su potencial a su arquitectura única. El core de \emph{Caché} es una BBDD que provee los servicios más comunes - incluyendo almacenamiento, concurrencia, transacciones, administración de procesos - necesario para un gestor en condiciones. Sin embargo, donde encontramos lo mejor es en su variedad de modelos de datos, este combina objetos, tablas relacionales y estructuras multidimensionales, todos accediendo a los mismos datos que se describen un única vez. Pero \emph{Caché} no es solo un SGDB, también incluye un servidor de aplicaciones con capacidades de POO. \cite{CACHE:3} \\
+Caché proporciona diferentes lenguajes de script para creación y acceso de datos (\emph{Caché ObjectScript}, \emph{Caché Basic}…).  Soporta lenguajes como Java y C++, conectores como JDBC y ODBC.  Caché incluye mas funcionalidades a parte de un SGBD, incorpora herrramientas para desarrollar aplicaciones Web basadas en navegador a través de\emph{ InterSystem Zen} o \emph{Caché Server Pages}. También tiene soporte para aplicaciones que no se basan en web, por ejemplo, aquellas cuya IU está programada en \emph{Java} o \emph{C++}brindando grandes rendimientos si se implementa el resto de la aplicación con \emph{Caché}. También es compatible con otras tecnologías como Angular a través de la \emph{API Rest}.\\
 
-\emph{InterSystem Caché }no es muy abierto cuando hablamos de SO. Tiene licencias para unos SOs y hardware especificos que se pueden encontrar en \href{https://www.intersystems.com/support-learning/support/cache-licensing-platforms/}{esta web}. Además, nos ofrecen dos tipos de licencias, \emph{Independiente de Plataforma} o \emph{Especifico para Plataforma}, destacar que si se adquiere la específica y se cambia de SO, se aplican cargos. \cite{CACHE:1} \\
+\emph{InterSystem Caché }no es muy abierto cuando hablamos de SO. Tiene licencias para unos SOs y hardware especificos que se pueden encontrar en \href{https://www.intersystems.com/support-learning/support/cache-licensing-platforms/}{esta web}. Además, nos ofrecen dos tipos de licencias, \emph{Independiente de Plataforma} o \emph{Especifico para Plataforma}, destacar que si se adquiere la específica y se cambia de SO, se aplican cargos.\\
 
-En\footnote{link} relación a las características, \emph{Caché} incluye un sistema de bloqueos muy potente que hace poder tener acceso concurrente a la BBDD. Ofrece operaciones atómicas sin necesidad de bloqueos a nivel aplicación, esto lo realiza asignando ids únicos a cada objeto o fila. También posee la capacidad de realizar \emph{locks} a nivel lógico, es decir, no bloquea grandes cantidades de datos mientras se realizan actualizaciones. Los bloqueos tiene gran granularidad y es capaz de realizar bloqueos a nivel fila u objeto. Por último, también dispone de bloqueos distribuidos.\\
+En relación a las características, \emph{Caché} incluye un sistema de bloqueos muy potente que hace poder tener acceso concurrente a la BBDD. Ofrece operaciones atómicas sin necesidad de bloqueos a nivel aplicación, esto lo realiza asignando ids únicos a cada objeto o fila. También posee la capacidad de realizar \emph{locks} a nivel lógico, es decir, no bloquea grandes cantidades de datos mientras se realizan actualizaciones. Los bloqueos tiene gran granularidad y es capaz de realizar bloqueos a nivel fila u objeto. Por último, también dispone de bloqueos distribuidos.\cite{CACHE:1}\\
 
 Este gestor ofrece una buena escalabilidad debido a que usa un protocolo propio, \emph{ECP (Enterprise Cache Protocol).} Este protocolo permite que diferentes máquinas distribuidas usen unos a otros como bases de datos. Lo más destacable de este protocolo es que a nivel aplicación no hay cambios, es transparente por lo que para las apliaciones es como acceder de forma local. Otro punto a destacar de este proceso, es que si un cliente necesita un dato de otro servidor de datos, el servidor local lo obtiene, se lo proporciona y lo cachea para futuros accesos. Tener datos cuyo acceso es habitual de manera cacheada, hace que el trafico en red se reduzca y de esta manera se brinde un servicio mucho mejor.
 
@@ -229,13 +229,10 @@ El punto clave de \emph{VoltDB} es su velocidad. Puede procesar hasta 45 veces m
 \emph{Cassandra}, al estar programado sobre \emph{Java}, es multiplataforma, es decir, se puede instalar sobre cualquier sistema operativo siempre que cuente con \emph{Java (recomiendan la última versión de Java 8)}. La opción más habitual es utilizar un servidor con SO \emph{Linux}. \cite{AP:2}\\
 
 Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{Cassandra} se graduó como un proyecto de \emph{Apache Incubator} en 2010, y desde entonces ha liberado 11 versiones. Sigue manteniendo de forma activa 3 de ellas. \cite{AP:5} \\
-
 El dominio de aplicación de \emph{Cassandra} se corresponde con el análisis de datos en entornos distribuidos donde se puede sacrificar la \emph{consistencia} de los datos frente a la disponibilidad y a la tolerancia a particiones de red (Teorema CAP). Se centra en la disponibilidad y la escalabilidad lineal, es decir, se mejora el rendimiento en relación al número de nodos que se encuentran en la red \cite{WIKI:5}. Esta orientado a entornos donde no existe un nodo maestro, es decir, entornos totalmente distribuidos donde los nodos se comunican por una red \emph{P2P}.\\
 
 Este software se distribuye bajo una licencia \emph{Apache 2}, es una licencia open-source que implica que se puede utilizar para cualquier propósito de forma gratuita. La licencia \emph{Apache 2} es una licencia permisiva ya que la modificación del software distribuido con la misma no tiene por qué mantener esta licencia, exceptuando las partes que no hayan sido modificadas. \cite{WIKI:6}\\
-
 A diferencia de los gestores de bases de datos relacionales, \emph{Cassandra} no sigue las propiedades de transacciones \emph{ACID}, pero en su lugar ofrece transacciones \emph{atómicas}, \emph{aisladas} y transacciones \emph{persistentes} con \emph{consistencia eventual} o modificable, es decir, el usuario puede decidir el nivel de exigencia que quiere fijar sobre la consistencia de una transacción. \cite{DS:1} \\
-
 La herramienta de realización de consultas es \emph{CQLSH}, una herramienta de línea de comandos para interactuar con \emph{Cassandra} utilizando \emph{CQL (Cassandra Query Language)} \cite{AP:3}, un lenguaje para la realización de consultas y manipulación de los datos muy similar a \emph{SQL}. \cite{WIKI:5} \\
 Existen drivers (\emph{ODBC} y \emph{JDBC (Java)}) con los cuales podemos realizar el acceso a la base de datos utilizando distintos lenguajes de programación, tales como: \emph{Java}, \emph{Python}, \emph{NodeJS (JavaScript)}, \emph{Dart}, \emph{C++}... \cite{AP:4} \\
 Para la administración de los nodos de un clúster, \emph{Cassandra} provee la herramienta \emph{Nodetool}. Esta herramienta brinda la capacidad de realizar tareas de administración sobre los nodos (añadir un nodo a un clúster, modificar la configuración de un nodo...) tanto como las herramientas necesarias para realizar una monitorización sobre el mismo. \cite{WIKI:5} \\
@@ -273,13 +270,10 @@ Además, el gestor posee una gran serie guías para cada una de sus funcionalida
 Al estar programado con \emph{Java}, \emph{Apache HBase} es una solución multiplataforma, aunque desde la documentación del \emph{SGBD} no recomiendan utilizar \emph{Windows} en entornos de producción. Uno de los prerequisitos para utilizar este sistema es tener \emph{JDK} instalado (recomiendan \emph{JDK8}). \cite{AP:6}\\
 
 \emph{Apache HBase} es un \emph{SGBD} orientado al procesamiento de grandes cantidades de datos, es decir, está orientado al análisis de datos (\emph{OLAP}).\\
-
 Este \emph{SGBD} pertenece a \emph{Apache Software Foundation}, una compañía sin ánimo de lucro que desde 1999 ha desarrollado software open-source. \emph{HBase} es un proyecto de alto nivel de \emph{Apache}. Su última versión estable se liberó en abril de 2006. \cite{WIKI:8} \\
-
 \emph{HBase} se distribuye bajo una licencia \emph{Apache 2}, que, como se ha explicado anteriormente, permite la utilización del software para cualquier propósito de forma gratuita. \cite{WIKI:6}\\
 
 Sobre la escalabilidad, este \emph{SGBD} está orientado a un entorno distribuido. Al igual que \emph{Apache Cassandra}, está orientado a la escalabilidad lineal, es decir, el rendimiento del sistema mejora de manera lineal respecto al número de nodos del sistema. \cite{AP:7} \\
-
 A diferencia de los \emph{SGBD} relacionales, \emph{HBase} provee transacciones \emph{ACID} a nivel de fila. Para ello hace uso de mecanismos de bloqueo por filas \emph{(row level lock)} y un sistema de control de la concurrencia multiversión \cite{BAP:1}\cite{QL:1}. Es un mecanismo que utilizan los \emph{SGBD} relacionales para permitir la concurrencia, es decir, el sistema gestor almacena distintas versiones del objeto con el que se esta trabajando mientras alguien esté trabajando con alguna de ellas. \cite{WIKI:12} \\
 
 Para el acceso a este \emph{SGDB}, desde la página web, nos proporcionan una serie de conectores. También, podemos realizar el <acceso utilizando \emph{SQL} existe \emph{Apache Phoenix\footnote{\emph{Apache Phoenix} es una base de datos de código abierto, masivamente paralela con soporte \emph{OLTP} para \emph{Hadoop} utilizando \emph{HBase} como servicio de almacenamiento. \cite{WIKI:11}}}, que proporciona una capa de acceso a \emph{HBase} asi como el acceso con drivers \emph{JDBC} y e integración con herramientas de inteligencia de negocio \cite{WIKI:8}. \\
