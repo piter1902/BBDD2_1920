@@ -63,7 +63,7 @@ Si fuese necesario se podría utilizar la infraestructura disponible en las ciud
 
 Por ello, en base a estos requisitos buscaremos un sistema gestor \textit{OLTP (Online Transaction Processing)} ya que un gestor OLAP está enfocado para en el análisis. Respecto al volumen de datos, el sistema no se prevee que almacene grandes volúmenes de datos, por lo tanto la escalabilidad no es un factor primordial.
 
-Según los datos del presupuesto de turismo proporcionados por el presupuesto de la comunidad de Aragón del año 2020 \textbf{insertar referencia aquí}, turismo cuenta con una cantidad de 13.100 \euro \ ( trece mil cien euros ).\\
+Según los datos del presupuesto de turismo proporcionados por el presupuesto de la comunidad de Aragón del año 2020 \textbf{insertar referencia aquí}, turismo cuenta con una cantidad de 13.100 \euro \ ( trece mil cien euros ).\cite{ARAG:1}\\
 Con estas condiciones suponemos que vamos a contar con un presupuesto similar.\\
 
 Dado que el Gobierno de Aragón es una entidad pública se buscará el uso de un SGBD consolidado, y que ofrezca buen soporte en el tiempo. \\\\
@@ -145,7 +145,7 @@ Otro aspecto muy importante a tener en cuenta a la hora de elegir \emph{SGBD} es
 
 \emph{Postgres} es uno de los gestores con más soporte y recorrido en el mercado, y por tanto, cuenta con una herramienta administración llamada \emph{pgAdmin} (desde 2016 en la versión pgAdmin4), que facilita la gestión y administración de bases de datos ya sea mediante instrucciones SQL o con ayuda de un entorno gráfico. Permite acceder a todas las funcionalidades de la base de datos; consulta, manipulación y gestión de datos, incluso opciones avanzadas como manipulación del motor de replicación \emph{Slony-I\footnote {Slony-I es un sistema asíncrono de replicación maestro-esclavo para PostgreSQL , que proporciona soporte para conexión en cascada y conmutación por error . Asíncrono significa que cuando una transacción de base de datos se ha comprometido con el servidor maestro, todavía no se garantiza que esté disponible en esclavos. La conexión en cascada significa que las réplicas se pueden crear (y actualizar) a través de otras réplicas, es decir, no necesitan conectarse directamente al maestro.\cite{SLO:1}}}. A parte de este entorno de escritorio, también existen otras herramientas como \emph{psql} (cliente de consola) o \emph{PhpPgAdmin} (entorno web).\cite{PG:1}
 
-\subsection{DB2}
+\subsection{IBM DB2}
 
 \emph{IBM DB2} es un gestor de bases de datos relacional orientada a empresas capaz de gestionar datos estructurados y no estructurados en entornos públicos, privados y locales.\cite{DB2:1} Actualmente es una marca comercial, propiedad de \emph{IBM}, aunque posee una versión gratuita, \emph{DB2 Express-C}\cite{DB2:2}, que permite desarrollar aplicaciones con las funcionalidades básicas de \emph{DB2}.\\
 
@@ -172,7 +172,7 @@ La arquitectura que usan se basa en una capa externa que actúa como interfaz. T
 
 Una de las ventajas que tiene este gestor es la cantidad de servicios que ofrece, como por ejemplo, \emph{servicio de Broker}, \emph{servicio de análisis}, \emph{SQLCMD }(permite ejecución de consultas desde terminal), y un \emph{servicio de replicación}. Respecto al servicio de replicación incluye replicación transaccional, replicación por mezcla (cambios tanto en publicador como suscriptor, y luego se sincronizan de manera cruzada), y replicación por instantánea (se realiza una copia de la base y los suscriptores replican estos datos). \\
 
-En cuanto a soporte de lenguajes, ofrece drivers para muchos, desde \emph{Java} y\emph{C++} hasta \emph{Ruby}, en \hyperref{https://docs.microsoft.com/en-us/sql/connect/homepage-sql-connection-programming?view=sql-server-ver15}{este link} podemos encontrar todos. \cite{MSSQL:1} \\
+En cuanto a soporte de lenguajes, ofrece drivers para muchos, desde \emph{Java} y\emph{C++} hasta \emph{Ruby}, en \href{https://docs.microsoft.com/en-us/sql/connect/homepage-sql-connection-programming?view=sql-server-ver15}{este enlace} podemos encontrar todos. \cite{MSSQL:1} \\
 
 Como es de esperar es un gestor que garantiza las propiedades \emph{ACID} en las transacciones.\\
 Para garantizar una alta disponibilidad nos ofrece replicación, envios de log, \emph{mirroring}, \emph{clustering} y una funcionalidad llamada \emph{allwaysON Avilability Groups.} La replicación usa una serie de \emph{jobs}, donde interactuan un \emph{publicador(publisher)}, un \emph{distribuidor}, y un \emph{suscriptor(subscriber)}. El log se lleva a cabo a través de tareas que realizan transacciones del log con copias de la base desde un \emph{primario} a un \emph{secundario}, al igual que con el servicio de \emph{mirroring}. El clustering cosiste en que los diferentes servicios en funcionamiento realizan almacenamiento en diferentes putos compartidos que son altamente fiables. Por último el servicio de AllwaysON consiste en realizar copias en diferentes \emph{grupos de disponibildiad} que creamos, estos grupos realizan la conmutación por error conjuntamente.\\
@@ -281,6 +281,22 @@ Para la realización de tareas como las copias de seguridad, \emph{Apache HBase}
 
 \newpage
 
+\section{Conclusiones}
+
+Entre los gestores analizados, descartaríamos la utilización de todos aquellos \emph{NoSQL}, ya que una de sus propiedades más atractivas es la escalabilidad horizontal. Dado que no se prevee tener un número de accesos al portal muy elevado, se ha considerado la prioridad de la propiedad de consistencia ante la disponibilidad. Por lo tanto, se estudiarán las opciones de bases de datos centralizadas. \\
+
+En cuanto a \emph{VoltDB}, su ámbito de actuación son las bases de datos \emph{OLAP}, debido a su velocidad y mecanismos de Inteligencia Artificial (modelos \emph{ML}). Por lo tanto, no se adecua a los requisitos del sistema. \\
+
+De los gestores restantes, \emph{PostgreSQL} es un gestor \emph{Open Source} diseñado para trabajar con grandes volúmenes de datos, siendo ineficiente para bases de datos pequeñas. A priori no se tiene una previsión acerca del volumen de datos que contendrá nuestra base de datos.\\
+
+\emph{InterSystems Caché} es utilizado en un ámbito donde existen diferentes bases de datos que necesitan una interconexión entre ellas, como es el caso de la banca. Por ello se descarta su uso.\\
+
+En lo referente a \emph{Microsoft Access} al ser un gestor monousuario, que sólo se puede instalar en \emph{Windows} y un tamaño de fichero máximo de 2 \emph{GB}, se descarta ya que desconoce el volumen de datos.\\
+
+Entre las opciones restantes encontramos a \emph{Microsoft SQL Server, Oracle} y \emph{MySQL}. \emph{SQL Server} y \emph{Oracle} se podrían adaptar a los requisitos de nuestro sistema pero su precio excede el presupuesto disponible de la dirección general de turismo.\\
+Tras el análisis realizado anteriormente, se ha llegado a la conclusión de que se seleccionará \emph{MySQL} como sistema gestor debido a las siguientes razones. En primer lugar, se puede resaltar su precio, ya que se dispone de la versión \emph{Open Source} o en su defecto, la versión con soporte de \emph{Oracle} que se ajusta con creces al presupuesto. En segundo lugar se puede destacar su alta compatibilidad con \emph{Oracle}, uno de los gestores utilizados por el Gobierno de Aragón. Otro de los puntos a destacar es que su comunidad es muy amplia, lo que proporciona un buen soporte sin llegar a adquirir servicios adicionales. Respecto a páginas similares que hagan uso de este gestor, se tiene el caso de \emph{Twitter} y \emph{Facebook}, dos empresas de gran envergadura. Cabe destacar el buen soporte de este sistema ante la concurrencia, escalabilidad y el soporte en los sistemas operativos más utilizados en este ámbito. 
+
+\newpage
 \addcontentsline{toc}{section}{Referencias}
 \bibliography{bibliografia}
 \bibliographystyle{abbrv} 
