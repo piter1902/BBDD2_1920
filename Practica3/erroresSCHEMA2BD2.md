@@ -28,3 +28,16 @@ SELECT d.id_direccion, d.calle, d.numero, d.piso, d.ciudad, c.codpostal
 FROM DIRECCION@SCHEMA2BD2 d JOIN CODPOSTAL@SCHEMA2BD2 c ON d.calle = c.calle AND d.ciudad = c.ciudad;
 ```
 
+```
+-- No hay operaciones que no tengan hijos
+SELECT *
+FROM operacion@SCHEMA2BD2 o
+WHERE o.numop NOT IN (
+		SELECT ot.numop
+		FROM optransferencia@SCHEMA2BD2 ot
+	)
+	AND o.numop NOT IN (
+		SELECT oe.numop
+		FROM opefectivo@SCHEMA2BD2 oe
+	);
+```
