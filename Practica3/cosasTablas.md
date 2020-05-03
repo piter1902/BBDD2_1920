@@ -169,4 +169,6 @@ CCC                  NOT NULL CHAR(20)
    WHERE (Operacion.CCC = OpTransferencia.CCC) AND (Operacion.numOp = OpTransferencia.numOp)
 )
 
--> Aqui lo que hace es: mirar si la cuenta de destino pertenece a una cuenta (porque no lo comprueba de otra forma) y el where es la condición de "JOIN", se está asegurando que las operaciones de transferencia este esten en cuenta y que todas las operaciones de transferencia estén en operación.
+**(ESTA NO)** -> Aqui lo que hace es: mirar si la cuenta de destino pertenece a una cuenta (porque no lo comprueba de otra forma) y el where es la condición de "JOIN", se está asegurando que las operaciones de transferencia este esten en cuenta y que todas las operaciones de transferencia estén en operación.
+
+-> Es un left outter join. No se asegura de que las cuentas destino en optransferencia existan, solamente se encarga de realizar los joins necesarios para facilitar las consultas.
