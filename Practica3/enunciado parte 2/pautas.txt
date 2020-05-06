@@ -1,0 +1,4 @@
+En PRIMERO:
+	- Las herencias todo a los hijos
+En SEGUNDO:
+	- Las herencias compartidas entre los padres e hijos (atributos comunes en los padres)
