@@ -10,6 +10,7 @@
 \usepackage{listings}
 \usepackage[spanish]{babel}
 \usepackage[hidelinks]{hyperref}
+\usepackage{lscape}
 
 
 \begin{document}
@@ -24,21 +25,21 @@
 	  Hayk Kocharyan\\
 	  757715@unizar.es
 	  \and
+	  Juan José Tambo Tambo\\
+	  755742@unizar.es
+	  \and
 	  Pedro Tamargo Allué\\
 	  758267@unizar.es
 	  \and
 	  Jesús Villacampa Sagaste\\
 	  755739@unizar.es
-	  \and
-	  Juan José Tambo Tambo\\
-	  755742@unizar.es
 	}
 	\date{\today}
 	
 	\clearpage\maketitle
 	\thispagestyle{empty}
 	\tableofcontents
-	
+
 \end{titlepage}
 
 \newpage 
@@ -60,6 +61,29 @@ Los esfuerzos invertidos por cada integrante del equipo son:
 
 \textbf{Mostrar aqui el ER de la práctica anterior y contar su traducción a SQL diciendo las decisiones de diseño de forma DETALLADA.}
 
+Durante el desarrollo de la práctica 1 se diseñó una base de datos para un banco que quería gestionar cuentas con múltiples propietarios, diferentes tipos de cuentas (cuentas ahorro y cuentas corrientes), operaciones (transacciones entre cuentas, o movimientos de dinero en efectivo) y las sucursales de la entidad.\\
+En la Figura \ref{fig:er1} se puede observar el esquema entidad relación sobre el problema planteado. Se ha planteado las relaciones entre los distintos tipos de cuentas como una generalización, ya que todas comparten ciertos atributos como el número de cuenta, el \emph{IBAN}, la fecha de apertura y el saldo restante. Esta generalización es disjunta ya que no se considera posible la capacidad de que una cuenta pertenezca a los dos tipos de entidades al mismo tiempo. También, se trata de una generalización obligatoria ya que no se considera el caso de que una cuenta no pertenezca a algunos de las entidades derivadas de \emph{Cuenta}.\\
+Con transacción ocurre lo mismo, una transferencia entre cuentas y las operaciones de retirada o ingreso de efectivo se pueden generalizar en una nueva entidad \emph{Transacción} con los atributos comunes a ambas entidades, tales como: el número de la transacción, la fecha y hora de la misma, su importe y una descripción a modo de concepto. Se trata de una generalización disjunta ya que una transferencia no puede pertenecer a los dos subtipos a la vez. También, se trata de una generalización obligatoria ya que en el contexto del problema no tiene sentido que exista una transferencia que no pertenezca a \emph{Operación (operaciones en efectivo)} o a \emph{Transferencia (transferencia de saldo entre cuentas)}.\\
+Se ha decidido que \emph{Transacción} debía ser débil respecto a \emph{cuenta} ya que depende en existencia e identificación de \emph{cuenta}, por lo tanto la relación \emph{Realizar} es una relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción}. No obstante, existe una transacción que no indica la debilidad de la entidad \emph{Transacción} respecto a \emph{Cuenta}, la relación \emph{Recibir}, una relación \emph{1:N} que relaciona las entidades \emph{Cuenta} y \emph{Transferencia} , y cuyo significado es relacionar una transferencia con la cuenta beneficiaria.\\
+Los clientes titulares de una cuenta se reflejan en la entidad \emph{Cliente}, que almacena el DNI, el nombre, los apellidos la dirección y el email. Se ha decidido que el \emph{DNI} sea la clave primaria ya que es único para los ciudadanos.\\
+La relación de \emph{Cliente} con \emph{Cuenta} se encuentra en \emph{Poseer}, una relación \emph{M:N} que posibilita que una cuenta tenga más de un titular.\\
+Para el almacenamiento de las sucursales de la entidad bancaria, se ha diseñado una entidad \emph{Sucursal}, que almacena el código de la entidad, su dirección postal y el teléfono de la oficina. Se ha decidido que el código de la sucursal sea la clave primaria que identifique a las sucursales ya que dentro de la misma entidad bancaria no existen dos sucursales con el mismo código.\\
+Se ha considerado que las transacciones se tienen que realizar en una sucursal, por lo tanto existe una relación entre \emph{Transacción} y \emph{Sucursal}. También, una cuenta corriente debe ser abierta en una determinada sucursal de la entidad.\\
+
+En la traducción de las generalizaciones del esquema conceptual al esquema lógico (modelo relacional) se han escogido dos estrategias. En la generalización de \emph{Cuenta} se ha mantenido la entidad, y las entidades derivadas de la misma solamente almacenan los atributos necesarios que no pertenecen a \emph{Cuenta}.\\
+Por otra parte, en la generalización de \emph{Transacción} se ha optado por eliminar la entidad generalizada, obteniendo así dos entidades independientes y duplicando algunos de sus atributos. \textbf{Leyendo esto me doy cuenta que nos hacía falta un \emph{Trigger}}. En esta misma generalización se ha traducido la relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción} como un atributo (el número de cuenta) en las tablas derivadas de \emph{Transacción}, siendo una referencia a la cuenta que ha realizado la transacción.\\
+{\LARGE \textbf{¿CÓMO LES PONEMOS EL ESQUEMA LÓGICO? Un diagrama?}}
+
+\textbf{Qué hacemos con esta figura? La llevamos a otro sitio?}
+\begin{landscape}
+\begin{figure}
+\centering
+\includegraphics[scale=0.75]{images/er_practica1.png}
+\caption{Esquema ER de la base de datos diseñada en la práctica 1}
+\label{fig:er1}
+\end{figure}
+\end{landscape}
+
 \section{Parte 1 - Determinación del esquema lógico y conceptual de la base de datos Oracle a integrar}
 
 \textbf{Esquema ER de la base de datos a integrar y PONER LAS CONSULTAS CON LAS QUE HEMOS SACADO LAS COSAS.}\\
@@ -67,13 +91,29 @@ Los esfuerzos invertidos por cada integrante del equipo son:
 
 \section{Parte 1 - Mejoras sugeridas para la base de datos a integrar}
 
-\textbf{Hablar aqui de los problemas que hemos encontrado y lo que supone que esté mal.}
+Durante el interrogatorio al catálogo de datos de la base de datos de \emph{Banquete} se han encontrado diversas anomalías y diferencias respecto a nuestra base de datos.\\
+En la base de datos a integrar una cuenta solo puede disponer de un titular. Además en \emph{Titular} (se corresponde con \emph{Cliente} de \emph{Banquito}), no dispone de un atributo destinado para la dirección, si no que cuenta con una clave ajena a una entidad \emph{Dirección}, que no está relacionada con su entidad \emph{CodPostal}. Esta entidad \emph{CodPostal} almacena: calle, ciudad y código postal, por lo tanto a partir de una dirección si que se puede obtener su código postal pero al no estar relacionado habría que realizar consultas extras y a la par de que la información se encuentra duplicada en dos tablas de la base de datos (calle y ciudad).\\
+La entidad \emph{Sucursal} no dispone de un atributo como clave ajena de \emph{Dirección}, en este caso solamente se dispone de una restricción de consistencia sobre su valor que comprueba que este atributo no sea \emph{NULL}. Esto puede duplicar la información existente en \emph{Dirección} y en este atributo \emph{Dir}.\\
+En la entidad \emph{CodEntidades} encontramos el problema de que no está relacionada con ninguna otra. En este caso no duplica información y en ella se encuentran los códigos de las distintas entidades bancarias conocidas por el sistema de cuentas de \emph{Banquete}.\\
+La entidad \emph{OpTransferencia} tiene un atributo destinado a albergar el número de cuenta corriente de la cuenta destino, no obstante, al igual que con \emph{Sucursal}, este atributo no es una clave ajena de una \emph{Cuenta}. Esto puede ser debido a que \emph{Banquete} (transferencia entre \emph{Banquete} y \emph{Banco Generosidad}) ofrece la posibilidad de realizar transferencias entre cuentas que no tienen porque pertenecer a su entidad. Este aspecto no se tuvo en cuenta a la hora de diseñar la base de datos de \emph{Banquito}.\\
+Un problema similar existe en la entidad \emph{OpEfectivo}, ya que tiene un atributo destinado a identificar la \emph{Sucursal} en la que se ha realizado una operación con dinero en efectivo, pero este campo no se trata de una restricción de integridad referencial (clave ajena) si no que se trata de una restricción de consistencia que se impide que este campo sea \emph{NULL}.\\
+Sobre la generalización de \emph{Cuenta} en \emph{CuentaCorriente} y \emph{CuentaAhorro} se ha descubierto que en la base de datos de \emph{Banquete} no se trata de una generalización disjunta si no que existen cuentas que pueden pertenecer a ambos tipos al mismo tiempo.\\
+
+
+\textbf{Hablar aquí de los problemas que hemos encontrado y lo que supone que esté mal.}
 
 \section{Parte 1 - Definición e implementación del esquema global en Oracle}
 
-\textbf{Poner aqui el esquema ER y decir las decisiones de diseño (y el por qué).}
+\textbf{Se me ocurre que podríamos explicar lo de que no ponemos como una entidad aparte lo de \emph{Dirección} exponiendo que no queríamos ``romper'' el mal trabajo que hicieron con \emph{Sucursal} y que queríamos unificarlo.}
+\textbf{Poner aquí el esquema ER y decir las decisiones de diseño (y el por qué).}
 
 \section{Parte 2 - Enunciado de un problema de diseño de bases de datos}
+
+Se desea diseñar una base de datos para gestionar la información inherente a un hospital. En el hospital trabajan médicos y enfermeros. Los médicos tienen asignados una serie de pacientes. Los enfermeros tienen asignada una planta.\\
+%Los pacientes ingresan en el hospital a partir del servicio de urgencias, y tras examinarles se les asigna a una planta.\\
+La información sobre los trabajadores del hospital deberá contener información sobre su DNI, nombre, apellidos, fecha de nacimiento, dirección, teléfono de contacto. Los médicos deberán almacenar su especialidad y su número de colegiado. Los enfermeros almacenarán el servicio al que están asignados (planta, hematología, diálisis...).\\
+Nuestro hospital está dividido en plantas, cada planta alberga pacientes ingresados y almacena la información relativa al uso destinado para esa planta.\\
+Los pacientes almacenan su DNI, nombre, apellidos, fecha de nacimiento, dirección y teléfono. Disponemos de un historial clínico que almacena la información sobre los diagnósticos realizados a los pacientes.
 
 \textbf{Poner aqui ese enunciado que hemos redactado}
 
@@ -95,7 +135,7 @@ Los esfuerzos invertidos por cada integrante del equipo son:
 
 \section{Actualizaciones de datos sobre el esquema global}
 
-\textbf{Viabilidad? Pues depende de donde quieras guardarlo. Pero esto habrá que hablar.}
+\textbf{Viabilidad? Pues depende de dónde quieras guardarlo. Pero esto habrá que hablar.}
 
 
 \end{document}

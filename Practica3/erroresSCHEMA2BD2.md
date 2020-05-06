@@ -26,9 +26,12 @@
 -- Direcciones bien (con su código postal)
 SELECT d.id_direccion, d.calle, d.numero, d.piso, d.ciudad, c.codpostal
 FROM DIRECCION@SCHEMA2BD2 d JOIN CODPOSTAL@SCHEMA2BD2 c ON d.calle = c.calle AND d.ciudad = c.ciudad;
-```
 
-```
+-- Hay cuentas que pertenecen a los dos hijos
+SELECT *
+FROM cuentaahorro@SCHEMA2BD2 ca
+WHERE ca.ccc IN (SELECT ccc FROM cuentacorriente@SCHEMA2BD2);
+
 -- No hay operaciones que no tengan hijos
 SELECT *
 FROM operacion@SCHEMA2BD2 o
