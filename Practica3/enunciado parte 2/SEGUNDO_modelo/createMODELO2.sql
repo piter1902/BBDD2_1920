@@ -21,14 +21,14 @@ CREATE TABLE "Enfermeros"
  CONSTRAINT "FK_21" FOREIGN KEY ( "DNI" ) REFERENCES "Personal" ( "DNI" )
 );
 
--- ************************************** "Médicos"
+-- ************************************** "Medicos"
 
-CREATE TABLE "Médicos"
+CREATE TABLE "Medicos"
 (
  "DNI"           varchar(9) NOT NULL,
  "Especialidad"  varchar(50) NOT NULL,
  "Num_Colegiado" varchar(50) NOT NULL,
- CONSTRAINT "PK_Médicos" PRIMARY KEY ( "DNI" ),
+ CONSTRAINT "PK_Medicos" PRIMARY KEY ( "DNI" ),
  CONSTRAINT "FK_13" FOREIGN KEY ( "DNI" ) REFERENCES "Personal" ( "DNI" )
 );
 
@@ -72,7 +72,7 @@ CREATE TABLE "Atendidos"
  "DNI_medico"   varchar(9) NOT NULL,
  "DNI_paciente" varchar(9) NOT NULL,
  CONSTRAINT "PK_Atendidos" PRIMARY KEY ( "DNI_medico", "DNI_paciente" ),
- CONSTRAINT "FK_59" FOREIGN KEY ( "DNI_medico" ) REFERENCES "Médicos" ( "DNI" ),
+ CONSTRAINT "FK_59" FOREIGN KEY ( "DNI_medico" ) REFERENCES "Medicos" ( "DNI" ),
  CONSTRAINT "FK_65" FOREIGN KEY ( "DNI_paciente" ) REFERENCES "Pacientes" ( "DNI" )
 );
 
