@@ -74,16 +74,6 @@ En la traducción de las generalizaciones del esquema conceptual al esquema lóg
 Por otra parte, en la generalización de \emph{Transacción} se ha optado por eliminar la entidad generalizada, obteniendo así dos entidades independientes y duplicando algunos de sus atributos. \textbf{Leyendo esto me doy cuenta que nos hacía falta un \emph{Trigger}}. En esta misma generalización se ha traducido la relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción} como un atributo (el número de cuenta) en las tablas derivadas de \emph{Transacción}, siendo una referencia a la cuenta que ha realizado la transacción.\\
 {\LARGE \textbf{¿CÓMO LES PONEMOS EL ESQUEMA LÓGICO? Un diagrama?}}
 
-\textbf{Qué hacemos con esta figura? La llevamos a otro sitio?}
-\begin{landscape}
-\begin{figure}
-\centering
-\includegraphics[scale=0.75]{images/er_practica1.png}
-\caption{Esquema ER de la base de datos diseñada en la práctica 1}
-\label{fig:er1}
-\end{figure}
-\end{landscape}
-
 \section{Parte 1 - Determinación del esquema lógico y conceptual de la base de datos Oracle a integrar}
 
 \textbf{Esquema ER de la base de datos a integrar y PONER LAS CONSULTAS CON LAS QUE HEMOS SACADO LAS COSAS.}\\
@@ -119,6 +109,14 @@ Los pacientes almacenan su DNI, nombre, apellidos, fecha de nacimiento, direcci�
 
 \section{Parte 2- Esquema conceptual para el problema enunciado}
 
+Para la realización del esquema conceptual de este problema, y pensando en su futura tarea de integración, se han realizado dos esquemas conceptuales con una semántica similar para el problema descrito anteriormente. Se ha tomado esta decisión para dificultar la tarea de integración entre las dos bases de datos.\\
+El primer diagrama \textbf{{\LARGE Lo hacen Chus y Tambo asi que les toca a ellos}}.\\
+
+El segundo diagrama (Figura \ref{fig:er_parte2_2}) refleja el problema enunciado anteriormente. En el mismo podemos observar que debido a que los médicos y enfermeros comparten ciertos atributos (\emph{DNI}, Nombre, apellidos, dirección, teléfono...) se ha llegado a la conclusión de que debía existir una entidad común, \emph{Personal}.\\
+Por otra parte, los diagnósticos realizados por los pacientes forman su historia clínica. La entidad \emph{Diagnóstico} es una entidad débil ya que depende en identificación y en existencia de \emph{Paciente}.\\
+Los pacientes ingresan en plantas, por lo tanto, se ha diseñado una entidad \emph{Ingreso} que refleja el ingreso de un paciente determinado en una planta determinada. Esta entidad es débil ya que un paciente puede encontrarse con varios ingresos a lo largo de su vida. Por lo tanto, un ingreso depende de la planta, el paciente y, las fechas de ingreso y de alta.\\
+Dado que los médicos tienen varios pacientes, y un paciente puede tener varios médicos, se ha diseñado una relación \emph{M:N} entre \emph{Médicos} y \emph{Pacientes}.
+
 \textbf{Poner aquí los dos esquemas ER y explicar que se ha tomado esta decisión para dificultar la integración.}
 
 \section{Parte 2 - Esquema lógico 1 para el problema enunciado}
@@ -136,6 +134,25 @@ Los pacientes almacenan su DNI, nombre, apellidos, fecha de nacimiento, direcci�
 \section{Actualizaciones de datos sobre el esquema global}
 
 \textbf{Viabilidad? Pues depende de dónde quieras guardarlo. Pero esto habrá que hablar.}
+
+\newpage
+\section{Apéndice 1: Figuras}
+
+\begin{landscape}
+\begin{figure}
+\centering
+\includegraphics[scale=0.75]{images/er_practica1.png}
+\caption{Esquema ER de la base de datos diseñada en la práctica 1}
+\label{fig:er1}
+\end{figure}
+\end{landscape}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{images/er_parte2_2.png}
+\label{fig:er_parte2_2}
+\caption{Diagrama ER sobre el problema descrito en la parte 2}
+\end{figure}
 
 
 \end{document}
