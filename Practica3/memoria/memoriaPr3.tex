@@ -12,6 +12,11 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{lscape}
 
+\lstset{
+basicstyle=\ttfamily,
+frame=single,
+language=SQL
+}
 
 \begin{document}
 
@@ -85,7 +90,39 @@ Una vez conseguido el acceso a \emph{Banquete}, a través de las consultas expue
 
 \textbf{TODO Hay que insertar todas consultas que hicimos CREO QUE FALTAN}
 
+\begin{lstlisting}
+	-- Obtenemos las tablas
+	SELECT table_name FROM user_tables@SCHEMA2BD2;
+	-- Describir los atributos de la tabla <nombre_tabla>
+	DESC <nombre_tabla>@SCHEMA2BD2;
+
+	-- Para obtener las restricciones (clave primaria, ajena,
+	--  restricciones de consistencia) para una tabla <nombre_tabla>
+	SELECT UCC.CONSTRAINT_NAME, UCC.COLUMN_NAME, UC.CONSTRAINT_TYPE, 
+	 UC.SEARCH_CONDITION, UC2.TABLE_NAME as REFERENCES_TABLE
+	FROM USER_CONS_COLUMNS@SCHEMA2BD2 UCC, USER_CONSTRAINTS@SCHEMA2BD2 UC,
+	 USER_CONSTRAINTS@SCHEMA2BD2 UC2
+	WHERE UCC.CONSTRAINT_NAME = UC.CONSTRAINT_NAME
+	AND UC.R_CONSTRAINT_NAME = UC2.CONSTRAINT_NAME(+)
+	AND UCC.TABLE_NAME = '<nombre_tabla>'
+	ORDER BY UCC.CONSTRAINT_NAME;
+	
+	-- Para obtener las vistas de la base de datos a integrar
+	SELECT UV.VIEW_NAME, UV.TEXT, UTC.COMMENTS
+	FROM USER_VIEWS@SCHEMA2BD2 UV, USER_TAB_COMMENTS@SCHEMA2BD2 UTC
+	WHERE UV.VIEW_NAME = UTC.TABLE_NAME(+);
+	
+	-- Para obtener los triggers
+	SELECT TRIGGER_NAME, TRIGGER_TYPE, TRIGGERING_EVENT, TABLE_NAME,
+	 WHEN_CLAUSE, DESCRIPTION, TRIGGER_BODY
+	FROM USER_TRIGGERS@SCHEMA2BD2;
+\end{lstlisting}
+
+\textbf{Comprobar si quereis mover este párrafo}\\
+Para la extracción de la información con las consultas anteriores se ha utilizado la herramienta \emph{spool} y \emph{DBeaver}. Con estas herramientas se ha extraido la información sobre la estructura de la base de datos de \emph{Banquete} de una forma tabular (en ficheros .csv), facilitando su comprensión, ya que, utilizando la terminal la salida obtenida era difícil de interpretar.\\
+
 Una vez conseguida toda la información, se necesita crear un modelo conceptual canónico de \emph{Banquete} con el fin de poder crear a continuación el esquema global que las dos bases. La transformación de las tablas a un modelo E/R es prácticamente directo gracias a los constraints que proporcionan la información de claves primarias y ajenas de las que se pueden sacar la manera en la que están relacionadas las tablas. Una vez procesada y analizada la información obtenida se obtiene el siguiente esquema E/R \ref{fig:er_banquete}.
+
 \section{Parte 1 - Mejoras sugeridas para la base de datos a integrar}
 
 Durante el interrogatorio al catálogo de datos de la base de datos de \emph{Banquete} se han encontrado diversas anomalías y diferencias respecto a nuestra base de datos.\\
@@ -154,12 +191,6 @@ Dado que los médicos tienen varios pacientes, y un paciente puede tener varios 
 \end{figure}
 \end{landscape}
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{images/er_parte2_2.png}
-\label{fig:er_parte2_2}
-\caption{Diagrama ER sobre el problema descrito en la parte 2}
-\end{figure}
 
 \begin{landscape}
 \begin{figure}
@@ -169,6 +200,17 @@ Dado que los médicos tienen varios pacientes, y un paciente puede tener varios 
 \caption{Diagrama E/R de la base de datos de Banquete}
 \end{figure}
 \end{landscape}
+
+
+%% DIAGRAMAS PARTE 2
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{images/er_parte2_2.png}
+\label{fig:er_parte2_2}
+\caption{Diagrama ER sobre el problema descrito en la parte 2}
+\end{figure}
+
 
 
 \end{document}
