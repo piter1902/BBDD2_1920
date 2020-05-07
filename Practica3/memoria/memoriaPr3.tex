@@ -62,8 +62,8 @@ Los esfuerzos invertidos por cada integrante del equipo son:
 \textbf{Mostrar aqui el ER de la práctica anterior y contar su traducción a SQL diciendo las decisiones de diseño de forma DETALLADA.}
 
 Durante el desarrollo de la práctica 1 se diseñó una base de datos para un banco que quería gestionar cuentas con múltiples propietarios, diferentes tipos de cuentas (cuentas ahorro y cuentas corrientes), operaciones (transacciones entre cuentas, o movimientos de dinero en efectivo) y las sucursales de la entidad.\\
-En la Figura \ref{fig:er1} se puede observar el esquema entidad relación sobre el problema planteado. Se ha planteado las relaciones entre los distintos tipos de cuentas como una generalización, ya que todas comparten ciertos atributos como el número de cuenta, el \emph{IBAN}, la fecha de apertura y el saldo restante. Esta generalización es disjunta ya que no se considera posible la capacidad de que una cuenta pertenezca a los dos tipos de entidades al mismo tiempo. También, se trata de una generalización obligatoria ya que no se considera el caso de que una cuenta no pertenezca a algunos de las entidades derivadas de \emph{Cuenta}.\\
-Con transacción ocurre lo mismo, una transferencia entre cuentas y las operaciones de retirada o ingreso de efectivo se pueden generalizar en una nueva entidad \emph{Transacción} con los atributos comunes a ambas entidades, tales como: el número de la transacción, la fecha y hora de la misma, su importe y una descripción a modo de concepto. Se trata de una generalización disjunta ya que una transferencia no puede pertenecer a los dos subtipos a la vez. También, se trata de una generalización obligatoria ya que en el contexto del problema no tiene sentido que exista una transferencia que no pertenezca a \emph{Operación (operaciones en efectivo)} o a \emph{Transferencia (transferencia de saldo entre cuentas)}.\\
+En la Figura \ref{fig:er1} se puede observar el esquema entidad relación sobre el problema planteado. Se ha planteado las relaciones entre los distintos tipos de cuentas como una generalización, ya que todas comparten ciertos atributos como el número de cuenta, el \emph{IBAN}, la fecha de apertura y el saldo restante. Esta generalización es exclusiva ya que no se considera posible la capacidad de que una cuenta pertenezca a los dos tipos de entidades al mismo tiempo. También, se trata de una generalización total ya que no se considera el caso de que una cuenta no pertenezca a algunos de las entidades derivadas de \emph{Cuenta}.\\
+Con transacción ocurre lo mismo, una transferencia entre cuentas y las operaciones de retirada o ingreso de efectivo se pueden generalizar en una nueva entidad \emph{Transacción} con los atributos comunes a ambas entidades, tales como: el número de la transacción, la fecha y hora de la misma, su importe y una descripción a modo de concepto. Se trata de una generalización exclusiva ya que una transferencia no puede pertenecer a los dos subtipos a la vez. También, se trata de una generalización total ya que en el contexto del problema no tiene sentido que exista una transferencia que no pertenezca a \emph{Operación (operaciones en efectivo)} o a \emph{Transferencia (transferencia de saldo entre cuentas)}.\\
 Se ha decidido que \emph{Transacción} debía ser débil respecto a \emph{cuenta} ya que depende en existencia e identificación de \emph{cuenta}, por lo tanto la relación \emph{Realizar} es una relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción}. No obstante, existe una transacción que no indica la debilidad de la entidad \emph{Transacción} respecto a \emph{Cuenta}, la relación \emph{Recibir}, una relación \emph{1:N} que relaciona las entidades \emph{Cuenta} y \emph{Transferencia} , y cuyo significado es relacionar una transferencia con la cuenta beneficiaria.\\
 Los clientes titulares de una cuenta se reflejan en la entidad \emph{Cliente}, que almacena el DNI, el nombre, los apellidos la dirección y el email. Se ha decidido que el \emph{DNI} sea la clave primaria ya que es único para los ciudadanos.\\
 La relación de \emph{Cliente} con \emph{Cuenta} se encuentra en \emph{Poseer}, una relación \emph{M:N} que posibilita que una cuenta tenga más de un titular.\\
@@ -71,7 +71,7 @@ Para el almacenamiento de las sucursales de la entidad bancaria, se ha diseñado
 Se ha considerado que las transacciones se tienen que realizar en una sucursal, por lo tanto existe una relación entre \emph{Transacción} y \emph{Sucursal}. También, una cuenta corriente debe ser abierta en una determinada sucursal de la entidad.\\
 
 En la traducción de las generalizaciones del esquema conceptual al esquema lógico (modelo relacional) se han escogido dos estrategias. En la generalización de \emph{Cuenta} se ha mantenido la entidad, y las entidades derivadas de la misma solamente almacenan los atributos necesarios que no pertenecen a \emph{Cuenta}.\\
-Por otra parte, en la generalización de \emph{Transacción} se ha optado por eliminar la entidad generalizada, obteniendo así dos entidades independientes y duplicando algunos de sus atributos. \textbf{Leyendo esto me doy cuenta que nos hacía falta un \emph{Trigger}}. En esta misma generalización se ha traducido la relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción} como un atributo (el número de cuenta) en las tablas derivadas de \emph{Transacción}, siendo una referencia a la cuenta que ha realizado la transacción.\\
+Por otra parte, en la generalización de \emph{Transacción} se ha optado por eliminar la entidad generalizada, obteniendo así dos entidades independientes y duplicando algunos de sus atributos. \textbf{Leyendo esto me doy cuenta que nos hacía falta un \emph{Trigger}}. En esta misma generalización se ha traducido la relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción} como un atributo (el número de cuenta) en la tablas derivadas de \emph{Transacción} \textbf{TODO: Esto no se cuanto de bien está redactado}, siendo una referencia a la cuenta que ha realizado la transacción.\\
 {\LARGE \textbf{¿CÓMO LES PONEMOS EL ESQUEMA LÓGICO? Un diagrama?}}
 
 \section{Parte 1 - Determinación del esquema lógico y conceptual de la base de datos Oracle a integrar}
@@ -79,6 +79,13 @@ Por otra parte, en la generalización de \emph{Transacción} se ha optado por el
 \textbf{Esquema ER de la base de datos a integrar y PONER LAS CONSULTAS CON LAS QUE HEMOS SACADO LAS COSAS.}\\
 \textbf{Igual estaría bien comentar de donde hemos sacado la información.}
 
+En esta práctica se pide integrar la base de datos de la Práctica 1+2 en otra base de datos ya existente (\emph{Banquete}). Para ello, es preciso conocer la organización de sus tablas y como se relacionan unas con otras, por tanto, el primer paso para conseguir la integración es extraer toda la información posible de la base de datos de \emph{Banquete}.\\
+\emph{Banquete} es una base de datos proporcionada por los profesores de la asignatura y se puede acceder a ella a través de las máquinas del laboratorio. Al conectarse a \emph{lab000} y ejecutar el comando \emph{sqlplus2 aNIP@barret.danae04.unizar.es} (siendo NIP el identificador de la universidad de cada miembro) e introduciendo la contraseña proporcionada en el fichero \emph{README-oracle2}, cada componente del grupo tiene acceso a Oracle con la base de datos \emph{Banquete} ya cargada.\\
+Una vez conseguido el acceso a \emph{Banquete}, a través de las consultas expuestas a continuación se consigue toda la información sobre tablas, vistas, triggers o constraints necesarios para conocer el funcionamiento al completo de la misma. 
+
+\textbf{TODO Hay que insertar todas consultas que hicimos CREO QUE FALTAN}
+
+Una vez conseguida toda la información, se necesita crear un modelo conceptual canónico de \emph{Banquete} con el fin de poder crear a continuación el esquema global que las dos bases. La transformación de las tablas a un modelo E/R es prácticamente directo gracias a los constraints que proporcionan la información de claves primarias y ajenas de las que se pueden sacar la manera en la que están relacionadas las tablas. Una vez procesada y analizada la información obtenida se obtiene el siguiente esquema E/R \ref{fig:er_banquete}.
 \section{Parte 1 - Mejoras sugeridas para la base de datos a integrar}
 
 Durante el interrogatorio al catálogo de datos de la base de datos de \emph{Banquete} se han encontrado diversas anomalías y diferencias respecto a nuestra base de datos.\\
@@ -153,6 +160,15 @@ Dado que los médicos tienen varios pacientes, y un paciente puede tener varios 
 \label{fig:er_parte2_2}
 \caption{Diagrama ER sobre el problema descrito en la parte 2}
 \end{figure}
+
+\begin{landscape}
+\begin{figure}
+\centering
+\includegraphics[scale=0.75]{images/ER_BANQUETE.jpeg}
+\label{fig:er_banquete}
+\caption{Diagrama E/R de la base de datos de Banquete}
+\end{figure}
+\end{landscape}
 
 
 \end{document}
