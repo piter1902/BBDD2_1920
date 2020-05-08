@@ -392,6 +392,13 @@ Dado que los médicos tienen varios pacientes, y un paciente puede tener varios 
 
 \section{Parte 2 - Esquema lógico 2 para el problema enunciado}
 
+En la traducción del esquema conceptual al esquema lógico del segundo modelo se han traducido la generalización entre personal, médicos y enfermeros con una generalización mixta, es decir, existirá una tabla \emph{Personal}, que almacenará los campos comunes a las tablas derivadas, y también existirán tablas para las derivadas, de tal forma que almacenarán sus campos propios.\\
+Para modelar el histórico de diagnósticos sobre un paciente se ha creado una tabla \emph{Diagnóstico} con una restricción de clave ajena hacia la tabla \emph{Pacientes}, por lo tanto se ha modelado la entidad débil.\\
+La tabla \emph{Ingreso} posee dos claves ajenas, una apuntando a una \emph{Planta} y otra a \emph{Paciente}, haciendo que los ingresos estén relacionados con las plantas y los ingresos y por lo tanto un paciente distinto puede ser ingresado varias veces en una misma planta a lo largo del tiempo en fechas distintas.\\
+Para relacionar los médicos con los pacientes a los que tienen asignados, se ha traducido la relación \emph{M:N} en una nueva tabla \emph{Atendidos}, que almacenan las claves primarias de \emph{Médicos} y \emph{Pacientes}. Lo mismo ocurre entre \emph{Enfermeros} y \emph{Plantas}, se ha creado la tabla \emph{Asignados} que almacena las claves primarias de enfermeros y plantas.\\
+
+
+\textbf{Haría falta meter los códigos en un anexo aunque sea?}
 \textbf{Pues explicar las decisiones de diseño de este (PEDRO Y HAYK).}
 
 \section{Parte 2 - Esquema global y su implementación en PostgreSQL}
