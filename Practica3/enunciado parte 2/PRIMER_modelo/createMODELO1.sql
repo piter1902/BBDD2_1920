@@ -6,7 +6,7 @@ CREATE TABLE "Direccion"
  "Calle"     varchar(50) NOT NULL,
  "CodPostal" int NOT NULL,
  "NumPiso"   varchar(10) NOT NULL,
- "NumBloque" varchar(10),
+ "NumBloque" varchar(20),
  CONSTRAINT "PK_Direccion" PRIMARY KEY ( "ID" )
 );
 
