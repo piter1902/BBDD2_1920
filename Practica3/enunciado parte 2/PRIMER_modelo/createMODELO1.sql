@@ -6,7 +6,7 @@ CREATE TABLE "Direccion"
  "Calle"     varchar(50) NOT NULL,
  "CodPostal" int NOT NULL,
  "NumPiso"   varchar(10) NOT NULL,
- "NumBloque" varchar(10),
+ "NumBloque" varchar(20),
  CONSTRAINT "PK_Direccion" PRIMARY KEY ( "ID" )
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE "Enfermero"
  "NumContacto" varchar(20) NOT NULL,
  "Servicio"    varchar(50) NOT NULL,
  "ID"          int NOT NULL,
- CONSTRAINT "PK_Medicos" PRIMARY KEY ( "DNI" ),
+ CONSTRAINT "PK_Enfermeros" PRIMARY KEY ( "DNI" ),
  CONSTRAINT "FK_21" FOREIGN KEY ( "ID" ) REFERENCES "Direccion" ( "ID" )
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE "Paciente"
  "Apellidos"   varchar(20) NOT NULL,
  "NumContacto" varchar(20) NOT NULL,
  "ID"          int NOT NULL,
- CONSTRAINT "PK_Medicos" PRIMARY KEY ( "DNI" ),
+ CONSTRAINT "PK_Paciente" PRIMARY KEY ( "DNI" ),
  CONSTRAINT "FK_27" FOREIGN KEY ( "ID" ) REFERENCES "Direccion" ( "ID" )
 );
 
