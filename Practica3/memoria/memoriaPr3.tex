@@ -403,6 +403,163 @@ Para relacionar los médicos con los pacientes a los que tienen asignados, se ha
 
 \section{Parte 2 - Esquema global y su implementación en PostgreSQL}
 
+Tras la traducción del esquema conceptual a los esquemas lógicos llega el turno de realizar la integración de ambos modelos lógicos en un solo esquema global que recoja las características de ambos esquemas lógicos.\\
+Para ello, se ha compuesto el esquema global (Figura \ref{fig:er_parte2_global}). En este diagrama podemos observar que se encuentran características de ambos esquemas conceptuales. \\
+De cara a la implementación de este esquema utilizando \emph{PostgreSQL} se han utilizado vistas con manteniendo los nombres de las entidades mostrados en el esquema global. Ya que las generalizaciones se habían planteado de una forma distinta sobre las traducciones de los esquemas lógicos, se han realizado vistas que permitan seguir obteniendo toda la información que se podía consultar utilizando el \emph{Esquema lógico 1}. Por lo tanto, consultando la vista \emph{Personalview} obtendremos todos los datos comunes a las entidades que se derivan de la misma, tal y como se plantea en el \emph{Esquema lógico 2}. Para cada entidad derivada se han diseñado vistas para acceder a sus tuplas insertadas. En el caso de estas vistas, se mantiene el un conjunto de valores similar al utilizado por el esquema lógico 1.\\
+Una diferencia de integración entre ambos esquemas ha sido la dirección. Esta entidad no aparece en el esquema lógico 2, y por lo tanto para facilitar su integración se ha eliminado como una entidad y se ha añadido como un atributo más a la entidad \emph{Personal}. Algo similar ocurre con \emph{Apellido1} y \emph{Apellido2}, dos atributos que se encuentran presentes en el esquema lógico 2 pero que se encuentran unificados en el esquema lógico 1. En este caso se ha tomado la decisión de unificarlos bajo una columna en la vista (\emph{Apellidos}).\\
+En el caso de la entidad \emph{Ingreso} existente en el esquema lógico 2, se ha tomado la decisión de mantenerla ya que existe una relación en el esquema lógico 1 que mantiene la misma semántica, aunque no cuenta con todos los atributos necesarios (fecha de alta), en ese caso se asignará el valor \emph{NULL} para aquellos atributos con los que no se cuente información.\\
+
+En el apartado técnico, se ha utilizado la herramienta \emph{dblink\footnote{\url{https://www.postgresql.org/docs/10/contrib-dblink-function.html}}} de \emph{PostgreSQL} para realizar la conexión a la base de datos remota. Se realizará la integración suponiendo que la base de datos local es la correspondiente implementación del \emph{Esquema lógico 1}. Para mantener la implementación del \emph{Esquema lógico 2} se ha utilizado el servicio \emph{ElephantSQL\footnote{\url{https://www.elephantsql.com/}}} para obtener una instancia de \emph{PostgreSQL} en la nube.\\
+Para realizar la conexión con la base de datos remota se ha ejecutado la siguiente consulta, la cual guarda los datos de la conexión bajo el alias ``remota''.
+
+\begin{lstlisting}
+select * from dblink_connect('remota',
+ 'host=kandula.db.elephantsql.com  dbname=** user=** password=**');
+\end{lstlisting}
+
+Tras ejecutar esta sentencia, se habra realizado la conexión con la base de datos ubicada en \emph{kandula.db.elephant.sql}.\\
+Para ejecutar una consulta sobre \emph{dblink} podemos utilizar una forma similar a la siguiente:
+
+\begin{lstlisting}
+select DNI, Nombre, Apellido1 || ', ' || Apellido2 as "Apellidos",
+ Telefono, Direccion, Especialidad, Num_Colegiado as "NumColegiado"
+from dblink('remota', 
+'select pe."DNI", pe."Nombre", pe."Apellido1", pe."Apellido2",' || 
+' pe."Telefono", pe."Direccion",' || 
+' m."Especialidad", m."Num_Colegiado"' ||
+' from "Personal" pe join "Medicos" m on pe."DNI"=m."DNI"') 
+ as (DNI varchar, Nombre varchar, Apellido1 varchar,
+  Apellido2 varchar, Telefono varchar,
+  Direccion varchar, Especialidad varchar, Num_Colegiado varchar);
+\end{lstlisting}
+
+Con esta consulta, obtendremos toda la información de los médicos, junto con sus datos de personal de la base de datos de la base de datos remota.\\
+Se puede observar que es necesario establecer de manualmente los campos de la consulta tras la cláusula \emph{as}. Con esto se puede realizar conversiones de tipos de forma implícita, ya que si no habría que realizarlas en la primera parte de la consulta utilizando los casts\footnote{\url{https://www.postgresqltutorial.com/postgresql-cast/}} explícitos de \emph{PostgreSQL}.\\
+
+Tras realizar la conexión con la base de datos remota y aprender a realizar consultas se va a proceder a integrar los esquemas. Para ello se van a utilizar vistas. El nombre de las vistas será igual al de las entidades de la Figura \ref{fig:er_parte2_global}.\\
+La creación de las será similar al expuesto para el caso de \emph{Oracle}.
+Por lo tanto, se procede a la creación de las mismas.
+
+\begin{lstlisting}
+create or replace view Personal_view as 
+    (
+        select p."DNI", 
+         p."Nombre", 
+         p."Apellidos", 
+         p."NumContacto" as "Telefono", 
+         d."Calle" || ',' || 
+         d."NumBloque" || ', ' || 
+         d."NumPiso" || ', ' || 
+         d."CodPostal" as "Dirección"
+        from "Medico" p join "Direccion" d on p."ID" = d."ID"
+    )
+    union
+    (
+        select p."DNI", 
+         p."Nombre", 
+         p."Apellidos", 
+         p."NumContacto" as "Telefono", 
+         d."Calle" || 
+         ', ' || d."NumBloque" || 
+         ', ' || d."NumPiso" || 
+         ', ' || d."CodPostal" as "Dirección"
+        from "Enfermero" p join "Direccion" d on p."ID" = d."ID"
+    )
+    union
+    (
+        select p."DNI",
+         p."Nombre",
+         p."Apellidos",
+         p."NumContacto" as "Telefono",
+         d."Calle" || ', ' ||
+         d."NumBloque" ||
+         ', ' || d."NumPiso" ||
+         ', ' || d."CodPostal" as "Dirección"
+        from "Paciente" p join "Direccion" d on p."ID" = d."ID"
+    )
+    union
+    (
+        select DNI, Nombre, Apellido1 || 
+         ', ' || Apellido2 as "Apellidos", 
+         Telefono, Direccion
+		from dblink('remota',
+		 'select "DNI", "Nombre", "Apellido1", "Apellido2",' ||
+		  ' "Telefono", "Direccion" from "Personal"') 
+		  as (DNI varchar, Nombre varchar, Apellido1 varchar, 
+		  Apellido2 varchar, Telefono varchar, Direccion varchar)
+    )
+    union
+    (
+        select DNI, Nombre, Apellido1 || 
+        ', ' || Apellido2 as "Apellidos", 
+        Telefono, Direccion
+		from dblink('remota', 
+		 'select "DNI", "Nombre", "Apellido1", "Apellido2", ' || 
+		  '"Telefono", "Direccion" from "Pacientes"') 
+		  as (DNI varchar, Nombre varchar, Apellido1 varchar,
+		  Apellido2 varchar, Telefono varchar, Direccion varchar)
+    );
+\end{lstlisting}
+
+
+Con esta vista obtenemos al personal, de la misma forma que se obtendrían con el esquema lógico 2, pero añadiendo a los pacientes, cosa que venía incluida en el esquema lógico 1.\\
+No obstante, podemos obtener las entidades derivadas de personal con el formato especificado en el esquema lógico 1 utilizando la siguiente vista (en el caso de médicos):
+
+
+\begin{lstlisting}
+create or replace view Medico_view as
+    (
+        select p."DNI", p."Nombre", p."Apellidos",
+         p."NumContacto" as "Telefono",
+          d."Calle" || ', ' || d."NumBloque" ||
+          ', ' || d."NumPiso" || ', ' ||
+          d."CodPostal" as "Dirección",
+          p."Especialidad", p."NumColegiado"
+        from "Medico" p join "Direccion" d on p."ID" = d."ID"
+    )
+    union
+    (
+        select DNI,
+         Nombre, Apellido1 || ', ' || Apellido2 as "Apellidos",
+         Telefono, Direccion,
+         Especialidad,
+         Num_Colegiado as "NumColegiado"
+		from dblink('remota', 'select pe."DNI", pe."Nombre",' ||
+		 ' pe."Apellido1", pe."Apellido2", pe."Telefono", ' ||
+		 'pe."Direccion", m."Especialidad", m."Num_Colegiado" ' ||
+		 'from "Personal" pe join "Medicos" m on pe."DNI"=m."DNI"') 
+		 as (DNI varchar, Nombre varchar, Apellido1 varchar,
+		  Apellido2 varchar, Telefono varchar, Direccion varchar,
+		  Especialidad varchar, Num_Colegiado varchar)
+    );
+\end{lstlisting}
+
+
+Para obtener los resultados sobre las entidades \emph{Enfermeros} y \emph{Pacientes} se pueden utilizar las vistas: \emph{Enfermeroview} y \emph{Pacienteview}, respectivamente.\\
+Para el acceso a los datos de la entidad \emph{Ingreso} podemos utilizar \emph{Ingresosview}, definida de la siguiente forma.\\
+
+\begin{lstlisting}
+create or replace view Ingresos_view as
+    (
+        select "NumPlanta", "DNI", "Fecha" as "Fecha_Ingreso", 
+         NULL as "Fecha_Alta"
+        from "Ingresos"
+    )
+    union
+    (
+        select NumPlanta, DNI, Fecha_Ingreso, Fecha_Alta
+        from dblink('remota', 
+         'select "DNI", "Num_Planta", "Fecha_Ingreso", ' || 
+          '"Fecha_Alta" from "Ingresos"') 
+          as (DNI varchar, NumPlanta int, Fecha_Ingreso date,
+           Fecha_Alta date)
+    );
+\end{lstlisting}
+
+En esta vista se puede observar como el esquema lógico 1 no contaba con una fecha de alta el la relación \emph{Ingresos}, y por lo tanto ha tenido que ser sustituida por el valor \emph{NULL}.\\
+
+\textbf{{\LARGE ¿QUERÉIS QUE SIGA EXPLICANDO EL RESTO DE VISTAS O CON ESTO ES SUFICIENTE?}}
+
 \textbf{Puse aquí tenemos la incertidumbre de si querrán que sean vistas o una base de datos completa, pero de todas formas habrá que explicar las decisiones de diseño.}
 
 \section{Actualizaciones de datos sobre el esquema global}
@@ -426,8 +583,8 @@ Para relacionar los médicos con los pacientes a los que tienen asignados, se ha
 \begin{figure}
 \centering
 \includegraphics[scale=0.75]{images/ER_BANQUETE.jpeg}
-\label{fig:er_banquete}
 \caption{Diagrama E/R de la base de datos de Banquete}
+\label{fig:er_banquete}
 \end{figure}
 \end{landscape}
 
@@ -437,10 +594,16 @@ Para relacionar los médicos con los pacientes a los que tienen asignados, se ha
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{images/er_parte2_2.png}
-\label{fig:er_parte2_2}
 \caption{Diagrama ER sobre el problema descrito en la parte 2}
+\label{fig:er_parte2_2}
 \end{figure}
 
+\begin{figure}
+\centering
+\includegraphics[scale=0.45]{images/global_parte2_practica3.png}
+\caption{Diagrama ER global sobre la parte 2}
+\label{fig:er_parte2_global}
+\end{figure}
 
 
 \end{document}
