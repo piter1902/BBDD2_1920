@@ -15,9 +15,16 @@
 \lstset{
 basicstyle=\ttfamily,
 frame=single,
-language=SQL
+language=SQL,
+tabsize=2,
+literate=%
+    {á}{{\'a}}1
+    {é}{{\'e}}1
+    {è}{{\`e}}1
+    {í}{{\'i}}1
+    {ó}{{\'o}}1
+    {ú}{{\'u}}1
 }
-
 \begin{document}
 
 \begin{titlepage}
@@ -123,7 +130,7 @@ Para la extracción de la información con las consultas anteriores se ha utiliz
 
 Una vez conseguida toda la información, se necesita crear un modelo conceptual canónico de \emph{Banquete} con el fin de poder crear a continuación el esquema global que las dos bases. La transformación de las tablas a un modelo E/R es prácticamente directo gracias a los constraints que proporcionan la información de claves primarias y ajenas de las que se pueden sacar la manera en la que están relacionadas las tablas. Una vez procesada y analizada la información obtenida se obtiene el siguiente esquema E/R \ref{fig:er_banquete}.
 
-\section{Parte 1 - Mejoras sugeridas para la base de datos a integrar}
+\section{Parte 1 - Mejoras sugeridas para la base de datos a integrar}\label{mejoras}
 
 Durante el interrogatorio al catálogo de datos de la base de datos de \emph{Banquete} se han encontrado diversas anomalías y diferencias respecto a nuestra base de datos.\\
 En la base de datos a integrar una cuenta solo puede disponer de un titular. Además en \emph{Titular} (se corresponde con \emph{Cliente} de \emph{Banquito}), no dispone de un atributo destinado para la dirección, si no que cuenta con una clave ajena a una entidad \emph{Dirección}, que no está relacionada con su entidad \emph{CodPostal}. Esta entidad \emph{CodPostal} almacena: calle, ciudad y código postal, por lo tanto a partir de una dirección si que se puede obtener su código postal pero al no estar relacionado habría que realizar consultas extras y a la par de que la información se encuentra duplicada en dos tablas de la base de datos (calle y ciudad).\\
@@ -139,8 +146,86 @@ Sobre la generalización de \emph{Cuenta} en \emph{CuentaCorriente} y \emph{Cuen
 \section{Parte 1 - Definición e implementación del esquema global en Oracle}
 
 \textbf{Se me ocurre que podríamos explicar lo de que no ponemos como una entidad aparte lo de \emph{Dirección} exponiendo que no queríamos ``romper'' el mal trabajo que hicieron con \emph{Sucursal} y que queríamos unificarlo.}
-\textbf{Poner aquí el esquema ER y decir las decisiones de diseño (y el por qué).}
+\textbf{Poner aquí el esquema ER y decir las decisiones de diseño (y el por qué).}\\
 
+Para la elaboración del esquema global se ha realizado un meticuloso estudio del diseño de la base de datos de \emph{Banquete}, centrandose principalemente en las entidades que mas difieren de \emph{Banquito} como se ha explicado detalladamente en \hyperref[mejoras]{el apartado anterior }.\\
+A partir de estas diferencias obtenidas se ha realizado el siguiente esquma global:\\
+\begin{huge}
+SI QUEREIS QUITAD LA IMAGEN, PERO IGUAL ES MAS COMODO PARA QUE SE VEA AL EXPLICARLO Y LEERLO\\
+\end{huge}
+\begin{figure}
+\centering
+\includegraphics[scale=0.55]{images/DiagramaGLOBAL.png}
+\label{fig:er_banquete}
+\caption{Diagrama E/R de la base de datos de Banquete}
+\end{figure}\\
+
+La entidad \emph{Titular} es la que recogerá a todos los clientes de ambas bases, y contendrá toda su información, incluyendo la \textit{direccion}. Se ha optado por introducir este dato como un atributuo más de la tabla en lugar de crear una entidad con las direcciones. La dirección contendrá la calle, el piso, número y código postal. En el caso de \emph{Banquito} venía en un atributo, pero en el caso de \emph{Banquete}, se disponía en dos entidades, \textit{Dirección} y \textit{CodPostal}, esto se ha unificado en un atributo a través de la consulta ralizada a la hora de crear la vista con la siguientes sentencias:
+
+\begin{lstlisting}
+CREATE OR REPLACE VIEW titular_view AS
+(
+	-- BANQUITO
+	-- Seleccionamos los atributos que queremos mostrar con sus respectivos
+	-- nombres
+	SELECT c.DNI as DNI, 
+		c.nombre as NOMBRE,
+		regexp_substr(c.apellido, '^[a-zA-Z]+\w|^[a-zA-Z]+$') APELLIDO1,
+		regexp_substr(c.apellido, ' .*$') APELLIDO2,
+		c.direccion as DIRECCION,
+		TO_CHAR(c.telefono) as TELEFONO,
+		c.email as EMAIL, 
+		-- calculamos la edad ya que no disponemos de la fecha de 
+		-- nacimiento, sino la edad en el momento de registro
+		TO_DATE(sysdate-c.edad*365) as FECHA_NACIMIENTO
+	FROM Cliente c
+)
+UNION
+(
+	-- BANQUETE
+	-- Seleccionamos los atributos que queremos mostrar con sus respectivos
+	-- nombres
+	SELECT	t.DNI as DNI,
+	t.nombre as NOMBRE, 
+		t.apellido1 as APELLIDO1,
+		t.apellido2 as APELLIDO2,
+		d.calle || ', numero ' || d.numero || ', piso ' || d.piso 
+			|| ', ' || d.ciudad || ', '
+			|| (
+				-- buscamos en codpostal el código correspondiente
+				-- a la calle y ciudad que estamos mostrando
+				SELECT distinct cp.codpostal 
+				FROM codpostal@schema2bd2 cp 
+				WHERE cp.calle = d.calle AND
+					cp.ciudad = d.ciudad
+			) 
+			as DIRECCION,
+		t.telefono as TELEFONO,
+		-- no disponen de atributo email en banquete
+		null as EMAIL,
+		t.fecha_nacimiento as FECHA_NACIMIENTO
+	FROM titular@schema2bd2 t 
+		JOIN direccion@schema2bd2 d ON
+			t.direccion = d.id_direccion
+);
+\end{lstlisting}
+Para \emph{Banquito }simplemente se cogen los datos de la tabla \textit{Cliente} y se nombra las columnas siguiendo el esquema de \emph{Banquete}, de esta manera sus usuarios se sentirán mas cómdos. En cambio en la consulta a \emph{Banquete}, debemos realizar un \textit{join} con la tabla \textit{dirección} y  \textit{titular}, ya que el último contiene una clave ajena de dirección. Para obtener la dirección completa se concatenan los atributos de la tabla y para obtener el código posta, se hace a través de una consulta con la ciudad y la calle deseada.\\
+
+La entidad \emph{Cuenta} contendrá tanto las cuenta corrientes como las cuentas de ahorro. Esta dispone de una relación \textit{posee} con titular con cardinalidad N:M, con esta relación vinculamos las cuenta con sus titulares. Para ello se realiza la siguiente vista:\\
+\begin{lstlisting}
+CREATE OR REPLACE VIEW Posee_view AS
+    (
+        SELECT p.DNI as TITULAR, to_char(p.Num_cuenta) AS CCC
+        FROM Poseer p
+    )
+    UNION
+    (
+        select c1.titular, c1.CCC
+        from cuenta@schema2bd2 c1
+    );
+\end{lstlisting}
+Se realiza una unón con la tabla \textit{cuenta} de \emph{Banquete} y \textit{posee} de \textbf{Banquito}. \emph{Banquete} en su tabla \textit{cuenta } dispone de un atirbuto \textit{titular} que es el DNI del cliente al que pertenece esa cuenta (debido a la realación 1:N entre titular y cuenta). Para \emph{Banquito}  se ha tenido que obtener de la realación N:M posee que contine los DNIs asociados a sus cuentas.
+ 
 \section{Parte 2 - Enunciado de un problema de diseño de bases de datos}
 
 Se desea diseñar una base de datos para gestionar la información inherente a un hospital. En el hospital trabajan médicos y enfermeros. Los médicos tienen asignados una serie de pacientes. Los enfermeros tienen asignada una planta.\\
