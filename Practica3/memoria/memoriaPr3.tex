@@ -149,7 +149,7 @@ Sobre la generalización de \emph{Cuenta} en \emph{CuentaCorriente} y \emph{Cuen
 \textbf{Poner aquí el esquema ER y decir las decisiones de diseño (y el por qué).}\\
 
 Para la elaboración del esquema global se ha realizado un meticuloso estudio del diseño de la base de datos de \emph{Banquete}, centrandose principalemente en las entidades que mas difieren de \emph{Banquito} como se ha explicado detalladamente en \hyperref[mejoras]{el apartado anterior }.\\
-A partir de estas diferencias obtenidas se ha realizado el siguiente esquma global:\\
+A partir de estas diferencias obtenidas se ha realizado el siguiente esquema global:\\
 \begin{huge}
 SI QUEREIS QUITAD LA IMAGEN, PERO IGUAL ES MAS COMODO PARA QUE SE VEA AL EXPLICARLO Y LEERLO\\
 \end{huge}
@@ -224,8 +224,146 @@ CREATE OR REPLACE VIEW Posee_view AS
         from cuenta@schema2bd2 c1
     );
 \end{lstlisting}
-Se realiza una unón con la tabla \textit{cuenta} de \emph{Banquete} y \textit{posee} de \textbf{Banquito}. \emph{Banquete} en su tabla \textit{cuenta } dispone de un atirbuto \textit{titular} que es el DNI del cliente al que pertenece esa cuenta (debido a la realación 1:N entre titular y cuenta). Para \emph{Banquito}  se ha tenido que obtener de la realación N:M posee que contine los DNIs asociados a sus cuentas.
- 
+Se realiza una unón con la tabla \textit{cuenta} de \emph{Banquete} y \textit{posee} de \textbf{Banquito}. \emph{Banquete} en su tabla \textit{cuenta } dispone de un atirbuto \textit{titular} que es el DNI del cliente al que pertenece esa cuenta (debido a la realación 1:N entre titular y cuenta). Para \emph{Banquito}  se ha tenido que obtener de la realación N:M posee que contine los DNIs asociados a sus cuentas.\\
+
+\begin{lstlisting}
+-- Cuenta (Padre)
+CREATE OR REPLACE VIEW cuenta_view AS
+    (
+        SELECT TO_CHAR(c.Num_cuenta) AS CCC,
+        c.Fecha_creacion as fechacreacion,
+         c.saldo, 
+         c.IBAN
+        FROM Cuenta c
+    )
+    UNION
+    (
+        SELECT c1.CCC, 
+        c1.fechacreacion, 
+        c1.saldo, 
+        (SELECT CONCAT(cod.codigo,cu.CCC) 
+            from cuenta@schema2bd2 cu, codentidades@schema2bd2 cod
+            where  cod.banco='Banquete' AND cu.CCC = c1.CCC) AS IBAN
+        FROM cuenta@SCHEMA2BD2 c1
+    );
+\end{lstlisting}
+Para crear la tabla de \textit{cuenta}, se hace una unión con cuenta de \emph{Banquito} y \emph{Banquete }, con la peculiaridad de que este último no contiene el IBAN y este se debe de obtener a través de una consulta a la tabla \textit{CodEntidades}.\\
+Cuenta será la clase padre de una generalización total no exclusiva, sus hijos serán \textit{Cuenta Ahorro}, que dispondrá de una tributo \textit{tipo interés }que la diferencia de \textit{Cuenta Corriente}, además esta tiene una relaciuón 1:N con Sucursal, debido a que en ambos esquemas se encuentra de esta manera. Las vistas creadas son muy simples, basicamente se cogen los atributos y se renombran según el esquema de \emph{Banquete}.
+\begin{lstlisting}
+-- Cuenta Corriente
+CREATE OR REPLACE VIEW cuenta_corriente_view AS
+    (
+        SELECT to_char(cc.ID_cuenta) AS CCC, cc.ID_sucursal AS SUCURSAL_CODOFICINA
+        FROM Cuenta_Corriente cc
+    )
+    UNION
+    (
+        SELECT cc1.CCC, cc1.SUCURSAL_CODOFICINA
+        FROM cuentacorriente@SCHEMA2BD2 cc1
+    );
+
+-- Cuenta_ahorrro
+CREATE OR REPLACE VIEW cuenta_ahorro_view AS
+    (
+        SELECT to_char(cc.ID_cuenta) AS CCC, cc.Interes AS TipoInteres
+        FROM Cuenta_ahorro cc
+    )
+    UNION
+    (
+        SELECT cc1.CCC, cc1.TIPOINTERES
+        FROM cuentaahorro@SCHEMA2BD2 cc1
+    );
+\end{lstlisting}
+
+La entidad \textit{Sucursal} es igual en ambos bancos, por lo que no exige gran dificultad realizar la unión. 
+Además como se ha visto antes, hay una relación entre \textit{Cuenta Corriente} y \textit{Sucursal} de tipo 1:N, pero es cuenta corriente quien contiene la calve ajean de la sucursal en la que se abrió dicha cuenta.\\
+Para la vista se realizan las siguientes sentencias SQL:
+\begin{lstlisting}
+CREATE OR REPLACE VIEW sucursal_view AS 
+	(
+		SELECT s.codigo AS codoficina, s.direccion AS dir, s.telefono AS tfno
+		FROM Sucursal s
+	)
+	UNION
+	(
+		SELECT s1.codoficina, s1.dir, s1.tfno
+		FROM sucursal@SCHEMA2BD2 s1
+	);
+\end{lstlisting}
+La entidad \textit{Operación} (\textit{Transaccion} en \emph{Banquito}) es una entidad débil respecto a \textit{Cuenta} ya que depende de esta, en existencia y en identificación. Sin embargo, esto se soluciona con la relación entre Cuenta y Operación, de tipo 1:N, donde se propaga la clave de cuenta a Operación, eliminando de esta forma este problema. Cabe destacar que \textit{Operacion} es la entidad padre de una generalización total exclusiva, distinguiendo entre operaciones de trasnferencia y operaciones de efectivo. De esta manera se respeta el esquma de \emph{Banquete}. \\
+En cuanto a \emph{Banquito}, en su diseño no se contempló la posibilidad de que una transferencia se realizase con una cuenta ajena que no estuviese registrada, por esta razón la tabla correspondiente a \textit{OpTrasnferencia} que es \textit{Transferencia} dispone de una relación 1:N con \textit{Cuenta} en el diseño de \emph{Banquito}. 
+Para resolver la incosistencia del esquema de \emph{Banquete}, en el que una operación de efectivo contiene el código de la sucursal con un simple \textit{check} sin ser una referencia, se ha optado por una relación 1:N \textit{efectuado en } entre \textit{OpEfectivo} y \textit{Sucursal}, con esto se soluciona la incosistencia y se sigue el modelado.
+Para obtener la vista se realiza la siguiente consulta:
+
+\begin{lstlisting}
+CREATE OR REPLACE VIEW operacion_view AS
+(
+	SELECT *
+	FROM (
+		SELECT t1.num_transaccion AS numop, t1.descripcion AS descripcionop, 
+		t1.fecha AS fechaop, TO_CHAR(t1.fecha, 'HH24:MI') AS horaop, 
+		t1.importe AS cantidadop, TO_CHAR(t1.NUM_CUENTA_REALIZANTE) AS ccc
+		FROM TRANSACCION t1
+	)
+	UNION
+	(
+		SELECT op.num_transaccion AS numop, op.descripcion AS descripcionop,
+		 op.fecha AS fechaop, TO_CHAR(op.fecha, 'HH24:MI') AS horaop,
+		  op.importe AS CANTIDADOP, TO_CHAR(op.NUM_CUENTA_REALIZANTE) AS ccc
+		FROM operacion op
+	)
+)
+UNION
+(
+	SELECT o.numop, o.descripcionop, o.fechaop, o.horaop, o.cantidadop, o.ccc
+	FROM operacion@SCHEMA2BD2 o
+);
+\end{lstlisting}
+Respetando el esquema de \emph{Banquete}, realizamos una unión con \textit{Transacción} y \textit{Operación} en \emph{Banquito}, 
+\begin{huge} pendiente \end{huge}\\
+Para \textit{OpTransferencia}, se realiza una unión, con la tabla \textit{Transaccion} de \emph{Banquito} y con un \textit{join} entre \textit{Operacion} y \textit{OpTransferencia}  en el esquema de \emph{Banquete} cogiendo únicamente aquellas operaciones que pertenecen a una transferencia.
+
+\begin{lstlisting}
+CREATE VIEW optransferencia_view AS
+(
+	SELECT t1.num_transaccion AS numop, t1.descripcion AS descripcionop, 
+			t1.fecha AS fechaop, 
+			TO_CHAR(t1.fecha, 'HH24:MI') AS horaop, 
+			t1.importe AS cantidadop, 
+			TO_CHAR(t1.NUM_CUENTA_REALIZANTE) AS ccc,
+			TO_CHAR(t1.NUM_CUENTA_BENEFICIARIO) AS cuentadestino
+	FROM TRANSACCION t1
+)
+UNION
+(
+	SELECT o.numop, o.descripcionop, o.fechaop, o.horaop, o.cantidadop, 
+	o.ccc, ot.cuentadestino
+	FROM operacion@SCHEMA2BD2 o JOIN optransferencia@SCHEMA2BD2 ot 
+		ON o.numop = ot.numop AND o.ccc = ot.ccc
+);
+\end{lstlisting}
+Para \textit{OpEfectivo} ocurre lo mismo que con la anterior tabla, la consulta es igual, simplemente se cambia la tabla de \textit{Transaccion } por \textit{Operación} en \emph{Banquito}, y en \emph{Banquete} la tabla de \textit{OpTransferencia } por \textit{OpEfectivo}.
+\begin{lstlisting}
+CREATE VIEW opefectivo_view AS
+	(
+		SELECT t1.num_transaccion AS numop, t1.descripcion AS descripcionop, 
+				t1.fecha AS fechaop, 
+				TO_CHAR(t1.fecha, 'HH24:MI') AS horaop, 
+				t1.importe AS cantidadop, 
+				TO_CHAR(t1.NUM_CUENTA_REALIZANTE) AS ccc,
+				t1.tipo AS tipoopefectivo,
+				t1.codigo AS sucursal_codoficina
+		FROM OPERACION t1
+	)
+	UNION
+	(
+		SELECT o.numop, o.descripcionop, o.fechaop, o.horaop, o.cantidadop,
+			 o.ccc, oe.tipoopefectivo, oe.sucursal_codoficina
+		FROM operacion@SCHEMA2BD2 o 
+			JOIN opefectivo@SCHEMA2BD2 oe 
+				ON o.numop = oe.numop AND o.ccc = oe.ccc
+	);
+\end{lstlisting}
 \section{Parte 2 - Enunciado de un problema de diseño de bases de datos}
 
 Se desea diseñar una base de datos para gestionar la información inherente a un hospital. En el hospital trabajan médicos y enfermeros. Los médicos tienen asignados una serie de pacientes. Los enfermeros tienen asignada una planta.\\
