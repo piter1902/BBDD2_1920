@@ -21,8 +21,6 @@ CREATE OR REPLACE VIEW sucursal_view AS
 		FROM sucursal@SCHEMA2BD2 s1
 	);
 	
-SELECT * FROM sucursal_view;
-
 
 -- Operacion (padre)
 CREATE OR REPLACE VIEW operacion_view AS
@@ -169,12 +167,4 @@ CREATE OR REPLACE VIEW Posee_view AS
         select c1.titular, c1.CCC
         from cuenta@SCHEMA2BD2 c1
     );
-
-
-SELECT * FROM operacion_view;
-SELECT * FROM optransferencia_view;
-SELECT * FROM opefectivo_view;
-SELECT * FROM titular_view;
-SELECT * FROM cuenta_view;
-
 

@@ -1,4 +1,3 @@
-
 -- Direcciones
 
 INSERT INTO "Direccion" VALUES (1, 'Amargura', 50670, '1 D', '32');

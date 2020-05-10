@@ -1,0 +1,6 @@
+Nombre		Apellidos	NIP
+========      ============    =========
+Hayk		Kocharyan	755715
+Pedro		Tamargo		758267
+Juan José	Tambo		755742
+Jesús 		Villacampa	755739
