@@ -565,12 +565,12 @@ En esta vista se puede observar como el esquema lógico 1 no contaba con una fec
 \textbf{Puse aquí tenemos la incertidumbre de si querrán que sean vistas o una base de datos completa, pero de todas formas habrá que explicar las decisiones de diseño.}
 
 \section{Actualizaciones de datos sobre el esquema global}
-
+El esquema global es una representación que unifica los esquemas lógicos de dos o más bases de datos. Se utiliza cuando las bases de datos en cuestión tienen cierta relación e interesa obtener información de ambas mediante un solo acceso, en vez de acceder por separado a las mismas. Con esta representación global se intenta ajustar las distintas entidades, relaciones y atributos de las bases participantes para que el esquema global sea lo más parecido posible a las mismas. 
+En nuestro caso, tanto para el apartado de \textit{Oracle} como el de \textit{PostgreSQL}, las bases de datos que componen los respectivos esquemas globales son lógicamente diferentes entre sí. Es por ello que toda la información se almacena en cada una de ellas por separado y para representar el esquema global se crean vistas que recogen la información de las mismas y la  muestran de una forma unificada. De esta manera, si se quisiera modificar información en el esquema global, podría dar problemas dado que, por un lado, como se ha mencionado anteriormente toda información se guarda en las bases componentes y por ello si se modifica la información de las vistas, el cambio no perdura en el tiempo. Por otro lado, si en lugar de utilizar vistas, se utilizaran tablas o vistas materializadas, de forma que se garantizara la persistencia de los cambios en el esquema global, cualquier modificación en el mismo debe transmitirse a la base correspondiente, es decir, se deberían programar \textit{Triggers} para garantizar la consistencia. Además de ser un trabajo complicado, las diferencias en la representación lógica de las bases implicaría, en algunos casos, una transofrmación de la información añadida/modificada. Por ejemplo, en el esquema global de \textit{Banquete} y \textit{Banquito} se representa la "Dirección" como una sola cadena. Si se añade un cliente relacionado con la base \textit{Banquete}, a la hora de actualizar la información en esta base, se observa que "Dirección" se representa en una tabla "Direccon" con distintos atributos, es decir, posee una representación lógica diferente. Para introducirlo en la base, se debería procesar la información y separar la cadena proveniente del esquema global en los distintos atributos de la tabla correspondiente de \textit{Banquete}, lo que sería un proceso ocioso y podría producir errores de inserción. 
+En conclusión, tanto si el equema global se representa por medio de vistas o no, es recomendable utilizar el mismo únicamente para realizar consultas y realizar la inserción o modificación de datos en las bases componentes por separado 
 \textbf{Viabilidad? Pues depende de dónde quieras guardarlo. Pero esto habrá que hablar.}\\
 \\
 \newpage
-
-
 
 
 \section{Apéndice 1: Figuras}
