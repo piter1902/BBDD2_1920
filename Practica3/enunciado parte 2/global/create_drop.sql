@@ -9,6 +9,9 @@ drop view Atendidos_view;
 drop view Diagnostico_view;
 drop view Ingresos_view;
 
+-- A veces es necesario la creación del link
+create extension dblink;
+
 -- Establecemos la conexión con el remoto
 select * from dblink_connect('remota', 'host=kandula.db.elephantsql.com  dbname=roslynet  user=roslynet  password=nInsMGh_8rdRTPbnApGMqWS7W2kt-Y93');
 
@@ -111,6 +114,18 @@ create or replace view Diagnostico_view as
     (
         select ID, DNI, FechaDiagnostico, Descripcion
         from dblink('remota', 'select "ID", "DNI", "Fecha", "Descripcion" from "Diagnostico"') as (ID int, DNI varchar, FechaDiagnostico date, Descripcion text)
+    );
+
+-- Plantas
+create or replace view Plantas_view as
+    (
+        select "NumPlanta", "Nombre"
+        from "Planta"
+    )
+    union
+    (
+        select NumPlanta, Nombre
+        from dblink('remota', 'select "Num_Planta", "Titulo" from "Plantas"') as (NumPlanta int, Nombre varchar)
     );
 
 -- Ingresos

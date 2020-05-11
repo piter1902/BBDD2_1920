@@ -6,4 +6,7 @@ drop view Paciente_view;
 drop view Asignados_view;
 drop view Atendidos_view;
 drop view Diagnostico_view;
+drop view Plantas_view;
 drop view Ingresos_view;
+
+drop extension dblink;
