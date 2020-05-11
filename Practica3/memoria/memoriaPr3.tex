@@ -379,7 +379,12 @@ Los pacientes almacenan su DNI, nombre, apellidos, fecha de nacimiento, direcci�
 \section{Parte 2- Esquema conceptual para el problema enunciado}
 
 Para la realización del esquema conceptual de este problema, y pensando en su futura tarea de integración, se han realizado dos esquemas conceptuales con una semántica similar para el problema descrito anteriormente. Se ha tomado esta decisión para dificultar la tarea de integración entre las dos bases de datos.\\
-El primer diagrama \textbf{{\LARGE Lo hacen Chus y Tambo asi que les toca a ellos}}.\\
+
+El primer diagrama (Figura \ref{fig:er_parte2_1}) refleja el problema enunciado anteriormente. En el mismo podemos observar que debido a que los médicos, enfermeros y pacientes comparten ciertos atributos (\emph{DNI}, Nombre, apellidos, dirección, teléfono...) se ha llegado a la conclusión de que debía existir una entidad común, \emph{Personal}..\\
+Dirección se ha representado como una entidad debido a que como clave primaria son un conjunto de atributos (Calle, bloque, número de piso y código postal).\\
+La entidad diagnóstico es débil respecto a \emph{Paciente} debido a que depende en identificación y existencia de ella.\\
+Para representar los \emph{Paciente} que han sido ingresados en cada una de las \emph{Plantas} se ha diseñado la relación \emph{N:M} \emph{Ingresos}, la cual posee un atributo Fecha, que representa el momento en el que el paciente fue ingresado en dicha planta.\\
+Dado que los médicos tienen varios pacientes, y un paciente puede tener varios médicos, se ha diseñado una relación \emph{M:N} entre \emph{Médicos} y \emph{Pacientes}.\\
 
 El segundo diagrama (Figura \ref{fig:er_parte2_2}) refleja el problema enunciado anteriormente. En el mismo podemos observar que debido a que los médicos y enfermeros comparten ciertos atributos (\emph{DNI}, Nombre, apellidos, dirección, teléfono...) se ha llegado a la conclusión de que debía existir una entidad común, \emph{Personal}.\\
 Por otra parte, los diagnósticos realizados por los pacientes forman su historia clínica. La entidad \emph{Diagnóstico} es una entidad débil ya que depende en identificación y en existencia de \emph{Paciente}.\\
@@ -390,7 +395,10 @@ Dado que los médicos tienen varios pacientes, y un paciente puede tener varios 
 
 \section{Parte 2 - Esquema lógico 1 para el problema enunciado}
 
-\textbf{Pues explicar las decisiones de diseño de este (CHUS Y RATAMBO).}
+En la traducción del esquema conceptual al esquema lógico del primer modelo se han traducido la generalización entre personal, médicos, enfermeros y pacientes con una generalización en la que toda la información es almacenada en las tablas \emph{hijas} (Médico, Enfermero y Paciente), sin crear una tabla \emph{Personal}.\\
+Para la traducción de la entidad dirección, debido a que al tener una relación 1:N con \emph{Personal} debe almacenarse su clave primaria ( la cual es un conjunto de atributos), se ha decidido crear una clave subrogada como identificador primario de la tabla \emph{Dirección}.\\
+Para modelar el histórico de diagnósticos sobre un paciente se ha creado una tabla \emph{Diagnóstico} con una restricción de clave ajena hacia la tabla \emph{Pacientes}, por lo tanto se ha modelado la entidad débil.\\
+Las relaciones N:M (entre médicos y pacientes, enfermeros y plantas y pacientes y plantas) se han traducido como nuevas tablas con restricciones de clave ajena entre las entidades relacionadas y los atributos de de la relación como atributos de las tablas.
 
 \section{Parte 2 - Esquema lógico 2 para el problema enunciado}
 
@@ -602,15 +610,21 @@ En conclusión, tanto si el equema global se representa por medio de vistas o no
 
 %% DIAGRAMAS PARTE 2
 
+\begin{landscape}
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{images/er_parte2_1.jpg}
+\caption{Diagrama ER de la primera solución sobre el problema descrito en la parte 2}
+\label{fig:er_parte2_1}
+\end{figure}
+\end{landscape}
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{images/er_parte2_2.png}
-\caption{Diagrama ER sobre el problema descrito en la parte 2}
+\caption{Diagrama ER de la segunda solución sobre el problema descrito en la parte 2}
 \label{fig:er_parte2_2}
 \end{figure}
-
-
 
 \begin{landscape}
 \begin{figure}
