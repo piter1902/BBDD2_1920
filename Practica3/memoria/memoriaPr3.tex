@@ -54,6 +54,7 @@ literate=%
 	\clearpage\maketitle
 	\thispagestyle{empty}
 	\tableofcontents
+	\listoffigures
 
 \end{titlepage}
 
@@ -63,18 +64,53 @@ literate=%
 Los esfuerzos invertidos por cada integrante del equipo son:
 \begin{itemize}
 \item Hayk:
+\begin{itemize}
+\item Interrogación a base de datos de Banquete : 2 horas.
+\item Esquema ER de banquete: 30 minutos.
+\item Vista de Titular del esquema global: 1 hora y 30 minutos.
+\item Enunciado de parte 2: 1 hora.
+\item Inserciones del esquema lógico 2: 2 horas.
+\item Redacción de memoria: 1 hora y 30 minutos.
+\end{itemize}
 
 \item Juanjo:	
+\begin{itemize}
+\item Interrogación a base de datos de Banquete : 2 horas.
+\item Vistas de Cuenta, Cuenta Corriente, Cuenta Ahorro y Posee del esquema global: 2 horas.
+\item Enunciado de parte 2: 1 hora.
+\item Creación del esquema conceptual y lógico 1: 2 horas.
+\item Inserciones del esquema lógico 1: 1 hora.
+\item Redacción de memoria: 1 hora y 30 minutos.
+\end{itemize}
 
 \item Jesús:
+\begin{itemize}
+\item Interrogación a base de datos de Banquete : 2 horas.
+\item Vistas de Sucursal, Transacción, Transferencia y Operación del esquema global: 2 horas.
+\item Enunciado de parte 2: 1 hora.
+\item Creación del esquema conceptual y lógico 1: 2 horas.
+\item Creación del esquema conceptual y lógico global de las bases de datos: 30 minutos
+\item Creación de las vistas del esquema global de las bases de datos de la segunda parte: 2 horas.
+\item Redacción de memoria: 2 horas y media.
+\end{itemize}
 
 \item Pedro: 
+\begin{itemize}
+\item Interrogación a base de datos de Banquete : 2 horas.
+\item Esquema ER global de las dos bases: 1 hora.
+\item Vistas de Sucursal, Transacción, Transferencia y Operación del esquema global: 2 horas.
+\item Enunciado de parte 2: 1 hora.
+\item Creación del esquema conceptual y lógico 2: 2 horas.
+\item Creación del esquema conceptual y lógico global de las bases de datos: 30 minutos.
+\item Creación de las vistas del esquema global de las bases de datos de la segunda parte: 2 horas.
+\item Redacción de memoria: 2 horas y media.
+\end{itemize}
 
 \end{itemize}
 
+\newpage
 \section{Parte 1 - Esquema conceptual y lógico de la base de datos relacional diseñada en la práctica anterior}
 
-\textbf{Mostrar aqui el ER de la práctica anterior y contar su traducción a SQL diciendo las decisiones de diseño de forma DETALLADA.}
 
 Durante el desarrollo de la práctica 1 se diseñó una base de datos para un banco que quería gestionar cuentas con múltiples propietarios, diferentes tipos de cuentas (cuentas ahorro y cuentas corrientes), operaciones (transacciones entre cuentas, o movimientos de dinero en efectivo) y las sucursales de la entidad.\\
 En la Figura \ref{fig:er1} se puede observar el esquema entidad relación sobre el problema planteado. Se ha planteado las relaciones entre los distintos tipos de cuentas como una generalización, ya que todas comparten ciertos atributos como el número de cuenta, el \emph{IBAN}, la fecha de apertura y el saldo restante. Esta generalización es exclusiva ya que no se considera posible la capacidad de que una cuenta pertenezca a los dos tipos de entidades al mismo tiempo. También, se trata de una generalización total ya que no se considera el caso de que una cuenta no pertenezca a algunos de las entidades derivadas de \emph{Cuenta}.\\
@@ -86,19 +122,128 @@ Para el almacenamiento de las sucursales de la entidad bancaria, se ha diseñado
 Se ha considerado que las transacciones se tienen que realizar en una sucursal, por lo tanto existe una relación entre \emph{Transacción} y \emph{Sucursal}. También, una cuenta corriente debe ser abierta en una determinada sucursal de la entidad.\\
 
 En la traducción de las generalizaciones del esquema conceptual al esquema lógico (modelo relacional) se han escogido dos estrategias. En la generalización de \emph{Cuenta} se ha mantenido la entidad, y las entidades derivadas de la misma solamente almacenan los atributos necesarios que no pertenecen a \emph{Cuenta}.\\
-Por otra parte, en la generalización de \emph{Transacción} se ha optado por eliminar la entidad generalizada, obteniendo así dos entidades independientes y duplicando algunos de sus atributos. \textbf{Leyendo esto me doy cuenta que nos hacía falta un \emph{Trigger}}. En esta misma generalización se ha traducido la relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción} como un atributo (el número de cuenta) en la tablas derivadas de \emph{Transacción} \textbf{TODO: Esto no se cuanto de bien está redactado}, siendo una referencia a la cuenta que ha realizado la transacción.\\
-{\LARGE \textbf{¿CÓMO LES PONEMOS EL ESQUEMA LÓGICO? Un diagrama?}}
+Por otra parte, en la generalización de \emph{Transacción} se ha optado por eliminar la entidad generalizada, obteniendo así dos entidades independientes y duplicando algunos de sus atributos. En esta misma generalización se ha traducido la relación \emph{1:N} entre \emph{Cuenta} y \emph{Transacción} como un atributo (el número de cuenta) en las tablas derivadas de \emph{Transacción} (\emph{Transferencia} y \emph{Operación}), siendo una referencia a la cuenta que ha realizado la transacción.\\
+Se ha usado el siguiente código.\\
+\newpage
+\begin{lstlisting}
+-- ************************************** "Cuenta"
+CREATE TABLE Cuenta 
+(
+	Num_cuenta 			int CONSTRAINT PK_Cuenta NOT NULL PRIMARY KEY,
+	IBAN				varchar(40) NOT NULL,
+	Fecha_creacion      date NOT NULL,
+	Saldo               int NOT NULL,
+	Tipo 				varchar(10) NOT NULL		
+);
+
+-- ************************************** "Cuenta_ahorro"
+
+
+CREATE TABLE Cuenta_ahorro
+(
+    ID_Cuenta			int CONSTRAINT PK_CuentaAhorro NOT NULL PRIMARY KEY,
+    Interes				int NOT NULL,
+    CONSTRAINT FK_idCuenta FOREIGN KEY (ID_cuenta) 
+    REFERENCES Cuenta ( Num_cuenta ) 
+    on delete cascade
+);
+
+-- ************************************** "Cliente"
+
+CREATE TABLE Cliente
+(
+    DNI       varchar(10) CONSTRAINT PK_Cliente NOT NULL PRIMARY KEY,
+    Nombre    varchar(50) NOT NULL,
+    Apellido  varchar(50) NOT NULL,
+    Edad      int NOT NULL,
+    Direccion varchar(100) NOT NULL,
+    Telefono  int NOT NULL,
+    Email     varchar(50) NULL
+);
+
+
+-- ************************************** "Sucursal"
+
+CREATE TABLE Sucursal
+(
+    Codigo    int CONSTRAINT PK_Sucursal NOT NULL PRIMARY KEY,
+    Direccion varchar(100) NOT NULL,
+    Telefono  int NOT NULL
+);
+
+-- ************************************** "Cuenta_corriente"
+
+CREATE TABLE Cuenta_corriente
+(
+    ID_Cuenta           int NOT NULL,
+    ID_Sucursal         int NOT NULL,
+    CONSTRAINT PK_CuentaCorriente PRIMARY KEY (ID_cuenta, ID_sucursal),
+    CONSTRAINT FK_idCuentaCorrput  FOREIGN KEY (ID_cuenta) 
+    REFERENCES Cuenta 
+    (Num_cuenta),
+    CONSTRAINT FK_idSucursal FOREIGN KEY (ID_sucursal) REFERENCES Sucursal 
+    (Codigo)
+);
+
+
+
+-- ************************************** "Transaccion"
+
+CREATE TABLE Transaccion
+(
+    Num_transaccion         int NOT NULL,
+    Num_cuenta_realizante   int NOT NULL,
+    Num_cuenta_beneficiario int NOT NULL,
+    Fecha                   date NOT NULL,
+    Importe                 int NOT NULL,
+    Descripcion             varchar(280) NULL,
+    Codigo                  int NOT NULL,
+    CONSTRAINT PK_TransaccionOpe PRIMARY KEY 
+    (Num_transaccion, Num_cuenta_realizante, Num_cuenta_beneficiario ),
+    CONSTRAINT FK_76 FOREIGN KEY ( Num_cuenta_realizante ) 
+    REFERENCES Cuenta ( Num_cuenta ),
+    CONSTRAINT FK_83 FOREIGN KEY ( Num_cuenta_beneficiario ) 
+    REFERENCES Cuenta ( Num_cuenta ),
+    CONSTRAINT FK_95 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
+);
+
+
+-- ************************************** "Poseer"
+
+CREATE TABLE Poseer
+(
+    DNI        varchar(10) NOT NULL,
+    Num_cuenta int NOT NULL,
+    CONSTRAINT PK_Poseer PRIMARY KEY ( DNI, Num_cuenta ),
+    CONSTRAINT FK_37 FOREIGN KEY ( DNI ) REFERENCES Cliente ( DNI ),
+    CONSTRAINT FK_41 FOREIGN KEY ( Num_cuenta ) REFERENCES Cuenta ( Num_cuenta )
+);
+
+
+-- ************************************** "Operacion"
+
+CREATE TABLE Operacion
+(
+    Num_transaccion       int NOT NULL,
+    Num_cuenta_realizante int NOT NULL,
+    Fecha                 date NOT NULL,
+    Importe               int NOT NULL,
+    Descripcion           varchar(280) NULL,
+    Tipo                  varchar(10) NOT NULL,
+    Codigo                int NOT NULL,
+    CONSTRAINT PK_TransaccionTra 
+    PRIMARY KEY ( Num_transaccion, Num_cuenta_realizante ),
+    CONSTRAINT FK_77 FOREIGN KEY ( Num_cuenta_realizante ) 
+    REFERENCES Cuenta ( Num_cuenta ),
+    CONSTRAINT FK_92 FOREIGN KEY ( Codigo ) REFERENCES Sucursal ( Codigo )
+);
+\end{lstlisting}
 
 \section{Parte 1 - Determinación del esquema lógico y conceptual de la base de datos Oracle a integrar}
-
-\textbf{Esquema ER de la base de datos a integrar y PONER LAS CONSULTAS CON LAS QUE HEMOS SACADO LAS COSAS.}\\
-\textbf{Igual estaría bien comentar de donde hemos sacado la información.}
 
 En esta práctica se pide integrar la base de datos de la Práctica 1+2 en otra base de datos ya existente (\emph{Banquete}). Para ello, es preciso conocer la organización de sus tablas y como se relacionan unas con otras, por tanto, el primer paso para conseguir la integración es extraer toda la información posible de la base de datos de \emph{Banquete}.\\
 \emph{Banquete} es una base de datos proporcionada por los profesores de la asignatura y se puede acceder a ella a través de las máquinas del laboratorio. Al conectarse a \emph{lab000} y ejecutar el comando \emph{sqlplus2 aNIP@barret.danae04.unizar.es} (siendo NIP el identificador de la universidad de cada miembro) e introduciendo la contraseña proporcionada en el fichero \emph{README-oracle2}, cada componente del grupo tiene acceso a Oracle con la base de datos \emph{Banquete} ya cargada.\\
 Una vez conseguido el acceso a \emph{Banquete}, a través de las consultas expuestas a continuación se consigue toda la información sobre tablas, vistas, triggers o constraints necesarios para conocer el funcionamiento al completo de la misma. 
-
-\textbf{TODO Hay que insertar todas consultas que hicimos CREO QUE FALTAN}
 
 \begin{lstlisting}
 	-- Obtenemos las tablas
@@ -340,11 +485,11 @@ CCC                  NOT NULL CHAR(20)
 )
 \end{lstlisting}
 
-\textbf{Comprobar si quereis mover este párrafo}\\
 Para la extracción de la información con las consultas anteriores se ha utilizado la herramienta \emph{spool} y \emph{DBeaver}. Con estas herramientas se ha extraido la información sobre la estructura de la base de datos de \emph{Banquete} de una forma tabular (en ficheros .csv), facilitando su comprensión, ya que, utilizando la terminal la salida obtenida era difícil de interpretar.\\
 
-Una vez conseguida toda la información, se necesita crear un modelo conceptual canónico de \emph{Banquete} con el fin de poder crear a continuación el esquema global que las dos bases. La transformación de las tablas a un modelo E/R es prácticamente directo gracias a los constraints que proporcionan la información de claves primarias y ajenas de las que se pueden sacar la manera en la que están relacionadas las tablas. Una vez procesada y analizada la información obtenida se obtiene el siguiente esquema E/R \ref{fig:er_banquete}.
+Una vez conseguida toda la información, se necesita crear un modelo conceptual canónico de \emph{Banquete} con el fin de poder crear a continuación el esquema global que las dos bases. La transformación de las tablas a un modelo E/R es prácticamente directo gracias a los constraints que proporcionan la información de claves primarias y ajenas de las que se pueden sacar la manera en la que están relacionadas las tablas. Una vez procesada y analizada la información obtenida se obtiene el siguiente esquema E/R Figura \ref{fig:er_banquete}.
 
+\newpage
 \section{Parte 1 - Mejoras sugeridas para la base de datos a integrar}\label{mejoras}
 
 Durante el interrogatorio al catálogo de datos de la base de datos de \emph{Banquete} se han encontrado diversas anomalías y diferencias respecto a nuestra base de datos.\\
@@ -356,26 +501,15 @@ Un problema similar existe en la entidad \emph{OpEfectivo}, ya que tiene un atri
 Sobre la generalización de \emph{Cuenta} en \emph{CuentaCorriente} y \emph{CuentaAhorro} se ha descubierto que en la base de datos de \emph{Banquete} no se trata de una generalización disjunta si no que existen cuentas que pueden pertenecer a ambos tipos al mismo tiempo.\\
 
 
-\textbf{Hablar aquí de los problemas que hemos encontrado y lo que supone que esté mal.}
-
 \section{Parte 1 - Definición e implementación del esquema global en Oracle}
 
 \textbf{Se me ocurre que podríamos explicar lo de que no ponemos como una entidad aparte lo de \emph{Dirección} exponiendo que no queríamos ``romper'' el mal trabajo que hicieron con \emph{Sucursal} y que queríamos unificarlo.}
 \textbf{Poner aquí el esquema ER y decir las decisiones de diseño (y el por qué).}\\
 
-Para la elaboración del esquema global se ha realizado un meticuloso estudio del diseño de la base de datos de \emph{Banquete}, centrandose principalemente en las entidades que mas difieren de \emph{Banquito} como se ha explicado detalladamente en \hyperref[mejoras]{el apartado anterior }.\\
-A partir de estas diferencias obtenidas se ha realizado el siguiente esquema global:\\
-\begin{huge}
-SI QUEREIS QUITAD LA IMAGEN, PERO IGUAL ES MAS COMODO PARA QUE SE VEA AL EXPLICARLO Y LEERLO\\
-\end{huge}
-\begin{figure}
-\centering
-\includegraphics[scale=0.55]{images/DiagramaGLOBAL.png}
-\label{fig:er_banquete}
-\caption{Diagrama E/R de la base de datos de Banquete}
-\end{figure}\\
+Para la elaboración del esquema global se ha realizado un meticuloso estudio del diseño de la base de datos de \emph{Banquete}, centrándose principalmente en las entidades que más difieren de \emph{Banquito} como se ha explicado detalladamente en \hyperref[mejoras]{el apartado anterior }.\\
+A partir de estas diferencias obtenidas se ha realizado el siguiente esquema global (Figura \ref{fig:er_global1})\\
 
-La entidad \emph{Titular} es la que recogerá a todos los clientes de ambas bases, y contendrá toda su información, incluyendo la \textit{direccion}. Se ha optado por introducir este dato como un atributuo más de la tabla en lugar de crear una entidad con las direcciones. La dirección contendrá la calle, el piso, número y código postal. En el caso de \emph{Banquito} venía en un atributo, pero en el caso de \emph{Banquete}, se disponía en dos entidades, \textit{Dirección} y \textit{CodPostal}, esto se ha unificado en un atributo a través de la consulta ralizada a la hora de crear la vista con la siguientes sentencias:
+La entidad \emph{Titular} es la que recogerá a todos los clientes de ambas bases, y contendrá toda su información, incluyendo la \textit{direccion}. Se ha optado por introducir este dato como un atributo más de la tabla en lugar de crear una entidad con las direcciones. La dirección contendrá la calle, el piso, número y código postal. En el caso de \emph{Banquito} venía en un atributo, pero en el caso de \emph{Banquete}, se disponía en dos entidades, \textit{Dirección} y \textit{CodPostal}, esto se ha unificado en un atributo a través de la consulta realizada a la hora de crear la vista con la siguientes sentencias SQL:
 
 \begin{lstlisting}
 CREATE OR REPLACE VIEW titular_view AS
@@ -424,9 +558,10 @@ UNION
 			t.direccion = d.id_direccion
 );
 \end{lstlisting}
-Para \emph{Banquito }simplemente se cogen los datos de la tabla \textit{Cliente} y se nombra las columnas siguiendo el esquema de \emph{Banquete}, de esta manera sus usuarios se sentirán mas cómdos. En cambio en la consulta a \emph{Banquete}, debemos realizar un \textit{join} con la tabla \textit{dirección} y  \textit{titular}, ya que el último contiene una clave ajena de dirección. Para obtener la dirección completa se concatenan los atributos de la tabla y para obtener el código posta, se hace a través de una consulta con la ciudad y la calle deseada.\\
+Para \emph{Banquito }simplemente se cogen los datos de la tabla \textit{Cliente} y se nombra las columnas siguiendo el esquema de \emph{Banquete}, de esta manera sus usuarios se sentirán mas cómodos. En cambio en la consulta a \emph{Banquete}, debemos realizar un \textit{join} con la tabla \textit{dirección} y  \textit{titular}, ya que el último contiene una clave ajena de dirección. Para obtener la dirección completa se concatenan los atributos de la tabla y para obtener el código posta, se hace a través de una consulta con la ciudad y la calle deseada.\\
 
 La entidad \emph{Cuenta} contendrá tanto las cuenta corrientes como las cuentas de ahorro. Esta dispone de una relación \textit{posee} con titular con cardinalidad N:M, con esta relación vinculamos las cuenta con sus titulares. Para ello se realiza la siguiente vista:\\
+\newpage
 \begin{lstlisting}
 CREATE OR REPLACE VIEW Posee_view AS
     (
@@ -439,7 +574,7 @@ CREATE OR REPLACE VIEW Posee_view AS
         from cuenta@schema2bd2 c1
     );
 \end{lstlisting}
-Se realiza una unón con la tabla \textit{cuenta} de \emph{Banquete} y \textit{posee} de \textbf{Banquito}. \emph{Banquete} en su tabla \textit{cuenta } dispone de un atirbuto \textit{titular} que es el DNI del cliente al que pertenece esa cuenta (debido a la realación 1:N entre titular y cuenta). Para \emph{Banquito}  se ha tenido que obtener de la realación N:M posee que contine los DNIs asociados a sus cuentas.\\
+Se realiza una unión con la tabla \textit{cuenta} de \emph{Banquete} y \textit{posee} de \emph{Banquito}. \emph{Banquete} en su tabla \textit{cuenta} dispone de un atributo \textit{titular} que es el DNI del cliente al que pertenece esa cuenta (debido a la relación 1:N entre titular y cuenta). Para \emph{Banquito} se ha tenido que obtener de la relación N:M posee que contiene los DNIs asociados a sus cuentas.\\
 
 \begin{lstlisting}
 -- Cuenta (Padre)
@@ -463,7 +598,7 @@ CREATE OR REPLACE VIEW cuenta_view AS
     );
 \end{lstlisting}
 Para crear la tabla de \textit{cuenta}, se hace una unión con cuenta de \emph{Banquito} y \emph{Banquete }, con la peculiaridad de que este último no contiene el IBAN y este se debe de obtener a través de una consulta a la tabla \textit{CodEntidades}.\\
-Cuenta será la clase padre de una generalización total no exclusiva, sus hijos serán \textit{Cuenta Ahorro}, que dispondrá de una tributo \textit{tipo interés }que la diferencia de \textit{Cuenta Corriente}, además esta tiene una relaciuón 1:N con Sucursal, debido a que en ambos esquemas se encuentra de esta manera. Las vistas creadas son muy simples, basicamente se cogen los atributos y se renombran según el esquema de \emph{Banquete}.
+Cuenta será la clase padre de una generalización total no exclusiva, sus hijos serán \textit{Cuenta Ahorro}, que dispondrá de una tributo \textit{tipo interés }que la diferencia de \textit{Cuenta Corriente}, además esta tiene una relación 1:N con Sucursal, debido a que en ambos esquemas se encuentra de esta manera. Las vistas creadas son simples, se cogen los atributos y se renombran según el esquema de \emph{Banquete}.
 \begin{lstlisting}
 -- Cuenta Corriente
 CREATE OR REPLACE VIEW cuenta_corriente_view AS
@@ -505,9 +640,9 @@ CREATE OR REPLACE VIEW sucursal_view AS
 		FROM sucursal@SCHEMA2BD2 s1
 	);
 \end{lstlisting}
-La entidad \textit{Operación} (\textit{Transaccion} en \emph{Banquito}) es una entidad débil respecto a \textit{Cuenta} ya que depende de esta, en existencia y en identificación. Sin embargo, esto se soluciona con la relación entre Cuenta y Operación, de tipo 1:N, donde se propaga la clave de cuenta a Operación, eliminando de esta forma este problema. Cabe destacar que \textit{Operacion} es la entidad padre de una generalización total exclusiva, distinguiendo entre operaciones de trasnferencia y operaciones de efectivo. De esta manera se respeta el esquma de \emph{Banquete}. \\
+La entidad \textit{Operación} (\textit{Transaccion} en \emph{Banquito}) es una entidad débil respecto a \textit{Cuenta} ya que depende de esta, en existencia y en identificación. Sin embargo, esto se soluciona con la relación entre Cuenta y Operación, de tipo 1:N, donde se propaga la clave de cuenta a Operación, eliminando de esta forma este problema. Cabe destacar que \textit{Operacion} es la entidad padre de una generalización total exclusiva, distinguiendo entre operaciones de transferencia y operaciones de efectivo. De esta manera se respeta el esquema de \emph{Banquete}. \\
 En cuanto a \emph{Banquito}, en su diseño no se contempló la posibilidad de que una transferencia se realizase con una cuenta ajena que no estuviese registrada, por esta razón la tabla correspondiente a \textit{OpTrasnferencia} que es \textit{Transferencia} dispone de una relación 1:N con \textit{Cuenta} en el diseño de \emph{Banquito}. 
-Para resolver la incosistencia del esquema de \emph{Banquete}, en el que una operación de efectivo contiene el código de la sucursal con un simple \textit{check} sin ser una referencia, se ha optado por una relación 1:N \textit{efectuado en } entre \textit{OpEfectivo} y \textit{Sucursal}, con esto se soluciona la incosistencia y se sigue el modelado.
+Para resolver la inconsistencia del esquema de \emph{Banquete}, en el que una operación de efectivo contiene el código de la sucursal con un simple \textit{check} sin ser una referencia, se ha optado por una relación 1:N \textit{efectuado en } entre \textit{OpEfectivo} y \textit{Sucursal}, con esto se soluciona la inconsistencia y se sigue el modelado.
 Para obtener la vista se realiza la siguiente consulta:
 
 \begin{lstlisting}
@@ -534,8 +669,6 @@ UNION
 	FROM operacion@SCHEMA2BD2 o
 );
 \end{lstlisting}
-Respetando el esquema de \emph{Banquete}, realizamos una unión con \textit{Transacción} y \textit{Operación} en \emph{Banquito}, 
-\begin{huge} pendiente \end{huge}\\
 Para \textit{OpTransferencia}, se realiza una unión, con la tabla \textit{Transaccion} de \emph{Banquito} y con un \textit{join} entre \textit{Operacion} y \textit{OpTransferencia}  en el esquema de \emph{Banquete} cogiendo únicamente aquellas operaciones que pertenecen a una transferencia.
 
 \begin{lstlisting}
@@ -579,15 +712,14 @@ CREATE VIEW opefectivo_view AS
 				ON o.numop = oe.numop AND o.ccc = oe.ccc
 	);
 \end{lstlisting}
+\newpage
 \section{Parte 2 - Enunciado de un problema de diseño de bases de datos}
 
 Se desea diseñar una base de datos para gestionar la información inherente a un hospital. En el hospital trabajan médicos y enfermeros. Los médicos tienen asignados una serie de pacientes. Los enfermeros tienen asignada una planta.\\
-%Los pacientes ingresan en el hospital a partir del servicio de urgencias, y tras examinarles se les asigna a una planta.\\
 La información sobre los trabajadores del hospital deberá contener información sobre su DNI, nombre, apellidos, fecha de nacimiento, dirección, teléfono de contacto. Los médicos deberán almacenar su especialidad y su número de colegiado. Los enfermeros almacenarán el servicio al que están asignados (planta, hematología, diálisis...).\\
 Nuestro hospital está dividido en plantas, cada planta alberga pacientes ingresados y almacena la información relativa al uso destinado para esa planta.\\
 Los pacientes almacenan su DNI, nombre, apellidos, fecha de nacimiento, dirección y teléfono. Disponemos de un historial clínico que almacena la información sobre los diagnósticos realizados a los pacientes.
 
-\textbf{Poner aqui ese enunciado que hemos redactado}
 
 \section{Parte 2- Esquema conceptual para el problema enunciado}
 
@@ -604,8 +736,7 @@ Por otra parte, los diagnósticos realizados por los pacientes forman su histori
 Los pacientes ingresan en plantas, por lo tanto, se ha diseñado una entidad \emph{Ingreso} que refleja el ingreso de un paciente determinado en una planta determinada. Esta entidad es débil ya que un paciente puede encontrarse con varios ingresos a lo largo de su vida. Por lo tanto, un ingreso depende de la planta, el paciente y, las fechas de ingreso y de alta.\\
 Dado que los médicos tienen varios pacientes, y un paciente puede tener varios médicos, se ha diseñado una relación \emph{M:N} entre \emph{Médicos} y \emph{Pacientes}.
 
-\textbf{Poner aquí los dos esquemas ER y explicar que se ha tomado esta decisión para dificultar la integración.}
-
+\newpage
 \section{Parte 2 - Esquema lógico 1 para el problema enunciado}
 
 En la traducción del esquema conceptual al esquema lógico del primer modelo se han traducido la generalización entre personal, médicos, enfermeros y pacientes con una generalización en la que toda la información es almacenada en las tablas \emph{hijas} (Médico, Enfermero y Paciente), sin crear una tabla \emph{Personal}.\\
@@ -620,10 +751,6 @@ Para modelar el histórico de diagnósticos sobre un paciente se ha creado una t
 La tabla \emph{Ingreso} posee dos claves ajenas, una apuntando a una \emph{Planta} y otra a \emph{Paciente}, haciendo que los ingresos estén relacionados con las plantas y los pacientes,. Por lo tanto, un paciente distinto puede tener varios ingresos varias veces en una misma o distintinta planta a lo largo del tiempo en fechas distintas.\\
 Para relacionar los médicos con los pacientes a los que tienen asignados, se ha traducido la relación \emph{M:N} en una nueva tabla \emph{Atendidos}, que almacenan las claves primarias de \emph{Médicos} y \emph{Pacientes}. Lo mismo ocurre entre \emph{Enfermeros} y \emph{Plantas}, se ha creado la tabla \emph{Asignados} que almacena las claves primarias de enfermeros y plantas.\\
 
-
-\textbf{Haría falta meter los códigos en un anexo aunque sea?}
-\textbf{Pues explicar las decisiones de diseño de este (PEDRO Y HAYK).}
-
 \section{Parte 2 - Esquema global y su implementación en PostgreSQL}
 
 Tras la traducción del esquema conceptual a los esquemas lógicos llega el turno de realizar la integración de ambos modelos lógicos en un solo esquema global que recoja las características de ambos esquemas lógicos.\\
@@ -636,11 +763,12 @@ En el apartado técnico, se ha utilizado la herramienta \emph{dblink\footnote{\u
 Para realizar la conexión con la base de datos remota se ha ejecutado la siguiente consulta, la cual guarda los datos de la conexión bajo el alias ``remota''.
 
 \begin{lstlisting}
+create extension dblink;
 select * from dblink_connect('remota',
  'host=kandula.db.elephantsql.com  dbname=** user=** password=**');
 \end{lstlisting}
 
-Tras ejecutar esta sentencia, se habra realizado la conexión con la base de datos ubicada en \emph{kandula.db.elephant.sql}.\\
+Tras ejecutar esta sentencia, se habrá realizado la conexión con la base de datos ubicada en \emph{kandula.db.elephant.sql}.\\
 Para ejecutar una consulta sobre \emph{dblink} podemos utilizar una forma similar a la siguiente:
 
 \begin{lstlisting}
@@ -779,18 +907,13 @@ create or replace view Ingresos_view as
     );
 \end{lstlisting}
 
-En esta vista se puede observar como el esquema lógico 1 no contaba con una fecha de alta el la relación \emph{Ingresos}, y por lo tanto ha tenido que ser sustituida por el valor \emph{NULL}.\\
+En esta vista se puede observar como el esquema lógico 1 no contaba con una fecha de alta el la relación \emph{Ingresos}, y por lo tanto ha tenido que ser sustituida por el valor \emph{NULL}.
 
-\textbf{{\LARGE ¿QUERÉIS QUE SIGA EXPLICANDO EL RESTO DE VISTAS O CON ESTO ES SUFICIENTE?}}
-
-\textbf{Puse aquí tenemos la incertidumbre de si querrán que sean vistas o una base de datos completa, pero de todas formas habrá que explicar las decisiones de diseño.}
-
+\newpage
 \section{Actualizaciones de datos sobre el esquema global}
-El esquema global es una representación que unifica los esquemas lógicos de dos o más bases de datos. Se utiliza cuando las bases de datos en cuestión tienen cierta relación e interesa obtener información de ambas mediante un solo acceso, en vez de acceder por separado a las mismas. Con esta representación global se intenta ajustar las distintas entidades, relaciones y atributos de las bases participantes para que el esquema global sea lo más parecido posible a las mismas. 
-En nuestro caso, tanto para el apartado de \textit{Oracle} como el de \textit{PostgreSQL}, las bases de datos que componen los respectivos esquemas globales son lógicamente diferentes entre sí. Es por ello que toda la información se almacena en cada una de ellas por separado y para representar el esquema global se crean vistas que recogen la información de las mismas y la  muestran de una forma unificada. De esta manera, si se quisiera modificar información en el esquema global, podría dar problemas dado que, por un lado, como se ha mencionado anteriormente toda información se guarda en las bases componentes y por ello si se modifica la información de las vistas, el cambio no perdura en el tiempo. Por otro lado, si en lugar de utilizar vistas, se utilizaran tablas o vistas materializadas, de forma que se garantizara la persistencia de los cambios en el esquema global, cualquier modificación en el mismo debe transmitirse a la base correspondiente, es decir, se deberían programar \textit{Triggers} para garantizar la consistencia. Además de ser un trabajo complicado, las diferencias en la representación lógica de las bases implicaría, en algunos casos, una transofrmación de la información añadida/modificada. Por ejemplo, en el esquema global de \textit{Banquete} y \textit{Banquito} se representa la "Dirección" como una sola cadena. Si se añade un cliente relacionado con la base \textit{Banquete}, a la hora de actualizar la información en esta base, se observa que "Dirección" se representa en una tabla "Direccon" con distintos atributos, es decir, posee una representación lógica diferente. Para introducirlo en la base, se debería procesar la información y separar la cadena proveniente del esquema global en los distintos atributos de la tabla correspondiente de \textit{Banquete}, lo que sería un proceso ocioso y podría producir errores de inserción. 
-En conclusión, tanto si el equema global se representa por medio de vistas o no, es recomendable utilizar el mismo únicamente para realizar consultas y realizar la inserción o modificación de datos en las bases componentes por separado 
-\textbf{Viabilidad? Pues depende de dónde quieras guardarlo. Pero esto habrá que hablar.}\\
-\\
+El esquema global es una representación que unifica los esquemas lógicos de dos o más bases de datos. Se utiliza cuando las bases de datos en cuestión tienen cierta relación e interesa obtener información de ambas mediante un solo acceso, en vez de acceder por separado a las mismas. Con esta representación global se intenta ajustar las distintas entidades, relaciones y atributos de las bases participantes para que el esquema global sea lo más parecido posible a las mismas.\\ 
+En nuestro caso, tanto para el apartado de \textit{Oracle} como el de \textit{PostgreSQL}, las bases de datos que componen los respectivos esquemas globales son lógicamente diferentes entre sí. Es por ello que toda la información se almacena en cada una de ellas por separado y para representar el esquema global se crean vistas que recogen la información de las mismas y la  muestran de una forma unificada. De esta manera, si se quisiera modificar información en el esquema global, podría dar problemas dado que, por un lado, como se ha mencionado anteriormente toda información se guarda en las bases componentes y por ello si se modifica la información de las vistas, el cambio no perdura en el tiempo. Por otro lado, si en lugar de utilizar vistas, se utilizaran tablas o vistas materializadas, de forma que se garantizara la persistencia de los cambios en el esquema global, cualquier modificación en el mismo debe transmitirse a la base correspondiente, es decir, se deberían programar \textit{Triggers} para garantizar la consistencia. Además de ser un trabajo complicado, las diferencias en la representación lógica de las bases implicaría, en algunos casos, una transformación de la información añadida/modificada. Por ejemplo, en el esquema global de \textit{Banquete} y \textit{Banquito} se representa la "Dirección" como una sola cadena. Si se añade un cliente relacionado con la base \textit{Banquete}, a la hora de actualizar la información en esta base, se observa que "Dirección" se representa en una tabla "Direccion" con distintos atributos, es decir, posee una representación lógica diferente. Para introducirlo en la base, se debería procesar la información y separar la cadena proveniente del esquema global en los distintos atributos de la tabla correspondiente de \textit{Banquete}, lo que sería un proceso ocioso y podría producir errores de inserción.\\
+En conclusión, tanto si el esquema global se representa por medio de vistas o no, es recomendable utilizar el mismo únicamente para realizar consultas y realizar la inserción o modificación de datos en las bases componentes por separado.
 \newpage
 
 
@@ -813,13 +936,20 @@ En conclusión, tanto si el equema global se representa por medio de vistas o no
 \begin{figure}
 \centering
 \includegraphics[scale=0.75]{images/ER_BANQUETE.jpeg}
-\caption{Diagrama E/R de la base de datos de Banquete}
+\caption{Diagrama ER de la base de datos de Banquete}
 \label{fig:er_banquete}
 \end{figure}
 \end{landscape}
 \pagebreak
 
-
+\begin{landscape}
+\begin{figure}
+\centering
+\includegraphics[scale=0.75]{images/DiagramaGLOBAL.png}
+\caption{Diagrama ER del esquema global de las base de datos bancarias}
+\label{fig:er_global1}
+\end{figure}
+\end{landscape}
 
 %% DIAGRAMAS PARTE 2
 
