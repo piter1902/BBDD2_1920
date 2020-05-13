@@ -1,5 +1,6 @@
 package bases2.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 @Entity
-public abstract class Cuenta {
+public abstract class Cuenta implements Serializable{
 
     @Id
     @Column(name = "NumCuenta")

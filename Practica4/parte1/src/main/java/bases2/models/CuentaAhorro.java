@@ -1,12 +1,13 @@
 package bases2.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class CuentaAhorro extends Cuenta {
+public class CuentaAhorro extends Cuenta implements Serializable{
 
     @Column(name = "INTERES")
     private double interes;
