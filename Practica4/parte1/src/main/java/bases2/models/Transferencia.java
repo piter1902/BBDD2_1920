@@ -1,12 +1,9 @@
-package bases2;
+package bases2.models;
 
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
-import bases2.models.Cuenta;
-import bases2.models.Transaccion;
 
 @Entity
 public class Transferencia extends Transaccion {

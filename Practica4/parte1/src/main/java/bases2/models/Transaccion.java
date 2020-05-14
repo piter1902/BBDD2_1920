@@ -31,6 +31,9 @@ public abstract class Transaccion implements Serializable{
     @Id
     private Cuenta realizante;
 
+    @ManyToOne
+    private Sucursal sucursal;
+
     public Transaccion() {
     }
 
@@ -90,6 +93,14 @@ public abstract class Transaccion implements Serializable{
 
     public void setRealizante(Cuenta realizante) {
         this.realizante = realizante;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
 
     @Override
