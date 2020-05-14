@@ -19,6 +19,8 @@ import javax.persistence.Table;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Cuenta implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "NUM_CUENTA", nullable = false)
     private int numCuenta;
@@ -151,7 +153,7 @@ public abstract class Cuenta implements Serializable{
     @Override
     public String toString() {
         return "Cuenta [IBAN=" + IBAN + ", fechaCreacion=" + fechaCreacion + ", numCuenta=" + numCuenta
-                + ", propietarios=" + propietarios + ", saldo=" + saldo + ", tipo=" + tipo + "]";
+                + ", saldo=" + saldo + ", tipo=" + tipo + "]";
     }
 
     

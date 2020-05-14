@@ -14,6 +14,8 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "ID_CUENTA")
 public class CuentaAhorro extends Cuenta implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Column(name = "INTERES", nullable = false)
     private int interes;
 

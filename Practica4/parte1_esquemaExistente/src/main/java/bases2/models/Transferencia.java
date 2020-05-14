@@ -11,6 +11,8 @@ import javax.persistence.Table;
 @Table(name = "TRANSACCION")
 public class Transferencia extends Transaccion {
 
+    private static final long serialVersionUID = 1L;
+
     @ManyToOne
     @JoinColumn(name = "NUM_CUENTA_BENEFICIARIO")
     private Cuenta cuentaDestino;

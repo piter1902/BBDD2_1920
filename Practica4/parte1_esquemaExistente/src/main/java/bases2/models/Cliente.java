@@ -18,6 +18,8 @@ import javax.persistence.Table;
 @Table(name = "CLIENTE")
 public class Cliente implements Serializable{
     
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "DNI", nullable = false)
     private String DNI;
@@ -203,7 +205,7 @@ public class Cliente implements Serializable{
     @Override
     public String toString() {
         return "Cliente [Apellidos=" + Apellidos + ", DNI=" + DNI + ", Direccion=" + Direccion + ", Email=" + Email
-                + ", Nombre=" + Nombre + ", Telefono=" + Telefono + ", cuentas=" + cuentas + ", edad=" + edad + "]";
+                + ", Nombre=" + Nombre + ", Telefono=" + Telefono + ", cuentas=" + cuentas.size() + ", edad=" + edad + "]";
     }
 
     

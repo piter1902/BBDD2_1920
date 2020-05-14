@@ -15,6 +15,8 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class Transaccion implements Serializable{
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "NUM_TRANSACCION", nullable = false)
     private int NumTransaccion;

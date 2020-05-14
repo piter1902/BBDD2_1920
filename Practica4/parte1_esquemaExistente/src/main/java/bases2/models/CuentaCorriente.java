@@ -15,6 +15,8 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "ID_CUENTA")
 public class CuentaCorriente extends Cuenta implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @ManyToOne
     @JoinColumn(name = "ID_SUCURSAL", nullable = false)
     private Sucursal sucursal;
