@@ -155,7 +155,4 @@ public abstract class Cuenta implements Serializable{
         return "Cuenta [IBAN=" + IBAN + ", fechaCreacion=" + fechaCreacion + ", numCuenta=" + numCuenta
                 + ", saldo=" + saldo + ", tipo=" + tipo + "]";
     }
-
-    
-    
 }
