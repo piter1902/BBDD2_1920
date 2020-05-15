@@ -11,6 +11,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import org.graalvm.compiler.nodes.virtual.EscapeObjectState;
 
 import bases2.queries.*;
 
@@ -50,7 +51,9 @@ public final class App {
 
         // printClients();
 
-        do_queries();
+        queryMasDinero();
+
+        querySucursalesMenores30();
     }
 
     private static void printClients() {
@@ -146,26 +149,27 @@ public final class App {
         em.close();
     }
 
-    private static void do_queries() {
+    private static void queryMasDinero() {
         // Query 1 en JPQL: "Users que más dinero han extraído de sus cuentas"
 
-        // EN SQL: 
-        // select cl.nombre, SUM(op.importe), op.num_cuenta_realizante 
-        // from operacion op 
-        // JOIN poseer pos ON op.num_cuenta_realizante = pos.num_cuenta
-        // JOIN  cliente cl ON pos.DNI = cl.DNI
-        // where op.tipo = 'Retirada' GROUP BY op.num_cuenta_realizante,cl.nombre
-        // ORDER BY SUM(importe) DESC; 
+        /*EN SQL: 
+        *select cl.nombre, SUM(op.importe), op.num_cuenta_realizante 
+        *from operacion op 
+        *JOIN poseer pos ON op.num_cuenta_realizante = pos.num_cuenta
+        *JOIN  cliente cl ON pos.DNI = cl.DNI
+        *where op.tipo = 'Retirada' GROUP BY op.num_cuenta_realizante,cl.nombre
+        *ORDER BY SUM(importe) DESC; 
+        */
 
         EntityManager em = emf.createEntityManager();
-        String query_text1 = "SELECT cl.Nombre, op.realizante.numCuenta, SUM(op.importe) " + 
+        String query_text = "SELECT cl.Nombre, op.realizante.numCuenta, SUM(op.importe) " + 
             "FROM Operacion op JOIN op.realizante realizantes " + 
             "JOIN realizantes.propietarios cl " +
             "WHERE op.tipo = 'Retirada' " + 
             "GROUP BY op.realizante.numCuenta, cl.Nombre " +
             "ORDER BY SUM(op.importe) DESC";
 
-        javax.persistence.Query query1 = em.createQuery(query_text1);
+        javax.persistence.Query query1 = em.createQuery(query_text);
 
         // Source: https://vladmihalcea.com/hibernate-resulttransformer/
         @SuppressWarnings("unchecked")
@@ -226,6 +230,88 @@ public final class App {
         }
 
         em.close(); //Cerramos el Manager
+     }
+
+     private static void querySucursalesMenores30(){
+        // Query2: Sucursales en las que los clientes menores de 30 años tienen cuentas corrientes.
+
+        /*  EN SQL: 
+              SELECT suc.CODIGO, cl.NOMBRE, cl.EDAD, cc.ID_CUENTA
+              FROM Sucursal suc
+              JOIN CUENTA_CORRIENTE cc ON suc.CODIGO = cc.ID_SUCURSAL
+              JOIN POSEER pos ON cc.ID_CUENTA = pos.NUM_CUENTA
+              JOIN CLIENTE cl ON pos.DNI = cl.DNI
+              WHERE cl.EDAD < 30
+              ORDER BY suc.codigo; 
+        */
+       
+        // EN JPQL:
+
+        EntityManager em = emf.createEntityManager();
+        // He cambiado la orientación de los JOIN porque queda más simple
+        String query_text = "SELECT suc.codigo, cl.Nombre, cl.edad, cc.numCuenta " + 
+                "FROM Cliente cl " +
+                "JOIN cl.cuentas cc " +
+                "JOIN cc.sucursal suc " +
+                "WHERE cl.edad < 30 " + 
+                "ORDER BY suc.codigo"; 
+
+        javax.persistence.Query query2 = em.createQuery(query_text);
+
+        // Source: https://vladmihalcea.com/hibernate-resulttransformer/
+        @SuppressWarnings("unchecked")
+        List<Query2> results = query2
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new Query2Transformer())
+                .getResultList();
+
+        System.out.println("------ Mostrando Query2 en JPQL ------");
+        
+        for (Query2 q : results){
+                System.out.println(q);
+        }
+
+        // Query 2 en Criteria API
+        
+        javax.persistence.criteria.CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        javax.persistence.criteria.CriteriaQuery query = cb.createQuery(Query2.class);
+        javax.persistence.criteria.Root<Cliente> clienteTable = query.from(Cliente.class); 
+        javax.persistence.criteria.Join<Cliente,Cuenta> cuentaJoin = clienteTable.join("cuentas");
+
+        // Seleccionamos tabla hija
+        javax.persistence.criteria.Join cuentaCorrienteJoin = cb.treat(cuentaJoin, CuentaCorriente.class);
+
+        javax.persistence.criteria.Join<CuentaCorriente,Sucursal> sucursalJoin = cuentaCorrienteJoin.join("sucursal");
+
+        List<javax.persistence.criteria.Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.lt(clienteTable.get("edad"), 30));
+        
+        query.multiselect(
+                sucursalJoin.get("codigo"),
+                clienteTable.get("Nombre"),
+                clienteTable.get("edad"),
+                cuentaCorrienteJoin.get("numCuenta")
+        ).distinct(true);
+
+        query.where(predicates.stream().toArray(javax.persistence.criteria.Predicate[]::new));
+
+        // Para poder hacer el Order By
+        List<javax.persistence.criteria.Order> order = new ArrayList<>();
+        order.add(cb.asc(sucursalJoin.get("codigo")));
+
+        query.orderBy(order);
+
+        TypedQuery<Query2> typedQuery = em.createQuery(query);
+
+        List<Query2> resultList = typedQuery.getResultList();
+        
+        System.out.println("------ Mostrando Query2 en Criteria API ------");
+
+        for (Query2 row : resultList){
+                System.out.println(row);
+        }
+
      }
 
     /**
