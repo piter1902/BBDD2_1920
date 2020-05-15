@@ -11,7 +11,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import main.java.queries.*;
+
+import bases2.queries.*;
 
 //import javax.persistence.Criteria;
 
@@ -173,6 +174,8 @@ public final class App {
                 .setResultTransformer(new Query1Transformer())
                 .getResultList();
 
+        System.out.println("------ Mostrando Query1 en JPQL ------");
+        
         for (Query1 q : results){
                 System.out.println(q);
         }
@@ -183,31 +186,46 @@ public final class App {
         // Query 1 en Criteria API
         // Source: https://stackoverflow.com/questions/41982998/hibernate-criteriabuilder-to-join-multiple-tables/42019970
         
-        // javax.persistence.criteria.CriteriaBuilder cb = em.getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        // javax.persistence.criteria.CriteriaQuery query = cb.createQuery(Query1.class);
-        // javax.persistence.criteria.Root<Operacion> operacionTable = query.from(Operacion.class); 
-        // javax.persistence.criteria.Join<Operacion,Cuenta> cuentaJoin = operacionTable.join(Operacion_.realizante);
-        // javax.persistence.criteria.Join<Operacion,Cliente> clienteJoin = operacionTable.join(Cuenta_.propietarios);
+        javax.persistence.criteria.CriteriaQuery query = cb.createQuery(Query1.class);
+        javax.persistence.criteria.Root<Operacion> operacionTable = query.from(Operacion.class); 
+        javax.persistence.criteria.Join<Operacion,Cuenta> cuentaJoin = operacionTable.join("realizante");
+        javax.persistence.criteria.Join<Cuenta,Cliente> clienteJoin = cuentaJoin.join("propietarios");
 
-        // List<Predicate> predicates = new ArrayList<>();
-        // predicates.add(cb.equal(operacionTable.get(Operacion_.tipo), "Retirada"));
+        List<javax.persistence.criteria.Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(operacionTable.get("tipo"), "Retirada"));
         
-        // query.multiselect(
-        //         clienteJoin.get(Cliente_.Nombre),
-        //         cuentaJoin.get(Cuenta_.numCuenta),
-        //         cb.sum(operacionTable.get(Operacion_.importe))
-        // );
-        // query.where(predicates.stream().toArray(Predicate[]::new));
-        // query.groupBy(cuentaJoin.get(Cuenta_.numCuenta), clienteJoin.get(Cliente_.Nombre));
-        // TypedQuery<Query1> typedQuery = em.createQuery(query);
+        query.multiselect(
+                clienteJoin.get("Nombre"),
+                cuentaJoin.get("numCuenta"),
+                cb.sum(operacionTable.get("importe"))
+        );
 
-        // List<Query1> resultList = typedQuery.getResultList();
-        // for (Query1 q : resultList){
-        //         System.out.println(q);
-        // }
+        query.where(predicates.stream().toArray(javax.persistence.criteria.Predicate[]::new));
+        query.groupBy(cuentaJoin.get("numCuenta"), clienteJoin.get("Nombre"));
+        //query.orderBy(operacionTable.get("importe"));
 
-        // em.close(); //Cerramos el Manager
+        // Para poder hacer el Order By
+        List<javax.persistence.criteria.Order> order = new ArrayList<>();
+        order.add(cb.desc(cb.sum(operacionTable.get("importe"))));
+
+        query.orderBy(order);
+
+        TypedQuery<Query1> typedQuery = em.createQuery(query);
+
+        List<Query1> resultList = typedQuery.getResultList();
+        
+        
+
+        System.out.println("------ Mostrando Query1 en Criteria API ------");
+
+        
+        for (Query1 q : resultList){
+                System.out.println(q);
+        }
+
+        em.close(); //Cerramos el Manager
      }
 
     /**

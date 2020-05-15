@@ -1,4 +1,4 @@
-package main.java.queries;
+package bases2.queries;
 
 
 // Se crea esta clase para poder mostrar el resultado correctamente en la Query 1 de JPA

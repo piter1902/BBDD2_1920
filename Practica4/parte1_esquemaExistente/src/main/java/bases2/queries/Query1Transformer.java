@@ -1,9 +1,9 @@
-package main.java.queries;
+package bases2.queries;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import main.java.queries.*;
+import bases2.queries.*;
 
 
 // Source: https://stackoverflow.com/questions/52568707/jpa-repository-query-java-lang-object-cannot-be-cast-to-model
