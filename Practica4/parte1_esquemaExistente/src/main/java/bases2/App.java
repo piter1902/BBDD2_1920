@@ -183,31 +183,31 @@ public final class App {
         // Query 1 en Criteria API
         // Source: https://stackoverflow.com/questions/41982998/hibernate-criteriabuilder-to-join-multiple-tables/42019970
         
-        javax.persistence.criteria.CriteriaBuilder cb = em.getCriteriaBuilder();
+        // javax.persistence.criteria.CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        CriteriaQuery query = cb.createQuery(consulta2.class);
-        Root<Operacion> operacionTable = query.from(Operacion.class); 
-        Join<Operacion,Cuenta> cuentaJoin = operacionTable.join(Operacion_.realizante);
-        Join<Operacion,Cliente> clienteJoin = operacionTable.join(Cuenta_.propietarios);
+        // javax.persistence.criteria.CriteriaQuery query = cb.createQuery(Query1.class);
+        // javax.persistence.criteria.Root<Operacion> operacionTable = query.from(Operacion.class); 
+        // javax.persistence.criteria.Join<Operacion,Cuenta> cuentaJoin = operacionTable.join(Operacion_.realizante);
+        // javax.persistence.criteria.Join<Operacion,Cliente> clienteJoin = operacionTable.join(Cuenta_.propietarios);
 
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(operacionTable.get(Operacion_.tipo), "Retirada"));
+        // List<Predicate> predicates = new ArrayList<>();
+        // predicates.add(cb.equal(operacionTable.get(Operacion_.tipo), "Retirada"));
         
-        query.multiselect(
-                clienteJoin.get(Cliente_.Nombre),
-                cuentaJoin.get(Cuenta_.numCuenta),
-                cb.sum(operacionTable.get(Operacion_.importe))
-        );
-        query.where(predicates.stream().toArray(Predicate[]::new));
-        query.groupBy(cuentaJoin.get(Cuenta_.numCuenta), );
-        TypedQuery<Query1> typedQuery = em.createQuery(query);
+        // query.multiselect(
+        //         clienteJoin.get(Cliente_.Nombre),
+        //         cuentaJoin.get(Cuenta_.numCuenta),
+        //         cb.sum(operacionTable.get(Operacion_.importe))
+        // );
+        // query.where(predicates.stream().toArray(Predicate[]::new));
+        // query.groupBy(cuentaJoin.get(Cuenta_.numCuenta), clienteJoin.get(Cliente_.Nombre));
+        // TypedQuery<Query1> typedQuery = em.createQuery(query);
 
-        List<Query1> resultList = typedQuery.getResultList();
-        for (Query1 q : resultList){
-                System.out.println(q);
-        }
+        // List<Query1> resultList = typedQuery.getResultList();
+        // for (Query1 q : resultList){
+        //         System.out.println(q);
+        // }
 
-        em.close(); //Cerramos el Manager
+        // em.close(); //Cerramos el Manager
      }
 
     /**
