@@ -208,7 +208,7 @@ mvn exec:java
 \section{Generación de esquema lógico con JPA}
 
 Para la generación del esquema lógico utilizando \emph{JPA} se ha  utilizado el diagrama de clases de la Figura \ref{fig:diagramauml}. El primer paso de la generación ha sido la confección de las clases \emph{Java} utilizando las anotaciones necesarias. En este caso, se han utilizado las anotaciones \emph{@Entity} para marcar las entidades y las etiquetas \emph{@Column} para las columnas. Para las columnas se ha añadido un atributo \emph{name} para especificar el nombre de esa columna en la base de datos y así conocer los nombres de las columnas.\\
-Para que \emph{JPA} funcione correctamente se deben definir los métodos \emph{hashCode() y equals()}. También, en el ámbito de las consultas es conveniente definir un método \emph{toString()} para obtener una salida comprensible del contenido de cada uno de los objetos.\\
+Para que \emph{JPA} funcione correctamente se deben definir los métodos \emph{hashCode() y equals()}. También, en el ámbito de las consultas es conveniente definir un método \emph{toString()} para obtener una salida comprensible del contenido de cada uno de los objetos. También es necesario que las clases tengan una estructura tipo \emph{Java Bean\footnote{\url{https://es.wikipedia.org/wiki/JavaBean}}}, esto implica que las clases deben disponer de un constructor por defecto (se llama sin parámetros) y métodos \emph{getters} y \emph{setters} para el acceso directo a cada uno de sus atributos, que deberán ser marcados como privados para impedir su acceso directo desde fuera de la propia clase.\\
 Para resolver la herencia en este primer esquema lógico se ha decidido establecer las \emph{superclases} \emph{Cuenta} y \emph{Transacción} como clases abstractas. De esta manera no podrán ser instanciadas y por lo tanto se obligará a que la herencia sea obligatoria. Además al utilizar dos subclases, la herencia será disjunta ya que un objeto no puede pertenecer a dos subclases al mismo tiempo en este modelo conceptual.\\
 El mecanismo predeterminado para la resolución de estas herencias ha sido el de crear una sola tabla con el nombre del padre con todos los atributos del padre y los específicos de cada uno de los hijos. Para determinar si una tupla en la base de datos pertenece a un subtipo o a otro se dispone de una columna (por defecto, \emph{DTYPE}) que contiene el nombre del subtipo cuyos valores se encuentran con valores permitidos para ese subtipo.\\
 Sobre las relaciones, se ha utilizado una relación \emph{ManyToMany} bidireccional entre \emph{Cliente} y \emph{Cuenta}, siendo cliente la parte poseedora. Esta acción genera una tabla nueva \emph{Cliente\_{}Cuenta}, que representará lo mismo que la tabla \emph{Poseer} de la base de datos de \emph{Banquito}.\\
@@ -219,11 +219,39 @@ No se han utilizado más relaciones bidireccionales pero es de destacar la relac
 
 \section{Adopción de un esquema lógico preexistente con JPA}
 
+Partiendo de las clases desarrolladas en el apartado anterior, se va a proceder a realizar las modificaciones sobre las mismas para adaptar al esquema lógico existente. Esta tarea no ha resultado especialmente difícil ya que \emph{JPA} provee muchas anotaciones para modificar el comportamiento del esquema que se va a generar o que se va a adoptar. Para facilitar esta tarea se ha modificado un campo del fichero \emph{persistence.xml}, el campo \emph{hibernate.hbm2ddl.auto} adoptará el valor \emph{validate}. Esto comprobará si el esquema generado por \emph{JPA} coincide con el esquema existente en el remoto especificado en ese mismo fichero. No realiza ninguna modificación sobre la base de datos.\\
+Para dejar claro el nombre de las tablas sobre las que actúan cada una de las entidades (\emph{@Entity}) desarrolladas se va a utilizar la anotación (\emph{@Table(name = "[...]")}) .\\
+Las relaciones desarrolladas anteriormente se han mantenido, no obstante se ha utilizado la anotación \emph{@JoinColumn} para establecer atributos tales como el nombre de la columna, restricciones de unicidad.\\
+En la relación \emph{ManyToMany} entre \emph{Cliente} y \emph{Cuenta} se ha utilizado la anotación \emph{@JoinTable} de la siguiente manera:
+
+\begin{lstlisting}
+@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+@JoinTable(
+  name = "POSEER",
+  joinColumns = @JoinColumn(
+    referencedColumnName = "DNI",	name = "DNI"
+  ),
+  inverseJoinColumns = @JoinColumn(
+    referencedColumnName = "NUM_CUENTA", name = "NUM_CUENTA"
+  )
+)
+private List<Cuenta> cuentas;
+\end{lstlisting}
+
+Con esta anotación se ha establecido que la relación entre cliente y cuenta se establecerá sobre una tabla \emph{POSEER} con columnas \emph{DNI} referenciando a \emph{Cliente.DNI} y con la columna \emph{NUM\_{}CUENTA} referenciando a \emph{Cuenta.NUM\_{}CUENTA}.\\
+
+Sobre la herencia, se han utilizado distintas estrategias de las propuestas por \emph{JPA}, en este caso, para la tabla cuenta se ha utilizado la estrategia \emph{JOINED}, la cual divide los campos específicos de la tabla padre en una tabla y los campos específicos de cada subtipo en sus respectivas tablas. En las tablas de los subtipos para establecer el nombre de la columna que actúa como clave primaria se utiliza la anotación \emph{@PrimaryKeyJoinColumn} con el atributo \emph{name}, en este caso se establecerá \emph{name = ``ID\_{}CUENTA''} para que coincidan con el esquema lógico preexistente.\\
+En el caso de la herencia entre \emph{Transacción, Transferencia y Operación}, se ha establecido un mecanismo de herencia distinto. En este caso la superclase (transacción) no será una entidad, si no que se utilizará la anotación \emph{@MappedSuperclass} para indicar que esta superclase no se persistirá como una tabla en la base de datos, pero sus campos si que serán persistidos en cada uno de sus subtipos (transferencia y operación).
+
 \textbf{Aquí le explicaremos el proceso de acomodación del esquema relacional de la base de datos con JPA. Le explicaremos lo del \emph{validate} y le mostraremos nuestros problemas.}
 
 \section{Consultas con JPA}
 
 \textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.
+
+\section{Conclusiones y opiniones}
+
+\textbf{Meter aqui las conclusiones y opiniones del equipo ante el uso de este ORM.}
 
 \newpage
 \section{Apéndice 1: Figuras}
