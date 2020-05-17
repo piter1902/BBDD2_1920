@@ -72,6 +72,8 @@ La relación de \emph{Cliente} con \emph{Cuenta} se encuentra en \emph{Poseer}, 
 Para el almacenamiento de las sucursales de la entidad bancaria, se ha diseñado una entidad \emph{Sucursal}, que almacena el código de la entidad, su dirección postal y el teléfono de la oficina. Se ha decidido que el código de la sucursal sea la clave primaria que identifique a las sucursales ya que dentro de la misma entidad bancaria no existen dos sucursales con el mismo código.\\
 Se ha considerado que las transacciones se tienen que realizar en una sucursal, por lo tanto existe una relación entre \emph{Transacción} y \emph{Sucursal}. También, una cuenta corriente debe ser abierta en una determinada sucursal de la entidad.\\
 
+Como apoyo hacia el desarrollo orientado a objetos con \emph{Java} se ha utilizado como referencia un diagrama de clases \emph{UML} (Figura \ref{fig:diagramauml}) con la misma semántica que el diagrama entidad relación explicado anteriormente.\\
+
 \textbf{Aquí explicaremos el diagrama ER de banquito, para que lo tengan presente (Figura \ref{fig:diagramaer}).}
 
 \section{Entorno de trabajo y ejecución}
@@ -205,6 +207,14 @@ mvn exec:java
 
 \section{Generación de esquema lógico con JPA}
 
+Para la generación del esquema lógico utilizando \emph{JPA} se ha  utilizado el diagrama de clases de la Figura \ref{fig:diagramauml}. El primer paso de la generación ha sido la confección de las clases \emph{Java} utilizando las anotaciones necesarias. En este caso, se han utilizado las anotaciones \emph{@Entity} para marcar las entidades y las etiquetas \emph{@Column} para las columnas. Para las columnas se ha añadido un atributo \emph{name} para especificar el nombre de esa columna en la base de datos y así conocer los nombres de las columnas.\\
+Para que \emph{JPA} funcione correctamente se deben definir los métodos \emph{hashCode() y equals()}. También, en el ámbito de las consultas es conveniente definir un método \emph{toString()} para obtener una salida comprensible del contenido de cada uno de los objetos.\\
+Para resolver la herencia en este primer esquema lógico se ha decidido establecer las \emph{superclases} \emph{Cuenta} y \emph{Transacción} como clases abstractas. De esta manera no podrán ser instanciadas y por lo tanto se obligará a que la herencia sea obligatoria. Además al utilizar dos subclases, la herencia será disjunta ya que un objeto no puede pertenecer a dos subclases al mismo tiempo en este modelo conceptual.\\
+El mecanismo predeterminado para la resolución de estas herencias ha sido el de crear una sola tabla con el nombre del padre con todos los atributos del padre y los específicos de cada uno de los hijos. Para determinar si una tupla en la base de datos pertenece a un subtipo o a otro se dispone de una columna (por defecto, \emph{DTYPE}) que contiene el nombre del subtipo cuyos valores se encuentran con valores permitidos para ese subtipo.\\
+Sobre las relaciones, se ha utilizado una relación \emph{ManyToMany} bidireccional entre \emph{Cliente} y \emph{Cuenta}, siendo cliente la parte poseedora. Esta acción genera una tabla nueva \emph{Cliente\_{}Cuenta}, que representará lo mismo que la tabla \emph{Poseer} de la base de datos de \emph{Banquito}.\\
+No se han utilizado más relaciones bidireccionales pero es de destacar la relación \emph{ManyToOne} unidireccional entre \emph{Transacción} y \emph{Cuenta}, ya que transacción es una entidad débil ante cuenta. La columna resultante de esta relación actúa también como parte de la clave primaria al utilizarse la anotación \emph{@Id}, siendo la clave primaria \emph{(NumTransaccion, realizante)}.\\
+
+
 \textbf{Aquí explicaremos como hemos desarrollado el esquema lógico desde 0 con JPA.}
 
 \section{Adopción de un esquema lógico preexistente con JPA}
@@ -215,6 +225,7 @@ mvn exec:java
 
 \textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.
 
+\newpage
 \section{Apéndice 1: Figuras}
 
 \begin{landscape}
@@ -225,6 +236,13 @@ mvn exec:java
 \label{fig:diagramaer}
 \end{figure}
 \end{landscape}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.45]{images/diagramauml.png}
+\caption{Diagrama de clases UML de la Base de Datos bancaria de \emph{Banquito}}
+\label{fig:diagramauml}
+\end{figure}
 
 \begin{figure}
 \centering
