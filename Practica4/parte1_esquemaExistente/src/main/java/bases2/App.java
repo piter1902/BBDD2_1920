@@ -53,17 +53,13 @@ public final class App {
 
                 // queryMasDinero();
 
-                LastDataTransaction();
+                //LastDataTransaction();
 
-<<<<<<< Updated upstream
-                // TODO: WIP
-                queryMaxIngresoTransaccion();
-=======
                 // querySucursalesMenores30();
-
+                
                 // TODO: WIP
                 // queryMaxIngresoTransaccion();
->>>>>>> Stashed changes
+                IngresosMasJoven();
         }
 
         private static void printClients() {
@@ -424,29 +420,30 @@ public final class App {
 
         }
 
-        private static void LastDataTransaction() {
-                // Query3: Ultima transaccion de todas cuentas de todos los clientes
+        private static void IngresosMasJoven() {
+                // Query5: Ingreso total de dinero de las cuentas del usuario mas viejo
 
                 // EN JPQL:
 
                 EntityManager em = emf.createEntityManager();
                 // He cambiado la orientación de los JOIN porque queda más simple
                 String query_text = 
-                "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
-                "FROM Transferencia tr JOIN tr.realizante real JOIN real.propietarios cl " + 
-                "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transferencia tr2 WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
-                "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
+                "SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.edad "
+                                + "FROM Operacion op JOIN op.realizante realizantes "
+                                + "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Ingreso' AND "
+                                + "cl.edad = (SELECT MAX(cl2.edad) FROM Cliente cl2) "
+                                + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.edad ORDER BY SUM(op.importe) DESC";
 
-                javax.persistence.Query query3 = em.createQuery(query_text);
+                javax.persistence.Query query5 = em.createQuery(query_text);
 
                 // Source: https://vladmihalcea.com/hibernate-resulttransformer/
                 @SuppressWarnings("unchecked")
-                List<Query3> results = query3.unwrap(org.hibernate.query.Query.class)
-                                .setResultTransformer(new Query3Transformer()).getResultList();
+                List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
+                                .setResultTransformer(new Query5Transformer()).getResultList();
 
-                System.out.println("------ Mostrando Query3 en JPQL ------");
+                System.out.println("------ Mostrando Query5 en JPQL ------");
 
-                for (Query3 q : results) {
+                for (Query5 q : results) {
                         System.out.println(q);
                 }
         }
@@ -497,6 +494,33 @@ public final class App {
 
         }
 
+        private static void LastDataTransaction() {
+                // Query3: Ultima transaccion de todas cuentas de todos los clientes
+
+                // EN JPQL:
+
+                EntityManager em = emf.createEntityManager();
+                // He cambiado la orientación de los JOIN porque queda más simple
+                String query_text = 
+                "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
+                "FROM Transferencia tr JOIN tr.realizante real JOIN real.propietarios cl " + 
+                "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transferencia tr2 WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
+                "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
+
+                javax.persistence.Query query3 = em.createQuery(query_text);
+
+                // Source: https://vladmihalcea.com/hibernate-resulttransformer/
+                @SuppressWarnings("unchecked")
+                List<Query3> results = query3.unwrap(org.hibernate.query.Query.class)
+                                .setResultTransformer(new Query3Transformer()).getResultList();
+
+                System.out.println("------ Mostrando Query3 en JPQL ------");
+
+                for (Query3 q : results) {
+                        System.out.println(q);
+                }
+        }
+
         /**
          * Función que he encontrado en:
          * http://www.java2s.com/Tutorials/Java/JPA/4100__JPA_Query_GroupBy_Having.htm
@@ -520,4 +544,5 @@ public final class App {
                 }
                 System.out.println();
         }
+
 }
