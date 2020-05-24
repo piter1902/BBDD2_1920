@@ -43,8 +43,8 @@ public final class App {
         Sucursal s1 = new Sucursal(1, "Calle de los amantes de las bases de datos 3, bajo, Zaragoza, 50018", 976446628);
         Sucursal s2 = new Sucursal(2, "Calle de los ingenieros informaticos 1, atico, Huesca, 22003", 974551197);
 
-        Cliente c1 = new Cliente("18064600D", "Calle de primero, 3, Atico, 50018", 665145589, "josemiguel@gmail.com", "José Miguel", "Hernandez");
-        Cliente c2 = new Cliente("15482697V", "Calle de ultimo, 5, 1ºD, 50002", 665444111, "juanjose@gmail.com", "Juan José", "Tambo");
+        Cliente c1 = new Cliente("18064600D", "Calle de primero, 3, Atico, 50018", 665145589, 19, "josemiguel@gmail.com", "José Miguel", "Hernandez");
+        Cliente c2 = new Cliente("15482697V", "Calle de ultimo, 5, 1ºD, 50002", 665444111, 25, "juanjose@gmail.com", "Juan José", "Tambo");
         Cuenta cu1 = new CuentaAhorro("11111", "1111122222", new GregorianCalendar(2020, 01, 25).getTime(), 100, 25.0);
         Cuenta cu2 = new CuentaAhorro("22222", "2222233333", new GregorianCalendar(2019, 06, 25).getTime(), 150, 0.0);
         Cuenta cu3 = new CuentaCorriente("33333", "3333344444", new GregorianCalendar(2020, 02, 19).getTime(), 200, s1);

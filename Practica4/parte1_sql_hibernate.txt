@@ -1,0 +1,10 @@
+Hibernate: create table Cliente_Cuenta (propietarios_DNI varchar2(255) not null, cuentas_NumCuenta varchar2(255) not null)
+Hibernate: create table Cuenta (DTYPE varchar2(31) not null, NumCuenta varchar2(255) not null, IBAN varchar2(255), FechaCreacion date, SALDO number(10,0), INTERES double precision, sucursal_CODIGO number(10,0), primary key (NumCuenta))
+Hibernate: create table Sucursal (CODIGO number(10,0) not null, DIRECCION varchar2(255), TELEFONO number(10,0), primary key (CODIGO))
+Hibernate: create table Transaccion (DTYPE varchar2(31) not null, NumTransaccion number(10,0) not null, DESCRIPCION varchar2(255), FECHA date, HORA varchar2(255), IMPORTE number(10,0), TIPO varchar2(255), realizante_NumCuenta varchar2(255) not null, sucursal_CODIGO number(10,0), cuentaDestino_NumCuenta varchar2(255), primary key (realizante_NumCuenta, NumTransaccion))
+Hibernate: alter table Cliente_Cuenta add constraint FK2uh7gdv2ai3dvvl77xlw5bghu foreign key (cuentas_NumCuenta) references Cuenta
+Hibernate: alter table Cliente_Cuenta add constraint FKjsd5mv2v35r4ptfwjsfawino foreign key (propietarios_DNI) references Cliente
+Hibernate: alter table Cuenta add constraint FK5jgxlj5kf4hslegr04u4a61wn foreign key (sucursal_CODIGO) references Sucursal
+Hibernate: alter table Transaccion add constraint FKa07yxx81xhsje1ke8se9djwue foreign key (realizante_NumCuenta) references Cuenta
+Hibernate: alter table Transaccion add constraint FK5rs1xefokif9rybi4ku8dhw4c foreign key (sucursal_CODIGO) references Sucursal
+Hibernate: alter table Transaccion add constraint FKiw86ytyoxhj02cpg77ovg30lc foreign key (cuentaDestino_NumCuenta) references Cuenta

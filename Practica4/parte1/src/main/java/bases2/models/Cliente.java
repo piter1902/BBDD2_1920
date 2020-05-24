@@ -22,6 +22,9 @@ public class Cliente implements Serializable{
     @Column(name = "TELEFONO")
     private int Telefono;
 
+    @Column(name = "EDAD")
+    private int Edad;
+
     @Column(name = "EMAIL")
     private String Email;
 
@@ -38,11 +41,12 @@ public class Cliente implements Serializable{
         cuentas = new ArrayList<>();
     }
 
-    public Cliente(String dNI, String direccion, int telefono, String email, String nombre, String apellidos) {
+    public Cliente(String dNI, String direccion, int telefono, int edad, String email, String nombre, String apellidos) {
         DNI = dNI;
         Direccion = direccion;
         Telefono = telefono;
         Email = email;
+        Edad = edad;
         Nombre = nombre;
         Apellidos = apellidos;
         cuentas = new ArrayList<>();
@@ -116,6 +120,14 @@ public class Cliente implements Serializable{
         }
     }
 
+    public int getEdad() {
+        return Edad;
+    }
+
+    public void setEdad(int edad) {
+        Edad = edad;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -123,9 +135,11 @@ public class Cliente implements Serializable{
         result = prime * result + ((Apellidos == null) ? 0 : Apellidos.hashCode());
         result = prime * result + ((DNI == null) ? 0 : DNI.hashCode());
         result = prime * result + ((Direccion == null) ? 0 : Direccion.hashCode());
+        result = prime * result + Edad;
         result = prime * result + ((Email == null) ? 0 : Email.hashCode());
         result = prime * result + ((Nombre == null) ? 0 : Nombre.hashCode());
         result = prime * result + Telefono;
+        result = prime * result + ((cuentas == null) ? 0 : cuentas.hashCode());
         return result;
     }
 
@@ -153,6 +167,8 @@ public class Cliente implements Serializable{
                 return false;
         } else if (!Direccion.equals(other.Direccion))
             return false;
+        if (Edad != other.Edad)
+            return false;
         if (Email == null) {
             if (other.Email != null)
                 return false;
@@ -165,13 +181,18 @@ public class Cliente implements Serializable{
             return false;
         if (Telefono != other.Telefono)
             return false;
+        if (cuentas == null) {
+            if (other.cuentas != null)
+                return false;
+        } else if (!cuentas.equals(other.cuentas))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Cliente [Apellidos=" + Apellidos + ", DNI=" + DNI + ", Direccion=" + Direccion + ", Email=" + Email
-                + ", Nombre=" + Nombre + ", Telefono=" + Telefono + "]";
-    }
+        return "Cliente [Apellidos=" + Apellidos + ", DNI=" + DNI + ", Direccion=" + Direccion + ", Edad=" + Edad
+                + ", Email=" + Email + ", Nombre=" + Nombre + ", Telefono=" + Telefono + ", cuentas=" + cuentas + "]";
+    }    
 
 }
