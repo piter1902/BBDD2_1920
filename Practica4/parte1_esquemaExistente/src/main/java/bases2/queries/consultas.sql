@@ -27,7 +27,12 @@ WHERE
   cl.EDAD < 30
 ORDER BY
   suc.codigo;
+<<<<<<< Updated upstream
 -- Consulta 3
+=======
+
+--Consulta3
+>>>>>>> Stashed changes
 SELECT
   cl.Nombre,
   p.num_cuenta,
@@ -48,6 +53,10 @@ GROUP BY
   s1.fecha
 ORDER BY
   cl.Nombre;
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 -- Consulta 4
 SELECT
   cl.Nombre,

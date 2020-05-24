@@ -51,12 +51,19 @@ public final class App {
 
                 // printClients();
 
-                queryMasDinero();
+                // queryMasDinero();
 
-                querySucursalesMenores30();
+                LastDataTransaction();
 
+<<<<<<< Updated upstream
                 // TODO: WIP
                 queryMaxIngresoTransaccion();
+=======
+                // querySucursalesMenores30();
+
+                // TODO: WIP
+                // queryMaxIngresoTransaccion();
+>>>>>>> Stashed changes
         }
 
         private static void printClients() {
@@ -415,6 +422,33 @@ public final class App {
                         System.out.println(row);
                 }
 
+        }
+
+        private static void LastDataTransaction() {
+                // Query3: Ultima transaccion de todas cuentas de todos los clientes
+
+                // EN JPQL:
+
+                EntityManager em = emf.createEntityManager();
+                // He cambiado la orientación de los JOIN porque queda más simple
+                String query_text = 
+                "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
+                "FROM Transferencia tr JOIN tr.realizante real JOIN real.propietarios cl " + 
+                "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transferencia tr2 WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
+                "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
+
+                javax.persistence.Query query3 = em.createQuery(query_text);
+
+                // Source: https://vladmihalcea.com/hibernate-resulttransformer/
+                @SuppressWarnings("unchecked")
+                List<Query3> results = query3.unwrap(org.hibernate.query.Query.class)
+                                .setResultTransformer(new Query3Transformer()).getResultList();
+
+                System.out.println("------ Mostrando Query3 en JPQL ------");
+
+                for (Query3 q : results) {
+                        System.out.println(q);
+                }
         }
 
         private static void queryMaxIngresoTransaccion() {
