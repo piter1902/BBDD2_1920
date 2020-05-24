@@ -27,6 +27,27 @@ WHERE
   cl.EDAD < 30
 ORDER BY
   suc.codigo;
+-- Consulta 3
+SELECT
+  cl.Nombre,
+  p.num_cuenta,
+  s1.fecha
+FROM (
+    SELECT
+      max(t.fecha) AS fecha,
+      t.num_cuenta_realizante
+    from transaccion t
+    GROUP BY
+      t.num_cuenta_realizante
+  ) s1
+JOIN poseer p ON p.num_cuenta = s1.num_cuenta_realizante
+JOIN cliente cl ON p.DNI = cl.DNI
+GROUP BY
+  cl.Nombre,
+  p.num_cuenta,
+  s1.fecha
+ORDER BY
+  cl.Nombre;
 -- Consulta 4
 SELECT
   cl.Nombre,

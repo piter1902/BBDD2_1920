@@ -47,7 +47,7 @@ public final class App {
                 // em.getTransaction().commit();
                 // em.close();
 
-                //insertData();
+                // insertData();
 
                 // printClients();
 
@@ -55,8 +55,8 @@ public final class App {
 
                 querySucursalesMenores30();
 
-                //TODO: WIP
-                //queryMaxIngresoTransaccion();
+                // TODO: WIP
+                queryMaxIngresoTransaccion();
         }
 
         private static void printClients() {
@@ -422,23 +422,42 @@ public final class App {
                 // cuentas de cada cliente
                 EntityManager em = emf.createEntityManager();
                 // He cambiado la orientación de los JOIN porque queda más simple
-                String query_text = "SELECT cl.Nombre, subquery1.Num_cuenta, MAX(subquery.Importe) as Importe"
-                                + "FROM ( SELECT tr.cuentaDestino as Num_cuenta, " + "MAX(tr.importe) as Importe "
-                                + "FROM Transaccion tr " + "GROUP BY tr.cuentaDestino " + "UNION "
-                                + "SELECT op.realizante AS Num_cuenta, MAX(op.importe) as Importe "
-                                + "FROM Operacion op " + "WHERE op.tipo = 'Ingreso' "
-                                + "GROUP BY op.realizante) subquery1 ";
+                // String query_text = "SELECT cl.Nombre, subquery1.Num_cuenta,
+                // MAX(subquery.Importe) as Importe"
+                // + "FROM (SELECT tr.cuentaDestino as Num_cuenta, " + "MAX(tr.importe) as
+                // Importe "
+                // + "FROM Transaccion tr " + "GROUP BY tr.cuentaDestino " + "UNION "
+                // + "SELECT op.realizante AS Num_cuenta, MAX(op.importe) as Importe "
+                // + "FROM Operacion op " + "WHERE op.tipo = 'Ingreso' "
+                // + "GROUP BY op.realizante) subquery1 ";
+
+                // String query_text = "SELECT tr.cuentaDestino.numCuenta, MAX(tr.importe) " +
+                // "FROM Transferencia tr "
+                // + "WHERE tr.importe IN" + "(SELECT MAX(tr.importe) as Importe "
+                // + "FROM Transferencia tr1 WHERE "
+                // + "tr1.cuentaDestino.numCuenta = tr.cuentaDestino.numCuenta) "
+                // + "OR tr.importe IN "
+                // + "(SELECT MAX(op.importe) as Importe " + "FROM Operacion op "
+                // + "WHERE op.tipo = 'Ingreso')";
+                // + "GROUP BY tr.cuentaDestino.numCuenta";
+
+                String query_text = "SELECT tr.cuentaDestino.numCuenta, tr.importe " + "FROM Transferencia tr "
+                                + "WHERE tr.importe IN " + "(SELECT MAX(tr1.importe) as Importe "
+                                + "FROM Transferencia tr1 JOIN Operacion op ON tr1.cuentaDestino.numCuenta = op.realizante.numCuenta "
+                                + "OR tr1.realizante.numCuenta = op.realizante.numCuenta "
+                                + "WHERE op.tipo = 'Ingreso') "
+                                + "ORDER BY tr.cuentaDestino.numCuenta";
 
                 javax.persistence.Query query4 = em.createQuery(query_text);
 
                 // Source: https://vladmihalcea.com/hibernate-resulttransformer/
                 @SuppressWarnings("unchecked")
-                List<Query1> results = query4.unwrap(org.hibernate.query.Query.class)
-                                .setResultTransformer(new Query1Transformer()).getResultList();
+                List<Query4> results = query4.unwrap(org.hibernate.query.Query.class)
+                                .setResultTransformer(new Query4Transformer()).getResultList();
 
                 System.out.println("------ Mostrando Query4 en JPQL ------");
 
-                for (Query1 q : results) {
+                for (Query4 q : results) {
                         System.out.println(q);
                 }
 
