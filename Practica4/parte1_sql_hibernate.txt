@@ -1,3 +1,9 @@
+Hibernate: drop table Cliente cascade constraints
+Hibernate: drop table Cliente_Cuenta cascade constraints
+Hibernate: drop table Cuenta cascade constraints
+Hibernate: drop table Sucursal cascade constraints
+Hibernate: drop table Transaccion cascade constraints
+Hibernate: create table Cliente (DNI varchar2(255) not null, APELLIDOS varchar2(255), DIRECCION varchar2(255), EDAD number(10,0), EMAIL varchar2(255), NOMBRE varchar2(255), TELEFONO number(10,0), primary key (DNI))
 Hibernate: create table Cliente_Cuenta (propietarios_DNI varchar2(255) not null, cuentas_NumCuenta varchar2(255) not null)
 Hibernate: create table Cuenta (DTYPE varchar2(31) not null, NumCuenta varchar2(255) not null, IBAN varchar2(255), FechaCreacion date, SALDO number(10,0), INTERES double precision, sucursal_CODIGO number(10,0), primary key (NumCuenta))
 Hibernate: create table Sucursal (CODIGO number(10,0) not null, DIRECCION varchar2(255), TELEFONO number(10,0), primary key (CODIGO))
