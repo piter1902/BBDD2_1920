@@ -247,11 +247,126 @@ En el caso de la herencia entre \emph{Transacción, Transferencia y Operación},
 
 \section{Consultas con JPA}
 
-\textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.
+\textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.\\
+\textbf{JUANJOOOOO POrFAVOR EXPLICA LO DE QUERY Y QUERYTRANSFORMER DICIENDO QUE ES DE HIBERNATE Y NO DE JPA Y POR QUE LO HAS USADO}.\\
+Para la elaboración de las consultas en \emph{JPA} se han propuesto 5 consultas diferentes y se han abordado tanto para el esquema lógico generado con \emph{JPA} como para el esquema lógico preexistente adaptado. También se han utilizado los diferentes lenguajes de consultas propuestos (SQL, JPQL y Criteria). Las consultas propuestas son las siguientes:
+
+\begin{itemize}
+\item Consulta 1: Clientes que más dinero han extraído de sus cuentas
+\item Consulta 2: Sucursales en las que los clientes menores de 30 años tienen cuentas corrientes.
+\item Consulta 3: Última transferencia de todas cuentas de todos los clientes
+\item Consulta 4: Máximo movimiento (de ingreso) en una transacción en cada una de las cuentas de cada cliente.
+\item Consulta 5: Ingreso total de dinero de las cuentas del usuario mas mayor
+\end{itemize}
+
+Para la consulta 3, para las dos versiones, se ha abordado la solución en \emph{JPQL}. \\
+El código para la versión de esquema lógico adaptado es el siguiente:
+
+\begin{lstlisting}
+	EntityManager em = emf.createEntityManager();
+	String query_text = 
+    "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
+    "FROM Transferencia tr JOIN tr.realizante real 
+    JOIN real.propietarios cl " + 
+    "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transferencia tr2 
+    WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
+    "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
+
+   javax.persistence.Query query3 = em.createQuery(query_text);
+
+   @SuppressWarnings("unchecked")
+   List<Query3> results = 
+   query3.unwrap(org.hibernate.query.Query.class)
+   .setResultTransformer(newQuery3Transformer()).getResultList();
+
+   System.out.println("------ Mostrando Query3 en JPQL ------");
+
+   for (Query3 q : results) {
+       System.out.println(q);
+   }
+\end{lstlisting}
+
+El código para la versión de esquema lógico creado es el siguiente:
+
+\begin{lstlisting}
+        EntityManager em = emf.createEntityManager();
+        String query_text = 
+        "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
+        "FROM Transaccion tr JOIN tr.realizante real JOIN 
+        real.propietarios cl " +  "WHERE tr.fecha IN 
+        ( SELECT MAX(tr2.fecha) FROM Transaccion tr2 WHERE 
+        tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
+        "GROUP BY cl.Nombre, real.numCuenta, tr.fecha 
+        ORDER BY cl.Nombre";
+
+        javax.persistence.Query query3 = em.createQuery(query_text);
+
+        @SuppressWarnings("unchecked")
+        List<Query3> results = 
+        query3.unwrap(org.hibernate.query.Query.class)
+        .setResultTransformer(new Query3Transformer()).getResultList();
+
+        System.out.println("------ Mostrando Query3 en JPQL ------");
+
+        for (Query3 q : results) {
+                System.out.println(q);
+        }
+\end{lstlisting}
+
+Para la consulta 5, para las dos versiones, se ha abordado la solución en \emph{JPQL}. \\
+El código para la versión de esquema lógico adaptado es el siguiente:
+
+\begin{lstlisting}
+	EntityManager em = emf.createEntityManager();
+   	String query_text = 
+    "SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), 
+    cl.edad "+ "FROM Operacion op JOIN op.realizante realizantes "
+    + "JOIN realizantes.propietarios cl " + 
+    "WHERE op.tipo = 'Ingreso' AND "+ "cl.edad = 
+    (SELECT MAX(cl2.edad) FROM Cliente cl2) "
+    + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.edad ORDER BY 
+    SUM(op.importe) DESC";
+
+    javax.persistence.Query query5 = em.createQuery(query_text);
+   	@SuppressWarnings("unchecked")
+    List<Query5> results = 
+    query5.unwrap(org.hibernate.query.Query.class)
+    .setResultTransformer(new Query5Transformer()).getResultList();
+
+   	System.out.println("------ Mostrando Query5 en JPQL ------");
+
+  	for (Query5 q : results) {
+   		System.out.println(q);
+  	}
+\end{lstlisting}
+
+El código para la versión de esquema lógico creado es el siguiente:
+\begin{lstlisting}
+	EntityManager em = emf.createEntityManager();
+    String query_text = 
+   	"SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.Edad "
+    + "FROM Operacion op JOIN op.realizante realizantes "
+   	+ "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Retirada' AND "
+    + "cl.Edad = (SELECT MAX(cl2.Edad) FROM Cliente cl2) "
+    + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.Edad ORDER BY 			
+    SUM(op.importe) DESC";
+
+    javax.persistence.Query query5 = em.createQuery(query_text);
+    @SuppressWarnings("unchecked")
+    List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
+    .setResultTransformer(new Query5Transformer()).getResultList();
+
+    System.out.println("------ Mostrando Query5 en JPQL ------");
+
+    for (Query5 q : results) {
+       	System.out.println(q);
+  	}
+\end{lstlisting}
 
 \section{Conclusiones y opiniones}
 
 \textbf{Meter aqui las conclusiones y opiniones del equipo ante el uso de este ORM.}
+
 
 \newpage
 \section{Apéndice 1: Figuras}
