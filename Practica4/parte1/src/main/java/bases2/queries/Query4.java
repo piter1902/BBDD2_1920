@@ -2,7 +2,9 @@ package bases2.queries;
 
 public class Query4 {
 
-    private int numCuenta;
+    private String nombre;
+    
+    private String numCuenta;
 
     private int sumaImporte;
 
@@ -10,16 +12,17 @@ public class Query4 {
 
     }
 
-    public Query4(int numCuenta, int sumaImporte) {
+    public Query4(String nombre, String numCuenta, int sumaImporte) {
+        this.nombre = nombre;
         this.numCuenta = numCuenta;
         this.sumaImporte = sumaImporte;
     }
 
-    public int getNumCuenta() {
+    public String getNumCuenta() {
         return numCuenta;
     }
 
-    public void setNumCuenta(int numCuenta) {
+    public void setNumCuenta(String numCuenta) {
         this.numCuenta = numCuenta;
     }
 
@@ -33,6 +36,15 @@ public class Query4 {
 
     @Override
     public String toString() {
-        return "[numCuenta=" + numCuenta + ", sumaImporte=" + sumaImporte + "]";
+        return "Query4 [nombre=" + nombre + ", numCuenta=" + numCuenta + ", sumaImporte=" + sumaImporte + "]";
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
 }

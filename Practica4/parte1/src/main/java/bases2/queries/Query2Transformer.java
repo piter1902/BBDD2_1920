@@ -16,7 +16,7 @@ public class Query2Transformer implements org.hibernate.transform.ResultTransfor
         q.setCodigo((int)tuple[0]);
         q.setNombre((String)tuple[1]);
         q.setEdad((int)tuple[2]);
-        q.setNumCuenta((int)tuple[3]);
+        q.setNumCuenta((String)tuple[3]);
         return q;
     }
 

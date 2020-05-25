@@ -27,12 +27,9 @@ WHERE
   cl.EDAD < 30
 ORDER BY
   suc.codigo;
-<<<<<<< Updated upstream
--- Consulta 3
-=======
-
---Consulta3
->>>>>>> Stashed changes
+< < < < < < < Updated upstream -- Consulta 3
+  == == == = --Consulta3
+  > > > > > > > Stashed changes
 SELECT
   cl.Nombre,
   p.num_cuenta,
@@ -53,29 +50,23 @@ GROUP BY
   s1.fecha
 ORDER BY
   cl.Nombre;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
--- Consulta 4
+-- Consulta 4 para BD original de oracle
 SELECT
   cl.Nombre,
   subquery1.Num_cuenta,
   MAX(subquery1.importe) as importe
 FROM (
     SELECT
-      tr.NUM_CUENTA_BENEFICIARIO AS Num_cuenta,
+      tr.NUM_CUENTA_REALIZANTE AS Num_cuenta,
       MAX(tr.importe) AS Importe
     FROM TRANSACCION tr
     GROUP BY
-      tr.NUM_CUENTA_BENEFICIARIO
+      tr.NUM_CUENTA_REALIZANTE
     UNION
     SELECT
       op.NUM_CUENTA_REALIZANTE AS Num_cuenta,
       MAX(op.importe) AS Importe
     FROM OPERACION op
-    WHERE
-      op.tipo = 'Ingreso'
     GROUP BY
       op.NUM_CUENTA_REALIZANTE
   ) subquery1
@@ -85,4 +76,24 @@ GROUP BY
   subquery1.Num_cuenta,
   cl.NOMBRE
 ORDER BY
+  cl.NOMBRE;
+-- Consulta 4 para BD original de oracle
+SELECT
+  cl.Nombre,
+  subquery1.Num_cuenta,
+  MAX(subquery1.importe) as importe
+FROM (
+    SELECT
+      tr.REALIZANTE_NUMCUENTA AS Num_cuenta,
+      MAX(tr.importe) AS Importe
+    FROM TRANSACCION tr
+    GROUP BY
+      tr.REALIZANTE_NUMCUENTA
+  ) subquery1
+JOIN CLIENTE_CUENTA pos ON pos.CUENTAS_NUMCUENTA = subquery1.Num_cuenta
+JOIN CLIENTE cl ON cl.DNI = pos.PROPIETARIOS_DNI
+GROUP BY
+  subquery1.Num_cuenta,
   cl.NOMBRE
+ORDER BY
+  cl.NOMBRE;

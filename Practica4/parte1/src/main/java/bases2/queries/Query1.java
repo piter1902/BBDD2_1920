@@ -6,13 +6,13 @@ public class Query1 {
     
     private String nombre;
 
-    private int numCuenta;
+    private String numCuenta;
 
     private Long sumaImporte;
 
     public Query1() {}
 
-    public Query1(String nombre, int numCuenta, Long sumaImporte) {
+    public Query1(String nombre, String numCuenta, Long sumaImporte) {
         this.nombre = nombre;
         this.numCuenta = numCuenta;
         this.sumaImporte = sumaImporte;
@@ -26,11 +26,11 @@ public class Query1 {
 		this.nombre = nombre;
 	}
 
-	public int getNumCuenta() {
+	public String getNumCuenta() {
 		return numCuenta;
 	}
 
-	public void setNumCuenta(int numCuenta) {
+	public void setNumCuenta(String numCuenta) {
 		this.numCuenta = numCuenta;
 	}
 

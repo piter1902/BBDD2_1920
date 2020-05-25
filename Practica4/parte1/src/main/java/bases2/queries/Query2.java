@@ -10,11 +10,11 @@ public class Query2 {
 
     private int Edad;
     
-    private int NumCuenta;
+    private String NumCuenta;
 
     public Query2() {}
 
-    public Query2(int codigo, String nombre, int edad, int numCuenta) {
+    public Query2(int codigo, String nombre, int edad, String numCuenta) {
         Codigo = codigo;
         Nombre = nombre;
         Edad = edad;
@@ -45,11 +45,11 @@ public class Query2 {
         Edad = edad;
     }
 
-    public int getNumCuenta() {
+    public String getNumCuenta() {
         return NumCuenta;
     }
 
-    public void setNumCuenta(int numCuenta) {
+    public void setNumCuenta(String numCuenta) {
         NumCuenta = numCuenta;
     }
 

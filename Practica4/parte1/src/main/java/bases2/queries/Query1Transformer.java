@@ -14,7 +14,7 @@ public class Query1Transformer implements org.hibernate.transform.ResultTransfor
         Query1 q = new Query1();
         
         q.setNombre((String)tuple[0]);
-        q.setNumCuenta((int)tuple[1]);
+        q.setNumCuenta((String)tuple[1]);
         q.setSumaImporte((Long)tuple[2]);
         return q;
     }

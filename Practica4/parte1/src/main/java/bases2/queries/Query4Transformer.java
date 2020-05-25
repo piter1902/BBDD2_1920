@@ -10,9 +10,9 @@ public class Query4Transformer implements org.hibernate.transform.ResultTransfor
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
         Query4 q = new Query4();
-        
-        q.setNumCuenta((int)tuple[0]);
-        q.setSumaImporte((int)tuple[1]);
+        q.setNombre((String)tuple[0]);
+        q.setNumCuenta((String)tuple[1]);
+        q.setSumaImporte((int)tuple[2]);
 
         return q;
     }
