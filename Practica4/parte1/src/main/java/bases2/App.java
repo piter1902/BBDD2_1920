@@ -6,7 +6,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.management.Query;
+import javax.persistence.TypedQuery;
+
+import org.graalvm.compiler.nodes.virtual.EscapeObjectState;
+
 import bases2.models.*;
+import bases2.queries.*;
 
 /**
  * Hello world!
@@ -36,6 +46,8 @@ public final class App {
         // em.getTransaction().commit();
         // em.close();
         insertData();
+        //LastDataTransaction();
+        IngresosMasJoven();
     }
 
     private static void insertData() {
@@ -88,4 +100,82 @@ public final class App {
         em.persist(t4);
         em.getTransaction().commit();
     }
+    private static void LastDataTransaction() {
+        // Query3: Ultima transaccion de todas cuentas de todos los clientes
+
+        // EN JPQL:
+
+        EntityManager em = emf.createEntityManager();
+        // He cambiado la orientación de los JOIN porque queda más simple
+        String query_text = 
+        "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
+        "FROM Transaccion tr JOIN tr.realizante real JOIN real.propietarios cl " + 
+        "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transaccion tr2 WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
+        "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
+
+        javax.persistence.Query query3 = em.createQuery(query_text);
+
+        // Source: https://vladmihalcea.com/hibernate-resulttransformer/
+        @SuppressWarnings("unchecked")
+        List<Query3> results = query3.unwrap(org.hibernate.query.Query.class)
+                        .setResultTransformer(new Query3Transformer()).getResultList();
+
+        System.out.println("------ Mostrando Query3 en JPQL ------");
+
+        for (Query3 q : results) {
+                System.out.println(q);
+        }
+    }
+
+    private static void IngresosMasJoven() {
+        // Query5: Retirada total de dinero de las cuentas del usuario mas viejo
+
+        // EN JPQL:
+
+        EntityManager em = emf.createEntityManager();
+        // He cambiado la orientación de los JOIN porque queda más simple
+        String query_text = 
+        "SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.Edad "
+                        + "FROM Operacion op JOIN op.realizante realizantes "
+                        + "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Retirada' AND "
+                        + "cl.Edad = (SELECT MAX(cl2.Edad) FROM Cliente cl2) "
+                        + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.Edad ORDER BY SUM(op.importe) DESC";
+
+        javax.persistence.Query query5 = em.createQuery(query_text);
+
+        // Source: https://vladmihalcea.com/hibernate-resulttransformer/
+        @SuppressWarnings("unchecked")
+        List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
+                        .setResultTransformer(new Query5Transformer()).getResultList();
+
+        System.out.println("------ Mostrando Query5 en JPQL ------");
+
+        for (Query5 q : results) {
+                System.out.println(q);
+        }
+}
+
+        /**
+         * Función que he encontrado en:
+         * http://www.java2s.com/Tutorials/Java/JPA/4100__JPA_Query_GroupBy_Having.htm
+         * 
+         * @param result
+         */
+        private static void printResult(Object result) {
+                if (result == null) {
+                        System.out.print("NULL");
+                } else if (result instanceof Object[]) {
+                        Object[] row = (Object[]) result;
+                        System.out.print("[");
+                        for (int i = 0; i < row.length; i++) {
+                                printResult(row[i]);
+                        }
+                        System.out.print("]");
+                } else if (result instanceof Long || result instanceof Double || result instanceof String) {
+                        System.out.print(result.getClass().getName() + ": " + result);
+                } else {
+                        System.out.print(result);
+                }
+                System.out.println();
+        }
 }
