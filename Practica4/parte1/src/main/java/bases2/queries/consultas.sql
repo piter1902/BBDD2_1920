@@ -13,6 +13,7 @@ GROUP BY
   cl.nombre
 ORDER BY
   SUM(importe) DESC;
+
 -- Consulta 2
 SELECT
   suc.CODIGO,
@@ -27,9 +28,8 @@ WHERE
   cl.EDAD < 30
 ORDER BY
   suc.codigo;
-< < < < < < < Updated upstream -- Consulta 3
-  == == == = --Consulta3
-  > > > > > > > Stashed changes
+
+--Consulta3
 SELECT
   cl.Nombre,
   p.num_cuenta,
@@ -50,33 +50,7 @@ GROUP BY
   s1.fecha
 ORDER BY
   cl.Nombre;
--- Consulta 4 para BD original de oracle
-SELECT
-  cl.Nombre,
-  subquery1.Num_cuenta,
-  MAX(subquery1.importe) as importe
-FROM (
-    SELECT
-      tr.NUM_CUENTA_REALIZANTE AS Num_cuenta,
-      MAX(tr.importe) AS Importe
-    FROM TRANSACCION tr
-    GROUP BY
-      tr.NUM_CUENTA_REALIZANTE
-    UNION
-    SELECT
-      op.NUM_CUENTA_REALIZANTE AS Num_cuenta,
-      MAX(op.importe) AS Importe
-    FROM OPERACION op
-    GROUP BY
-      op.NUM_CUENTA_REALIZANTE
-  ) subquery1
-JOIN POSEER pos ON pos.Num_cuenta = subquery1.Num_cuenta
-JOIN CLIENTE cl ON cl.DNI = pos.DNI
-GROUP BY
-  subquery1.Num_cuenta,
-  cl.NOMBRE
-ORDER BY
-  cl.NOMBRE;
+
 -- Consulta 4 para BD original de oracle
 SELECT
   cl.Nombre,
