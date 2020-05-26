@@ -39,7 +39,7 @@ public final class Test {
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("UnidadPersistenciaAlumnos");
 
         public static void main(String[] args) {
-                insertData();
+                // insertData();
 
                 printClients();
 
@@ -48,7 +48,7 @@ public final class Test {
                 LastDataTransaction();
 
                 querySucursalesMenores30();
-                
+
                 queryMaxIngresoTransaccion();
                 IngresosMasJoven();
         }
@@ -282,14 +282,29 @@ public final class Test {
         }
 
         private static void queryMasDinero() {
-                // Query 1 en JPQL: "Users que más dinero han extraído de sus cuentas"
+                // Query 1 en SQL
+
+                String query_sql = "select cl.nombre, op.num_cuenta_realizante, SUM(op.importe) "
+                                + "from operacion op JOIN poseer pos ON op.num_cuenta_realizante = pos.num_cuenta "
+                                + "JOIN cliente cl ON pos.DNI = cl.DNI where op.tipo = 'Retirada' GROUP BY "
+                                + "op.num_cuenta_realizante, cl.nombre ORDER BY SUM(importe) DESC";
 
                 EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query1 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Nombre: " + res[0] + ", Cuenta: " + res[1] + ",Suma: " + res[2] + "]");
+                }
+
                 String query_text = "SELECT cl.Nombre, op.realizante.numCuenta, SUM(op.importe) "
                                 + "FROM Operacion op JOIN op.realizante realizantes "
                                 + "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Retirada' "
                                 + "GROUP BY op.realizante.numCuenta, cl.Nombre " + "ORDER BY SUM(op.importe) DESC";
 
+                // Query 1 en JPQL: "Users que más dinero han extraído de sus cuentas"
                 javax.persistence.Query query1 = em.createQuery(query_text);
 
                 // Source: https://vladmihalcea.com/hibernate-resulttransformer/
@@ -348,12 +363,30 @@ public final class Test {
         }
 
         private static void querySucursalesMenores30() {
+
                 // Query2: Sucursales en las que los clientes menores de 30 años tienen cuentas
                 // corrientes.
 
-                // EN JPQL:
+                // Query 2 en SQL
+
+                String query_sql = "SELECT suc.CODIGO, cl.NOMBRE, cl.EDAD, cc.ID_CUENTA "
+                                + "FROM Sucursal suc JOIN CUENTA_CORRIENTE cc ON suc.CODIGO = cc.ID_SUCURSAL "
+                                + "JOIN POSEER pos ON cc.ID_CUENTA = pos.NUM_CUENTA "
+                                + "JOIN CLIENTE cl ON pos.DNI = cl.DNI WHERE cl.EDAD < 30 " + "ORDER BY suc.codigo";
 
                 EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query2 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Sucursal: " + res[0] + ", Cliente: " + res[1] + ", Edad: " + res[2]
+                                        + ", Cuenta: " + res[3] + "]");
+                }
+
+                // Query2: En JPQL
+
                 // He cambiado la orientación de los JOIN porque queda más simple
                 String query_text = "SELECT suc.codigo, cl.Nombre, cl.edad, cc.numCuenta " + "FROM Cliente cl "
                                 + "JOIN cl.cuentas cc " + "JOIN cc.sucursal suc " + "WHERE cl.edad < 30 "
@@ -412,73 +445,33 @@ public final class Test {
 
         }
 
-        private static void IngresosMasJoven() {
-                // Query5: Ingreso total de dinero de las cuentas del usuario mas viejo
-
-                // EN JPQL:
-
-                EntityManager em = emf.createEntityManager();
-                // He cambiado la orientación de los JOIN porque queda más simple
-                String query_text = 
-                "SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.edad "
-                                + "FROM Operacion op JOIN op.realizante realizantes "
-                                + "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Ingreso' AND "
-                                + "cl.edad = (SELECT MAX(cl2.edad) FROM Cliente cl2) "
-                                + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.edad ORDER BY SUM(op.importe) DESC";
-
-                javax.persistence.Query query5 = em.createQuery(query_text);
-
-                // Source: https://vladmihalcea.com/hibernate-resulttransformer/
-                @SuppressWarnings("unchecked")
-                List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
-                                .setResultTransformer(new Query5Transformer()).getResultList();
-
-                System.out.println("------ Mostrando Query5 en JPQL ------");
-
-                for (Query5 q : results) {
-                        System.out.println(q);
-                }
-        }
-
-        private static void queryMaxIngresoTransaccion() {
-                // Query4: Máximo movimiento (de ingreso) en una transacción en cada una de las
-                // cuentas de cada cliente
-                EntityManager em = emf.createEntityManager();
-
-                String query_text = "SELECT tr.cuentaDestino.numCuenta, tr.importe " + "FROM Transferencia tr "
-                                + "WHERE tr.importe IN " + "(SELECT MAX(tr1.importe) as Importe "
-                                + "FROM Transferencia tr1 WHERE tr1.cuentaDestino.numCuenta = tr.cuentaDestino.numCuenta) "
-                                + "OR tr.importe IN " + "(SELECT MAX(op.importe) as Importe FROM Operacion op "
-                                + "WHERE op.realizante.numCuenta = tr.cuentaDestino.numCuenta AND op.tipo = 'Ingreso') " 
-                                + "ORDER BY tr.cuentaDestino.numCuenta";
-
-                javax.persistence.Query query4 = em.createQuery(query_text);
-
-                // Source: https://vladmihalcea.com/hibernate-resulttransformer/
-                @SuppressWarnings("unchecked")
-                List<Query4> results = query4.unwrap(org.hibernate.query.Query.class)
-                                .setResultTransformer(new Query4Transformer()).getResultList();
-
-                System.out.println("------ Mostrando Query4 en JPQL ------");
-
-                for (Query4 q : results) {
-                        System.out.println(q);
-                }
-
-        }
-
         private static void LastDataTransaction() {
                 // Query3: Ultima transaccion de todas cuentas de todos los clientes
 
-                // EN JPQL:
+                // Query 3 en SQL
+
+                String query_sql = "SELECT cl.Nombre, p.num_cuenta, s1.fecha "
+                                + "FROM (SELECT max(t.fecha) AS fecha,t.num_cuenta_realizante from transaccion t "
+                                + "GROUP BY t.num_cuenta_realizante) s1 "
+                                + "JOIN poseer p ON p.num_cuenta = s1.num_cuenta_realizante JOIN cliente cl ON p.DNI = cl.DNI "
+                                + "GROUP BY cl.Nombre, p.num_cuenta, s1.fecha ORDER BY cl.Nombre";
 
                 EntityManager em = emf.createEntityManager();
-                // He cambiado la orientación de los JOIN porque queda más simple
-                String query_text = 
-                "SELECT cl.Nombre, real.numCuenta, tr.fecha " +
-                "FROM Transferencia tr JOIN tr.realizante real JOIN real.propietarios cl " + 
-                "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transferencia tr2 WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "+
-                "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query3 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1] + ", Fecha: " + res[2] + "]");
+                }
+
+                // Query 3 en JPQL
+
+                String query_text = "SELECT cl.Nombre, real.numCuenta, tr.fecha "
+                                + "FROM Transferencia tr JOIN tr.realizante real JOIN real.propietarios cl "
+                                + "WHERE tr.fecha IN ( SELECT MAX(tr2.fecha) FROM Transferencia tr2 WHERE tr2.realizante.numCuenta = tr.realizante.numCuenta) "
+                                + "GROUP BY cl.Nombre, real.numCuenta, tr.fecha ORDER BY cl.Nombre";
 
                 javax.persistence.Query query3 = em.createQuery(query_text);
 
@@ -490,6 +483,79 @@ public final class Test {
                 System.out.println("------ Mostrando Query3 en JPQL ------");
 
                 for (Query3 q : results) {
+                        System.out.println(q);
+                }
+        }
+
+        private static void queryMaxIngresoTransaccion() {
+                // Query4: Máximo movimiento (de ingreso) en una transacción en cada una de las
+                // cuentas de cada cliente
+
+                // Query 4 en SQL
+
+                String query_sql = "SELECT cl.Nombre, subquery1.Num_cuenta, MAX(subquery1.importe) as importe "
+                                + "FROM (SELECT tr.NUM_CUENTA_BENEFICIARIO AS Num_cuenta, MAX(tr.importe) AS Importe "
+                                + "FROM TRANSACCION tr GROUP BY tr.NUM_CUENTA_BENEFICIARIO "
+                                + "UNION SELECT op.NUM_CUENTA_REALIZANTE AS Num_cuenta, MAX(op.importe) AS Importe "
+                                + "FROM OPERACION op WHERE op.tipo = 'Ingreso' GROUP BY op.NUM_CUENTA_REALIZANTE ) subquery1 "
+                                + "JOIN POSEER pos ON pos.Num_cuenta = subquery1.Num_cuenta JOIN CLIENTE cl ON cl.DNI = pos.DNI "
+                                + "GROUP BY subquery1.Num_cuenta, cl.NOMBRE ORDER BY cl.NOMBRE";
+
+                EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query4 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Nombre: " + res[0] + ", Cuenta: " + res[1] + ", Importe: " + res[2] + "]");
+                }
+
+                String query_text = "SELECT tr.cuentaDestino.numCuenta, tr.importe " + "FROM Transferencia tr "
+                                + "WHERE tr.importe IN " + "(SELECT MAX(tr1.importe) as Importe "
+                                + "FROM Transferencia tr1 WHERE tr1.cuentaDestino.numCuenta = tr.cuentaDestino.numCuenta) "
+                                + "OR tr.importe IN " + "(SELECT MAX(op.importe) as Importe FROM Operacion op "
+                                + "WHERE op.realizante.numCuenta = tr.cuentaDestino.numCuenta AND op.tipo = 'Ingreso') "
+                                + "ORDER BY tr.cuentaDestino.numCuenta";
+
+                // javax.persistence.Query query4 = em.createQuery(query_text);
+
+                // // Source: https://vladmihalcea.com/hibernate-resulttransformer/
+                // @SuppressWarnings("unchecked")
+                // List<Query4> results = query4.unwrap(org.hibernate.query.Query.class)
+                //                 .setResultTransformer(new Query4Transformer()).getResultList();
+
+                // System.out.println("------ Mostrando Query4 en JPQL ------");
+
+                // for (Query4 q : results) {
+                //         System.out.println(q);
+                // }
+
+        }
+
+        private static void IngresosMasJoven() {
+                // Query5: Ingreso total de dinero de las cuentas del usuario mas viejo
+
+                // EN JPQL:
+
+                EntityManager em = emf.createEntityManager();
+                // He cambiado la orientación de los JOIN porque queda más simple
+                String query_text = "SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.edad "
+                                + "FROM Operacion op JOIN op.realizante realizantes "
+                                + "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Ingreso' AND "
+                                + "cl.edad = (SELECT MAX(cl2.edad) FROM Cliente cl2) "
+                                + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.edad ORDER BY SUM(op.importe) DESC";
+
+                javax.persistence.Query query5 = em.createQuery(query_text);
+
+                // Source: https://vladmihalcea.com/hibernate-resulttransformer/ s("un
+
+                List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
+                                .setResultTransformer(new Query5Transformer()).getResultList();
+
+                System.out.println("------ Mostrando Query5 en JPQL ------");
+
+                for (Query5 q : results) {
                         System.out.println(q);
                 }
         }

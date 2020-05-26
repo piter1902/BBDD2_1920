@@ -248,8 +248,10 @@ En el caso de la herencia entre \emph{Transacción, Transferencia y Operación},
 \section{Consultas con JPA}
 
 \textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.\\
-\textbf{JUANJOOOOO POrFAVOR EXPLICA LO DE QUERY Y QUERYTRANSFORMER DICIENDO QUE ES DE HIBERNATE Y NO DE JPA Y POR QUE LO HAS USADO}.\\
-Para la elaboración de las consultas en \emph{JPA} se han propuesto 5 consultas diferentes y se han abordado tanto para el esquema lógico generado con \emph{JPA} como para el esquema lógico preexistente adaptado. También se han utilizado los diferentes lenguajes de consultas propuestos (SQL, JPQL y Criteria). Las consultas propuestas son las siguientes:
+Para la elaboración de las consultas en \emph{JPA} se han propuesto 5 consultas diferentes y se han abordado tanto para el esquema lógico generado con \emph{JPA} como para el esquema lógico preexistente adaptado. También se han utilizado los diferentes lenguajes de consultas propuestos (SQL, JPQL y Criteria). 
+Para cada una de las consultas realizadas con \textit{JPA} y \textit{Criteria API}, se han creado dos clases adicionales. La primera de ella es una clase de \textit{Java} que posee tantos atributos como los indicados en la consulta. La otra clase es la encargada de atribuir cada una de las columnas de la consulta a los atributos correspondientes de la clase de \textit{Java}. Esta clase \textit{Transformadora} deriva de la clase \textit{org.hibernate.transform.ResultTransformer} de \textit{Hibernate}. Tras comparar varios resultados en internet, todos coinciden en que esta es la mejor forma de mostrar las consultas de \textit{JPQ} actualmente.
+Además, \textit{JPA} permite realizar consulas en \textit{SQL} utilizando la función \textit{createNativeQuery}.
+Las consultas propuestas son las siguientes:
 
 \begin{itemize}
 \item Consulta 1: Clientes que más dinero han extraído de sus cuentas
@@ -259,8 +261,405 @@ Para la elaboración de las consultas en \emph{JPA} se han propuesto 5 consultas
 \item Consulta 5: Ingreso total de dinero de las cuentas del usuario mas mayor
 \end{itemize}
 
-Para la consulta 3, para las dos versiones, se ha abordado la solución en \emph{JPQL}. \\
+La consulta 1 se ha realizado para ambas versiones en \textit{SQL}, \textit{JPQL} y \textit{Criteria.}
+Los códigos para la versión del esquema lógio creado son:\\
+\textbf{Código para \textit{SQL}:}
+\begin{lstlisting}
+String query_sql = "select cl.nombre, tr.realizante_numcuenta,
+    SUM(tr.importe) "
+	+ "from transaccion tr JOIN cliente_cuenta pos ON 
+	tr.realizante_numcuenta = pos.cuentas_numcuenta "
+	+ "JOIN cliente cl ON pos.propietarios_DNI = cl.DNI 
+	where tr.DTYPE = 'Operacion' AND tr.tipo = 'Retirada' "
+	+ "GROUP BY tr.realizante_numcuenta, cl.nombre ORDER BY 
+	SUM(importe) DESC";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query1 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println("[ Cliente: " + res[0] + ", Cuenta: " 
+	+ res[1] + ",Suma: " + res[2] + "]");
+}
+\end{lstlisting}
+
+\textbf{Código para \textit{JPQL}:}
+\begin{lstlisting}
+String query_text = "SELECT cl.Nombre, op.realizante.numCuenta,
+	 SUM(op.importe) "
+	+ "FROM Operacion op JOIN op.realizante realizantes "
+	+ "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Retirada'"
+	+ "GROUP BY op.realizante.numCuenta, cl.Nombre " 
+	+ "ORDER BY SUM(op.importe) DESC";
+
+javax.persistence.Query query1 = em.createQuery(query_text);
+
+@SuppressWarnings("unchecked")
+List<Query1> results = query1.unwrap(org.hibernate.query.Query.class)
+.setResultTransformer(new Query1Transformer()).getResultList();
+
+System.out.println("------ Mostrando Query1 en JPQL ------");
+
+for (Query1 q : results) {
+System.out.println(q);
+}
+
+\end{lstlisting}
+\textbf{Código para \textit{Criteria}:}
+\begin{lstlisting}
+javax.persistence.criteria.CriteriaBuilder cb = 
+	em.getCriteriaBuilder();
+
+javax.persistence.criteria.CriteriaQuery query = 
+	cb.createQuery(Query1.class);
+javax.persistence.criteria.Root<Operacion> operacionTable = 
+	query.from(Operacion.class);
+javax.persistence.criteria.Join<Operacion, Cuenta> cuentaJoin = 
+	operacionTable.join("realizante");
+javax.persistence.criteria.Join<Cuenta, Cliente> clienteJoin = 
+	cuentaJoin.join("propietarios");
+
+List<javax.persistence.criteria.Predicate> predicates = 
+	new ArrayList<>();
+predicates.add(cb.equal(operacionTable.get("tipo"), "Retirada"));
+
+query.multiselect(clienteJoin.get("Nombre"),cuentaJoin.get("numCuenta"),
+cb.sum(operacionTable.get("importe")));
+
+query.where(predicates.stream().
+	toArray(javax.persistence.criteria.Predicate[]::new));
+query.groupBy(cuentaJoin.get("numCuenta"), clienteJoin.get("Nombre"));
+
+List<javax.persistence.criteria.Order> order = new ArrayList<>();
+order.add(cb.desc(cb.sum(operacionTable.get("importe"))));
+
+query.orderBy(order);
+
+TypedQuery<Query1> typedQuery = em.createQuery(query);
+
+List<Query1> resultList = typedQuery.getResultList();
+
+System.out.println("------ Mostrando Query1 en Criteria API ------");
+
+for (Query1 q : resultList) {
+		System.out.println(q);
+	}
+
+\end{lstlisting}
+
+\bigbreak
+
+Los códigos para la versión del esquema lógio creado son:\\
+\bigbreak
+\textbf{Código para \textit{SQL}:}
+\begin{lstlisting}
+String query_sql = "select cl.nombre, op.num_cuenta_realizante, 
+	SUM(op.importe) "
+	+ "from operacion op JOIN poseer pos ON op.num_cuenta_realizante =
+		pos.num_cuenta "
+	+ "JOIN cliente cl ON pos.DNI = cl.DNI where op.tipo = 'Retirada' 
+		GROUP BY "
+	+ "op.num_cuenta_realizante, cl.nombre ORDER BY SUM(importe) DESC";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query1 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println("[ Nombre: " + res[0] + ", Cuenta: " 
+	+ res[1] + ",Suma: " + res[2] + "]");
+}
+\end{lstlisting}
+
+\textbf{Código para \textit{JPQL}:}
+\begin{lstlisting}
+String query_text = "SELECT cl.Nombre, op.realizante.numCuenta,
+	 SUM(op.importe) "
+	+ "FROM Operacion op JOIN op.realizante realizantes "
+	+ "JOIN realizantes.propietarios cl " + "WHERE op.tipo =
+	 'Retirada' "
+	+ "GROUP BY op.realizante.numCuenta, cl.Nombre " 
+	+ "ORDER BY SUM(op.importe) DESC";
+
+javax.persistence.Query query1 = em.createQuery(query_text);
+
+@SuppressWarnings("unchecked")
+List<Query1> results = query1.unwrap(org.hibernate.query.Query.class)
+.setResultTransformer(new Query1Transformer()).getResultList();
+
+System.out.println("------ Mostrando Query1 en JPQL ------");
+
+for (Query1 q : results) {
+System.out.println(q);
+}
+\end{lstlisting}
+\textbf{Código para \textit{Criteria}:}
+\begin{lstlisting}
+javax.persistence.criteria.CriteriaBuilder cb = 
+	em.getCriteriaBuilder();
+
+javax.persistence.criteria.CriteriaQuery query = 
+	cb.createQuery(Query1.class);
+javax.persistence.criteria.Root<Operacion> operacionTable = 
+	query.from(Operacion.class);
+javax.persistence.criteria.Join<Operacion, Cuenta> cuentaJoin = 
+	operacionTable.join("realizante");
+javax.persistence.criteria.Join<Cuenta, Cliente> clienteJoin = 
+	cuentaJoin.join("propietarios");
+
+List<javax.persistence.criteria.Predicate> predicates = 
+	new ArrayList<>();
+predicates.add(cb.equal(operacionTable.get("tipo"), "Retirada"));
+
+query.multiselect(clienteJoin.get("Nombre"), 
+cuentaJoin.get("numCuenta"),cb.sum(operacionTable.get("importe")));
+
+query.where(predicates.stream().
+	toArray(javax.persistence.criteria.Predicate[]::new));
+query.groupBy(cuentaJoin.get("numCuenta"), clienteJoin.get("Nombre"));
+
+List<javax.persistence.criteria.Order> order = new ArrayList<>();
+order.add(cb.desc(cb.sum(operacionTable.get("importe"))));
+
+query.orderBy(order);
+
+TypedQuery<Query1> typedQuery = em.createQuery(query);
+
+List<Query1> resultList = typedQuery.getResultList();
+
+System.out.println("------ Mostrando Query1 en Criteria API ------");
+
+for (Query1 q : resultList) {
+System.out.println(q);
+}
+
+\end{lstlisting}
+
+\bigskip
+
+La \textbf{consulta 2} también se ha realizado en \textit{SQL}, \textit{JPQL} y \textit{Criteria} para ambas versiones.
+Los códigos para la versión del esquema lógico creado son los siguientes:\\
+
+\textbf{Código para \textit{SQL}:}
+\begin{lstlisting}
+String query_sql = "SELECT suc.CODIGO,cl.NOMBRE,cl.EDAD,cc.NUMCUENTA "
++ "FROM Sucursal suc JOIN CUENTA cc ON suc.CODIGO = cc.sucursal_codigo"
++ "JOIN CLIENTE_CUENTA pos ON cc.numCuenta = pos.cuentas_numcuenta "
++ "JOIN CLIENTE cl ON pos.PROPIETARIOS_DNI = cl.DNI WHERE 
+	cl.EDAD < 30 AND cc.DTYPE = 'CuentaCorriente' "
++ "ORDER BY suc.codigo";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query2 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println("[ Sucursal: " + res[0] + ", Cliente: "
+	+ res[1] + ", Edad: " + res[2]
+	+ ", Cuenta: " + res[3] + "]");
+}
+\end{lstlisting}
+
+\textbf{Código para \textit{JPQL}:}
+\begin{lstlisting}
+String query_text = "SELECT suc.codigo, cl.Nombre, cl.Edad,
+	cc.numCuenta " + "FROM Cliente cl "
++ "JOIN cl.cuentas cc " + "JOIN cc.sucursal suc " + 
+	"WHERE cl.Edad < 30 "
++ "ORDER BY suc.codigo";
+
+javax.persistence.Query query2 = em.createQuery(query_text);
+
+// Source: https://vladmihalcea.com/hibernate-resulttransformer/
+@SuppressWarnings("unchecked")
+List<Query2> results = query2.unwrap(org.hibernate.query.Query.class)
+.setResultTransformer(new Query2Transformer()).getResultList();
+
+System.out.println("------ Mostrando Query2 en JPQL ------");
+
+for (Query2 q : results) {
+System.out.println(q);
+}
+\end{lstlisting}
+
+\textbf{Código para \textit{Criteria}:}
+\begin{lstlisting}
+javax.persistence.criteria.CriteriaBuilder cb = em.getCriteriaBuilder();
+
+javax.persistence.criteria.CriteriaQuery query = 
+	cb.createQuery(Query2.class);
+javax.persistence.criteria.Root<Cliente> clienteTable = 
+	query.from(Cliente.class);
+javax.persistence.criteria.Join<Cliente, Cuenta> cuentaJoin =
+	clienteTable.join("cuentas");
+
+// Seleccionamos tabla hija
+javax.persistence.criteria.Join cuentaCorrienteJoin = 
+	cb.treat(cuentaJoin, CuentaCorriente.class);
+
+javax.persistence.criteria.Join<CuentaCorriente, Sucursal> 
+	sucursalJoin = cuentaCorrienteJoin
+.join("sucursal");
+
+List<javax.persistence.criteria.Predicate> predicates = 
+	new ArrayList<>();
+predicates.add(cb.lt(clienteTable.get("Edad"), 30));
+
+query.multiselect(sucursalJoin.get("codigo"), clienteTable.
+	get("Nombre"), clienteTable.get("Edad"),
+	cuentaCorrienteJoin.get("numCuenta")).distinct(true);
+	
+query.where(predicates.stream().
+	toArray(javax.persistence.criteria.Predicate[]::new));
+
+// Para poder hacer el Order By
+List<javax.persistence.criteria.Order> order = new ArrayList<>();
+order.add(cb.asc(sucursalJoin.get("codigo")));
+
+query.orderBy(order);
+
+TypedQuery<Query2> typedQuery = em.createQuery(query);
+
+List<Query2> resultList = typedQuery.getResultList();
+
+System.out.println("------ Mostrando Query2 en Criteria API ------");
+
+for (Query2 row : resultList) {
+System.out.println(row);
+}
+\end{lstlisting}
+
+\bigbreak
+
+Ls códigos para el esquema lógico existente son:\\
+
+\textbf{Código para \textit{SQL}:}
+\begin{lstlisting}
+String query_sql = "SELECT suc.CODIGO, cl.NOMBRE, cl.EDAD, 
+	cc.ID_CUENTA "
+	+ "FROM Sucursal suc JOIN CUENTA_CORRIENTE cc ON suc.CODIGO = 
+	cc.ID_SUCURSAL "
+	+ "JOIN POSEER pos ON cc.ID_CUENTA = pos.NUM_CUENTA "
+	+ "JOIN CLIENTE cl ON pos.DNI = cl.DNI 
+	WHERE cl.EDAD < 30 " + "ORDER BY suc.codigo";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query2 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println("[ Sucursal: " + res[0] + ", Cliente: " 
+	+ res[1] + ", Edad: " + res[2]
+	+ ", Cuenta: " + res[3] + "]");
+}
+\end{lstlisting}
+
+\textbf{Código para \textit{JPQL}:}
+\begin{lstlisting}
+String query_text = "SELECT suc.codigo, cl.Nombre, cl.edad, 
+	cc.numCuenta " + "FROM Cliente cl "
+	+ "JOIN cl.cuentas cc " + "JOIN cc.sucursal suc " 
+	+ "WHERE cl.edad < 30 "
+	+ "ORDER BY suc.codigo";
+
+javax.persistence.Query query2 = em.createQuery(query_text);
+
+// Source: https://vladmihalcea.com/hibernate-resulttransformer/
+@SuppressWarnings("unchecked")
+List<Query2> results = query2.unwrap(org.hibernate.query.Query.class)
+.setResultTransformer(new Query2Transformer()).getResultList();
+
+System.out.println("------ Mostrando Query2 en JPQL ------");
+
+for (Query2 q : results) {
+System.out.println(q);
+}
+\end{lstlisting}
+
+\textbf{Código para \textit{Criteria}:}
+\begin{lstlisting}
+javax.persistence.criteria.CriteriaBuilder cb = 
+	em.getCriteriaBuilder();
+
+javax.persistence.criteria.CriteriaQuery query = 
+	cb.createQuery(Query2.class);
+javax.persistence.criteria.Root<Cliente> clienteTable = 
+	query.from(Cliente.class);
+javax.persistence.criteria.Join<Cliente, Cuenta> cuentaJoin = 
+	clienteTable.join("cuentas");
+
+// Seleccionamos tabla hija
+javax.persistence.criteria.Join cuentaCorrienteJoin = 
+	cb.treat(cuentaJoin, CuentaCorriente.class);
+
+javax.persistence.criteria.Join<CuentaCorriente, Sucursal> 
+	sucursalJoin = cuentaCorrienteJoin
+	.join("sucursal");
+
+List<javax.persistence.criteria.Predicate> predicates = 
+	new ArrayList<>();
+predicates.add(cb.lt(clienteTable.get("edad"), 30));
+
+query.multiselect(sucursalJoin.get("codigo"), 
+	clienteTable.get("Nombre"), clienteTable.get("edad"),
+	cuentaCorrienteJoin.get("numCuenta")).distinct(true);
+
+query.where(predicates.stream().
+	toArray(javax.persistence.criteria.Predicate[]::new));
+
+// Para poder hacer el Order By
+List<javax.persistence.criteria.Order> order = new ArrayList<>();
+order.add(cb.asc(sucursalJoin.get("codigo")));
+
+query.orderBy(order);
+
+TypedQuery<Query2> typedQuery = em.createQuery(query);
+
+List<Query2> resultList = typedQuery.getResultList();
+
+System.out.println("------ Mostrando Query2 en Criteria API ------");
+
+for (Query2 row : resultList) {
+System.out.println(row);
+}
+\end{lstlisting}
+
+\bigbreak
+Para la consulta 3, para las dos versiones, se ha abordado la solución en \emph{JPQL} y \textit{SQL}. \\
 El código para la versión de esquema lógico adaptado es el siguiente:
+
+\textbf{Código para \textit{SQL}:}
+\begin{lstlisting}
+String query_sql = "SELECT cl.Nombre, p.num_cuenta, s1.fecha "
+	+ "FROM (SELECT max(t.fecha) AS fecha,t.num_cuenta_realizante 
+	from transaccion t "
+	+ "GROUP BY t.num_cuenta_realizante) s1 "
+	+ "JOIN poseer p ON p.num_cuenta = s1.num_cuenta_realizante 
+	JOIN cliente cl ON p.DNI = cl.DNI "
+	+ "GROUP BY cl.Nombre, p.num_cuenta, s1.fecha ORDER BY cl.Nombre";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query3 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1] + ", Fecha: " + res[2] + "]");
+}
+\end{lstlisting}
+
+\bigbreak
+\textbf{Código para \textit{JPQL}:}
 
 \begin{lstlisting}
 	EntityManager em = emf.createEntityManager();
@@ -288,6 +687,10 @@ El código para la versión de esquema lógico adaptado es el siguiente:
 
 El código para la versión de esquema lógico creado es el siguiente:
 
+
+\bigbreak
+\textbf{Código para \textit{JPQL}:}
+
 \begin{lstlisting}
         EntityManager em = emf.createEntityManager();
         String query_text = 
@@ -313,6 +716,122 @@ El código para la versión de esquema lógico creado es el siguiente:
         }
 \end{lstlisting}
 
+
+\bigbreak
+\textbf{Código para \textit{SQL}:}
+\begin{lstlisting}
+String query_sql = "SELECT cl.NOMBRE, p.CUENTAS_NUMCUENTA,s1.FECHA "
+	+ "FROM (SELECT max(t.FECHA) AS fecha, t.REALIZANTE_NUMCUENTA 
+	from transaccion t "
+	+ "GROUP BY t.REALIZANTE_NUMCUENTA) s1 "
+	+ "JOIN CLIENTE_CUENTA p ON p.CUENTAS_NUMCUENTA = 
+		s1.REALIZANTE_NUMCUENTA "
+	+ "JOIN cliente cl ON p.PROPIETARIOS_DNI = cl.DNI GROUP BY "
+	+ "cl.NOMBRE,p.CUENTAS_NUMCUENTA,s1.FECHA ORDER BY cl.NOMBRE";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query3 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1] 
+	+ ", Fecha: " + res[2] + "]");
+}
+\end{lstlisting}
+\bigbreak
+En cuanto a la consulta 4, se ha realizado en \textit{SQL} únicamente para la versión del esquema lógico adaptado, debido a que se necesita una unión entre dos tablas y \textit{JPQL} ni \textit{Criteria} lo admiten.
+
+\textbf{Código para esquema lógico adaptado en \textit{SQL}:}
+\begin{lstlisting}
+
+String query_sql = "SELECT cl.Nombre, subquery1.Num_cuenta, 
+	MAX(subquery1.importe) as importe "
+	+ "FROM (SELECT tr.NUM_CUENTA_BENEFICIARIO AS Num_cuenta,
+	 MAX(tr.importe) AS Importe "
+	+ "FROM TRANSACCION tr GROUP BY tr.NUM_CUENTA_BENEFICIARIO "
+	+ "UNION SELECT op.NUM_CUENTA_REALIZANTE AS Num_cuenta, 
+	MAX(op.importe) AS Importe "
+	+ "FROM OPERACION op WHERE op.tipo = 'Ingreso' 
+	GROUP BY op.NUM_CUENTA_REALIZANTE ) subquery1 "
+	+ "JOIN POSEER pos ON pos.Num_cuenta = subquery1.Num_cuenta 
+	JOIN CLIENTE cl ON cl.DNI = pos.DNI "
+	+ "GROUP BY subquery1.Num_cuenta, cl.NOMBRE ORDER BY cl.NOMBRE";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query4 en SQL ------");
+
+for (Object[] res : result_sql) {
+	System.out.println("[ Nombre: " + res[0] + ", Cuenta: " 
+	+ res[1] + ", Importe: " + res[2] + "]");
+}
+\end{lstlisting}
+\bigbreak
+Sin embargo, para el esquema creado por \textit{JPA}, sí que se ha realizado la consulta en \textit{JPQL} y \textit{SQL}, al no ser necesaria la unión entre \textit{transferencia} y \textit{operación} al juntarse en una única tabla \textit{Transacción}.
+
+\bigbreak
+\textbf{Código para \textit{JPQL}:}
+
+\begin{lstlisting}
+String query_text = "SELECT cl.Nombre, cuen.numCuenta, tr.importe " 
+	+ "FROM Transaccion tr "
+	+ "JOIN tr.realizante cuen JOIN cuen.propietarios cl " + 
+	"WHERE tr.importe = "
+	+ "(SELECT MAX(tr1.importe) as Importe "
+	+ "FROM Transaccion tr1 WHERE tr1.realizante.numCuenta = 
+	tr.realizante.numCuenta) "
+	+ "ORDER BY cl.Nombre";
+
+javax.persistence.Query query4 = em.createQuery(query_text);
+
+// Source: https://vladmihalcea.com/hibernate-resulttransformer/
+@SuppressWarnings("unchecked")
+List<Query4> results = query4.unwrap(org.hibernate.query.Query.class)
+.setResultTransformer(new Query4Transformer()).getResultList();
+
+System.out.println("------ Mostrando Query4 en JPQL ------");
+
+for (Query4 q : results) {
+System.out.println(q);
+}
+\end{lstlisting}
+
+
+\bigbreak
+\textbf{Código para \textit{SQL}:}
+
+\begin{lstlisting}
+String query_sql = "SELECT cl.Nombre, subquery1.Num_cuenta,
+	 MAX(subquery1.importe) as importe "
+	+ "FROM (SELECT tr.REALIZANTE_NUMCUENTA AS Num_cuenta, 
+	MAX(tr.importe) AS Importe "
+	+ "FROM TRANSACCION tr GROUP BY tr.REALIZANTE_NUMCUENTA) subquery1 "
+	+ "JOIN CLIENTE_CUENTA pos ON pos.CUENTAS_NUMCUENTA = 
+	subquery1.Num_cuenta "
+	+ "JOIN CLIENTE cl ON cl.DNI = pos.PROPIETARIOS_DNI 
+	GROUP BY subquery1.Num_cuenta, cl.NOMBRE "
+	+ "ORDER BY cl.NOMBRE";
+
+EntityManager em = emf.createEntityManager();
+javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+List<Object[]> result_sql = q_sql.getResultList();
+
+System.out.println("------ Mostrando Query4 en SQL ------");
+
+for (Object[] res : result_sql) {
+System.out.println(
+"[ Nombre: " + res[0] + ", Cuenta: "
+ + res[1] + ", Importe: " + res[2] + "]");
+}
+
+\end{lstlisting}
+
+
+\bigbreak
 Para la consulta 5, para las dos versiones, se ha abordado la solución en \emph{JPQL}. \\
 El código para la versión de esquema lógico adaptado es el siguiente:
 
@@ -342,24 +861,25 @@ El código para la versión de esquema lógico adaptado es el siguiente:
 
 El código para la versión de esquema lógico creado es el siguiente:
 \begin{lstlisting}
-	EntityManager em = emf.createEntityManager();
-    String query_text = 
-   	"SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.Edad "
-    + "FROM Operacion op JOIN op.realizante realizantes "
-   	+ "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Retirada' AND "
-    + "cl.Edad = (SELECT MAX(cl2.Edad) FROM Cliente cl2) "
-    + "GROUP BY realizantes.numCuenta, cl.Nombre, cl.Edad ORDER BY 			
-    SUM(op.importe) DESC";
+EntityManager em = emf.createEntityManager();
+String query_text = 
+  	"SELECT cl.Nombre, realizantes.numCuenta, SUM(op.importe), cl.Edad"
+	+ "FROM Operacion op JOIN op.realizante realizantes "
+  	+ "JOIN realizantes.propietarios cl " + "WHERE op.tipo =
+  	'Retirada' AND "
+	+ "cl.Edad = (SELECT MAX(cl2.Edad) FROM Cliente cl2) "
+	+ "GROUP BY realizantes.numCuenta, cl.Nombre, cl.Edad ORDER BY 			
+	SUM(op.importe) DESC";
 
-    javax.persistence.Query query5 = em.createQuery(query_text);
-    @SuppressWarnings("unchecked")
-    List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
-    .setResultTransformer(new Query5Transformer()).getResultList();
+javax.persistence.Query query5 = em.createQuery(query_text);
+@SuppressWarnings("unchecked")
+List<Query5> results = query5.unwrap(org.hibernate.query.Query.class)
+.setResultTransformer(new Query5Transformer()).getResultList();
 
-    System.out.println("------ Mostrando Query5 en JPQL ------");
+System.out.println("------ Mostrando Query5 en JPQL ------");
 
-    for (Query5 q : results) {
-       	System.out.println(q);
+for (Query5 q : results) {
+      	System.out.println(q);
   	}
 \end{lstlisting}
 

@@ -39,7 +39,7 @@ public final class Test {
 
         public static void main(String[] args) {
 
-                insertData();
+                // insertData();
                 queryMasDinero();
 
                 querySucursalesMenores30();
@@ -269,9 +269,23 @@ public final class Test {
         }
 
         private static void queryMasDinero() {
-                // Query 1 en JPQL: "Users que más dinero han extraído de sus cuentas"
+                // Query 1 "Users que más dinero han extraído de sus cuentas"
+                // Query 1 en SQL
+                String query_sql = "select cl.nombre, tr.realizante_numcuenta, SUM(tr.importe) "
+                                + "from transaccion tr JOIN cliente_cuenta pos ON tr.realizante_numcuenta = pos.cuentas_numcuenta "
+                                + "JOIN cliente cl ON pos.propietarios_DNI = cl.DNI where tr.DTYPE = 'Operacion' AND tr.tipo = 'Retirada' "
+                                + "GROUP BY tr.realizante_numcuenta, cl.nombre ORDER BY SUM(importe) DESC";
 
                 EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query1 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1] + ",Suma: " + res[2] + "]");
+                }
+
                 String query_text = "SELECT cl.Nombre, op.realizante.numCuenta, SUM(op.importe) "
                                 + "FROM Operacion op JOIN op.realizante realizantes "
                                 + "JOIN realizantes.propietarios cl " + "WHERE op.tipo = 'Retirada' "
@@ -289,11 +303,7 @@ public final class Test {
                 for (Query1 q : results) {
                         System.out.println(q);
                 }
-
-                // TODO:He probado varias cosas pero los resultados son siempre del tipo
-                // "java.lang.object"
-                // printResult(results);
-
+                
                 // Query 1 en Criteria API
                 // Source:
                 // https://stackoverflow.com/questions/41982998/hibernate-criteriabuilder-to-join-multiple-tables/42019970
@@ -335,12 +345,30 @@ public final class Test {
         }
 
         private static void querySucursalesMenores30() {
+
                 // Query2: Sucursales en las que los clientes menores de 30 años tienen cuentas
                 // corrientes.
 
-                // EN JPQL:
+                // Query 2 en SQL
+
+                String query_sql = "SELECT suc.CODIGO,cl.NOMBRE,cl.EDAD,cc.NUMCUENTA "
+                                + "FROM Sucursal suc JOIN CUENTA cc ON suc.CODIGO = cc.sucursal_codigo "
+                                + "JOIN CLIENTE_CUENTA pos ON cc.numCuenta = pos.cuentas_numcuenta "
+                                + "JOIN CLIENTE cl ON pos.PROPIETARIOS_DNI = cl.DNI WHERE cl.EDAD < 30 AND cc.DTYPE = 'CuentaCorriente' "
+                                + "ORDER BY suc.codigo";
 
                 EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query2 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Sucursal: " + res[0] + ", Cliente: " + res[1] + ", Edad: " + res[2]
+                                        + ", Cuenta: " + res[3] + "]");
+                }
+
+                // Query2: En JPQL
                 // He cambiado la orientación de los JOIN porque queda más simple
                 String query_text = "SELECT suc.codigo, cl.Nombre, cl.Edad, cc.numCuenta " + "FROM Cliente cl "
                                 + "JOIN cl.cuentas cc " + "JOIN cc.sucursal suc " + "WHERE cl.Edad < 30 "
@@ -402,9 +430,26 @@ public final class Test {
         private static void LastDataTransaction() {
                 // Query3: Ultima transaccion de todas cuentas de todos los clientes
 
-                // EN JPQL:
+                // Query 3 en SQL
+
+                String query_sql = "SELECT cl.NOMBRE, p.CUENTAS_NUMCUENTA,s1.FECHA "
+                                + "FROM (SELECT max(t.FECHA) AS fecha, t.REALIZANTE_NUMCUENTA from transaccion t "
+                                + "GROUP BY t.REALIZANTE_NUMCUENTA) s1 "
+                                + "JOIN CLIENTE_CUENTA p ON p.CUENTAS_NUMCUENTA = s1.REALIZANTE_NUMCUENTA "
+                                + "JOIN cliente cl ON p.PROPIETARIOS_DNI = cl.DNI GROUP BY "
+                                + "cl.NOMBRE,p.CUENTAS_NUMCUENTA,s1.FECHA ORDER BY cl.NOMBRE";
 
                 EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query3 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1] + ", Fecha: " + res[2] + "]");
+                }
+
+                // Query 3 en JPQL
                 // He cambiado la orientación de los JOIN porque queda más simple
                 String query_text = "SELECT cl.Nombre, real.numCuenta, tr.fecha "
                                 + "FROM Transaccion tr JOIN tr.realizante real JOIN real.propietarios cl "
@@ -426,13 +471,32 @@ public final class Test {
         }
 
         private static void queryMaxIngresoTransaccion() {
-                // Query4: Máximo movimiento en una transacción en cada una de las
+                // Query4: Máximo movimiento (de ingreso) en una transacción en cada una de las
                 // cuentas de cada cliente
+
+                // Query 4 en SQL
+
+                String query_sql = "SELECT cl.Nombre, subquery1.Num_cuenta, MAX(subquery1.importe) as importe "
+                                + "FROM (SELECT tr.REALIZANTE_NUMCUENTA AS Num_cuenta, MAX(tr.importe) AS Importe "
+                                + "FROM TRANSACCION tr GROUP BY tr.REALIZANTE_NUMCUENTA) subquery1 "
+                                + "JOIN CLIENTE_CUENTA pos ON pos.CUENTAS_NUMCUENTA = subquery1.Num_cuenta "
+                                + "JOIN CLIENTE cl ON cl.DNI = pos.PROPIETARIOS_DNI GROUP BY subquery1.Num_cuenta, cl.NOMBRE "
+                                + "ORDER BY cl.NOMBRE";
+
                 EntityManager em = emf.createEntityManager();
+                javax.persistence.Query q_sql = em.createNativeQuery(query_sql);
+                List<Object[]> result_sql = q_sql.getResultList();
+
+                System.out.println("------ Mostrando Query4 en SQL ------");
+
+                for (Object[] res : result_sql) {
+                        System.out.println(
+                                        "[ Nombre: " + res[0] + ", Cuenta: " + res[1] + ", Importe: " + res[2] + "]");
+                }
 
                 String query_text = "SELECT cl.Nombre, cuen.numCuenta, tr.importe " + "FROM Transaccion tr "
-                                + "JOIN tr.realizante cuen JOIN cuen.propietarios cl "
-                                + "WHERE tr.importe = " + "(SELECT MAX(tr1.importe) as Importe "
+                                + "JOIN tr.realizante cuen JOIN cuen.propietarios cl " + "WHERE tr.importe = "
+                                + "(SELECT MAX(tr1.importe) as Importe "
                                 + "FROM Transaccion tr1 WHERE tr1.realizante.numCuenta = tr.realizante.numCuenta) "
                                 + "ORDER BY cl.Nombre";
 
