@@ -1,7 +1,0 @@
-Para ejecutar este codigo es necesario tener instalado Apache Maven.
-
-Para que funcione hay que rellenar las credenciales de la base de datos en el fichero src/main/resources/META-INF/persistence.xml y utilizar el comando:
-
-mvn clean && mvn compile && mvn exec:java -Dexec.mainClass="bases2.App" -Dexec.cleanupDaemonThreads=false
-
-PD: Meter esto en un script estaria bien

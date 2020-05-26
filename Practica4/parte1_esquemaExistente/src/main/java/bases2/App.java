@@ -28,37 +28,18 @@ public final class App {
 
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("UnidadPersistenciaAlumnos");
 
-        /**
-         * Says hello to the world.
-         * 
-         * @param args The arguments of the program.
-         */
         public static void main(String[] args) {
-                // System.out.println("Hello World!");
+                insertData();
 
-                // System.out.println("Creando EntityManager");
-                // EntityManager em = emf.createEntityManager();
+                printClients();
 
-                // em.getTransaction().begin();
-                // Prueba p = new Prueba(1L, "HOLA");
-                // Prueba p2 = new Prueba(2L, "MUNDO");
-                // em.persist(p);
-                // em.persist(p2);
-                // em.getTransaction().commit();
-                // em.close();
+                queryMasDinero();
 
-                // insertData();
+                LastDataTransaction();
 
-                // printClients();
-
-                // queryMasDinero();
-
-                //LastDataTransaction();
-
-                // querySucursalesMenores30();
+                querySucursalesMenores30();
                 
-                // TODO: WIP
-                // queryMaxIngresoTransaccion();
+                queryMaxIngresoTransaccion();
                 IngresosMasJoven();
         }
 
