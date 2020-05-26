@@ -1,29 +1,39 @@
 package bases2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.management.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import org.graalvm.compiler.nodes.virtual.EscapeObjectState;
-
-import bases2.queries.*;
-
 //import javax.persistence.Criteria;
-
-import bases2.models.*;
+import bases2.models.Cliente;
+import bases2.models.Cuenta;
+import bases2.models.CuentaAhorro;
+import bases2.models.CuentaCorriente;
+import bases2.models.Operacion;
+import bases2.models.Sucursal;
+import bases2.models.Transaccion;
+import bases2.models.Transferencia;
+import bases2.queries.Query1;
+import bases2.queries.Query1Transformer;
+import bases2.queries.Query2;
+import bases2.queries.Query2Transformer;
+import bases2.queries.Query3;
+import bases2.queries.Query3Transformer;
+import bases2.queries.Query4;
+import bases2.queries.Query4Transformer;
+import bases2.queries.Query5;
+import bases2.queries.Query5Transformer;
 
 /**
  * Hello world!
  */
-public final class App {
-        private App() {
+public final class Test {
+        private Test() {
         }
 
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("UnidadPersistenciaAlumnos");
