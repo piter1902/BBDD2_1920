@@ -1,2 +1,2 @@
 :: Es necesario Apache Maven
-mvn exec:java -Dexec.mainClass="bases2.App" -Dexec.cleanupDaemonThreads=false
+mvn exec:java -Dexec.mainClass="bases2.Test" -Dexec.cleanupDaemonThreads=false

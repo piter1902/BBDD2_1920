@@ -1,58 +1,52 @@
 package bases2;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.management.Query;
 import javax.persistence.TypedQuery;
 
-import org.graalvm.compiler.nodes.virtual.EscapeObjectState;
-
-import bases2.models.*;
-import bases2.queries.*;
+import bases2.models.Cliente;
+import bases2.models.Cuenta;
+import bases2.models.CuentaAhorro;
+import bases2.models.CuentaCorriente;
+import bases2.models.Operacion;
+import bases2.models.Sucursal;
+import bases2.models.Transaccion;
+import bases2.models.Transferencia;
+import bases2.queries.Query1;
+import bases2.queries.Query1Transformer;
+import bases2.queries.Query2;
+import bases2.queries.Query2Transformer;
+import bases2.queries.Query3;
+import bases2.queries.Query3Transformer;
+import bases2.queries.Query4;
+import bases2.queries.Query4Transformer;
+import bases2.queries.Query5;
+import bases2.queries.Query5Transformer;
 
 /**
  * Hello world!
  */
-public final class App {
-        private App() {
+public final class Test {
+        private Test() {
         }
 
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("UnidadPersistenciaAlumnos");
 
-        /**
-         * Says hello to the world.
-         * 
-         * @param args The arguments of the program.
-         */
         public static void main(String[] args) {
-                // System.out.println("Hello World!");
 
-                // System.out.println("Creando EntityManager");
-                // EntityManager em = emf.createEntityManager();
-
-                // em.getTransaction().begin();
-                // Prueba p = new Prueba(1L, "HOLA");
-                // Prueba p2 = new Prueba(2L, "MUNDO");
-                // em.persist(p);
-                // em.persist(p2);
-                // em.getTransaction().commit();
-                // em.close();
-                // insertData();
+                insertData();
                 queryMasDinero();
 
                 querySucursalesMenores30();
 
                 queryMaxIngresoTransaccion();
-                // LastDataTransaction();
-                // IngresosMasJoven();
+                LastDataTransaction();
+                IngresosMasJoven();
         }
 
         private static void insertData() {
