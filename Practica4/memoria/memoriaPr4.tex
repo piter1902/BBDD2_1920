@@ -56,9 +56,30 @@ literate=%
 
 \begin{itemize}
 \item Hayk:
+	\begin{itemize}
+	\item Formación en \emph{JPA}: 3 horas
+	\item Memoria: 1 hora
+	\end{itemize}
 \item Juan José:
+	\begin{itemize}
+	\item Formación en \emph{JPA}: 3 horas
+	\item Código Java del esquema lógico preexistente: 2 horas
+	\item Consultas de ambos esquemas: 4 horas
+	\item Memoria: 1 hora
+	\end{itemize}
 \item Pedro:
+	\begin{itemize}
+	\item Formación en \emph{JPA}: 3 horas
+	\item Código del esquema lógico desde 0: 1 hora
+	\item Código Java del esquema lógico preexistente: 2 horas
+	\item Memoria: 4 horas
+	\end{itemize}
 \item Jesús:
+	\begin{itemize}
+	\item Formación en \emph{JPA}: 3 horas
+	\item Consultas de ambos esquemas: 4 horas
+	\item Memoria: 2 horas
+	\end{itemize}
 \end{itemize}
 
 \section{Modelo conceptual}
@@ -74,7 +95,6 @@ Se ha considerado que las transacciones se tienen que realizar en una sucursal, 
 
 Como apoyo hacia el desarrollo orientado a objetos con \emph{Java} se ha utilizado como referencia un diagrama de clases \emph{UML} (Figura \ref{fig:diagramauml}) con la misma semántica que el diagrama entidad relación explicado anteriormente.\\
 
-\textbf{Aquí explicaremos el diagrama ER de banquito, para que lo tengan presente (Figura \ref{fig:diagramaer}).}
 
 \section{Entorno de trabajo y ejecución}
 
@@ -203,8 +223,8 @@ mvn exec:java
 	-Dexec.cleanupDaemonThreads=false
 \end{lstlisting}
 
-\textbf{Aquí le explicaremos que usamos visual code con maven y le explicaremos como se ejecuta.}
 
+\newpage
 \section{Generación de esquema lógico con JPA}
 
 Para la generación del esquema lógico utilizando \emph{JPA} se ha  utilizado el diagrama de clases de la Figura \ref{fig:diagramauml}. El primer paso de la generación ha sido la confección de las clases \emph{Java} utilizando las anotaciones necesarias. En este caso, se han utilizado las anotaciones \emph{@Entity} para marcar las entidades y las etiquetas \emph{@Column} para las columnas. Para las columnas se ha añadido un atributo \emph{name} para especificar el nombre de esa columna en la base de datos y así conocer los nombres de las columnas.\\
@@ -212,11 +232,9 @@ Para que \emph{JPA} funcione correctamente se deben definir los métodos \emph{h
 Para resolver la herencia en este primer esquema lógico se ha decidido establecer las \emph{superclases} \emph{Cuenta} y \emph{Transacción} como clases abstractas. De esta manera no podrán ser instanciadas y por lo tanto se obligará a que la herencia sea obligatoria. Además al utilizar dos subclases, la herencia será disjunta ya que un objeto no puede pertenecer a dos subclases al mismo tiempo en este modelo conceptual.\\
 El mecanismo predeterminado para la resolución de estas herencias ha sido el de crear una sola tabla con el nombre del padre con todos los atributos del padre y los específicos de cada uno de los hijos. Para determinar si una tupla en la base de datos pertenece a un subtipo o a otro se dispone de una columna (por defecto, \emph{DTYPE}) que contiene el nombre del subtipo cuyos valores se encuentran con valores permitidos para ese subtipo.\\
 Sobre las relaciones, se ha utilizado una relación \emph{ManyToMany} bidireccional entre \emph{Cliente} y \emph{Cuenta}, siendo cliente la parte poseedora. Esta acción genera una tabla nueva \emph{Cliente\_{}Cuenta}, que representará lo mismo que la tabla \emph{Poseer} de la base de datos de \emph{Banquito}.\\
-No se han utilizado más relaciones bidireccionales pero es de destacar la relación \emph{ManyToOne} unidireccional entre \emph{Transacción} y \emph{Cuenta}, ya que transacción es una entidad débil ante cuenta. La columna resultante de esta relación actúa también como parte de la clave primaria al utilizarse la anotación \emph{@Id}, siendo la clave primaria \emph{(NumTransaccion, realizante)}.\\
+No se han utilizado más relaciones bidireccionales pero es de destacar la relación \emph{ManyToOne} unidireccional entre \emph{Transacción} y \emph{Cuenta}, ya que transacción es una entidad débil ante cuenta. La columna resultante de esta relación actúa también como parte de la clave primaria al utilizarse la anotación \emph{@Id}, siendo la clave primaria \emph{(NumTransaccion, realizante)}.
 
-
-\textbf{Aquí explicaremos como hemos desarrollado el esquema lógico desde 0 con JPA.}
-
+\newpage
 \section{Adopción de un esquema lógico preexistente con JPA}
 
 Partiendo de las clases desarrolladas en el apartado anterior, se va a proceder a realizar las modificaciones sobre las mismas para adaptar al esquema lógico existente. Esta tarea no ha resultado especialmente difícil ya que \emph{JPA} provee muchas anotaciones para modificar el comportamiento del esquema que se va a generar o que se va a adoptar. Para facilitar esta tarea se ha modificado un campo del fichero \emph{persistence.xml}, el campo \emph{hibernate.hbm2ddl.auto} adoptará el valor \emph{validate}. Esto comprobará si el esquema generado por \emph{JPA} coincide con el esquema existente en el remoto especificado en ese mismo fichero. No realiza ninguna modificación sobre la base de datos.\\
@@ -243,8 +261,7 @@ Con esta anotación se ha establecido que la relación entre cliente y cuenta se
 Sobre la herencia, se han utilizado distintas estrategias de las propuestas por \emph{JPA}, en este caso, para la tabla cuenta se ha utilizado la estrategia \emph{JOINED}, la cual divide los campos específicos de la tabla padre en una tabla y los campos específicos de cada subtipo en sus respectivas tablas. En las tablas de los subtipos para establecer el nombre de la columna que actúa como clave primaria se utiliza la anotación \emph{@PrimaryKeyJoinColumn} con el atributo \emph{name}, en este caso se establecerá \emph{name = ``ID\_{}CUENTA''} para que coincidan con el esquema lógico preexistente.\\
 En el caso de la herencia entre \emph{Transacción, Transferencia y Operación}, se ha establecido un mecanismo de herencia distinto. En este caso la superclase (transacción) no será una entidad, si no que se utilizará la anotación \emph{@MappedSuperclass} para indicar que esta superclase no se persistirá como una tabla en la base de datos, pero sus campos si que serán persistidos en cada uno de sus subtipos (transferencia y operación).
 
-\textbf{Aquí le explicaremos el proceso de acomodación del esquema relacional de la base de datos con JPA. Le explicaremos lo del \emph{validate} y le mostraremos nuestros problemas.}
-
+\newpage
 \section{Consultas con JPA}
 
 \textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.\\
@@ -885,8 +902,15 @@ for (Query5 q : results) {
 
 \section{Conclusiones y opiniones}
 
-\textbf{Meter aqui las conclusiones y opiniones del equipo ante el uso de este ORM.}
+\emph{JPA} es una herramienta muy potente para el acceso a los datos de una base de datos de manera uniforme desde el código \emph{Java}. Nos permite abstraernos de la estructura de la base de datos teniendo solamente en cuenta las entidades definidas en el mismo código.\\
+Uno de los aspectos a tener en cuenta de esta librería es su gran adaptabilidad a una base de datos ya existente, esto es gracias a que existen muchas anotaciones que permiten modificar el comportamiento de \emph{JPA} drásticamente.\\
 
+La utilización y formación en la herramienta no ha resultado complicada debido a que la sintaxis y semántica de las anotaciones no dificultó la tarea. Además se han consultado los capítulos del libro \emph{Java Persistence with Hibernate} ubicados en la página de la asignatura.\\
+
+\textbf{PONER UNA CONCLUSIÓN DE LAS CONSULTAS}.\\
+
+Para finalizar, se ha utilizado anteriormente el framework \emph{Django\footnote{\url{https://www.djangoproject.com/}}}. Este Framework está orientado al desarrollo web utilizando \emph{Python}. Además cuenta con un \emph{ORM} que hace casi totalmente transparente el acceso a la base de datos de cara al programador.\\
+La diferencia principal entre estos dos \emph{ORMs} se basa en las anotaciones, siendo \emph{JPA} más sencillo de implantar, tanto en el caso de la generación del esquema lógico desde 0 como en la adopción de un esquema preexistente.
 
 \newpage
 \section{Apéndice 1: Figuras}
