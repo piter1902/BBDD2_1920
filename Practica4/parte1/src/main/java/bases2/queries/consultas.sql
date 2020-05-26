@@ -14,6 +14,7 @@ GROUP BY
   cl.nombre
 ORDER BY
   SUM(importe) DESC;
+
 -- Consulta 2
 SELECT
   suc.CODIGO,

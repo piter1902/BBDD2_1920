@@ -1,0 +1,29 @@
+create global temporary table HT_CUENTA_AHORRO (ID_CUENTA number(10,0) not null) on commit delete rows
+create global temporary table HT_CUENTA (NUM_CUENTA number(10,0) not null) on commit delete rows
+create global temporary table HT_CUENTA_CORRIENTE (ID_CUENTA number(10,0) not null) on commit delete rows
+drop table CLIENTE cascade constraints
+drop table CUENTA cascade constraints
+drop table CUENTA_AHORRO cascade constraints
+drop table CUENTA_CORRIENTE cascade constraints
+drop table OPERACION cascade constraints
+drop table POSEER cascade constraints
+drop table SUCURSAL cascade constraints
+drop table TRANSACCION cascade constraints
+create table CLIENTE (DNI varchar2(255) not null, APELLIDO varchar2(255) not null, DIRECCION varchar2(255) not null, EMAIL varchar2(255), NOMBRE varchar2(255) not null, TELEFONO number(10,0) not null, EDAD number(10,0) not null, primary key (DNI))
+create table CUENTA (NUM_CUENTA number(10,0) not null, IBAN varchar2(255) not null, FECHA_CREACION date not null, SALDO number(10,0) not null, TIPO varchar2(255), primary key (NUM_CUENTA))
+create table CUENTA_AHORRO (INTERES number(10,0) not null, ID_CUENTA number(10,0) not null, primary key (ID_CUENTA))
+create table CUENTA_CORRIENTE (ID_CUENTA number(10,0) not null, ID_SUCURSAL number(10,0) not null, primary key (ID_CUENTA))
+create table OPERACION (NUM_TRANSACCION number(10,0) not null, DESCRIPCION varchar2(255), FECHA date not null, IMPORTE number(10,0) not null, TIPO varchar2(255), NUM_CUENTA_REALIZANTE number(10,0) not null, CODIGO number(10,0), primary key (NUM_CUENTA_REALIZANTE, NUM_TRANSACCION))
+create table POSEER (DNI varchar2(255) not null, NUM_CUENTA number(10,0) not null)
+create table SUCURSAL (CODIGO number(10,0) not null, DIRECCION varchar2(255) not null, TELEFONO number(10,0) not null, primary key (CODIGO))
+create table TRANSACCION (NUM_TRANSACCION number(10,0) not null, DESCRIPCION varchar2(255), FECHA date not null, IMPORTE number(10,0) not null, NUM_CUENTA_REALIZANTE number(10,0) not null, CODIGO number(10,0), NUM_CUENTA_BENEFICIARIO number(10,0), primary key (NUM_CUENTA_REALIZANTE, NUM_TRANSACCION))
+alter table CUENTA_AHORRO add constraint FKimjiv7o96fumkrdfq4g7xhyqb foreign key (ID_CUENTA) references CUENTA
+alter table CUENTA_CORRIENTE add constraint FKjdna7gpnjt9heltruv2ub77ps foreign key (ID_SUCURSAL) references SUCURSAL
+alter table CUENTA_CORRIENTE add constraint FKqv8xy38vll62riqqvt3eqb13s foreign key (ID_CUENTA) references CUENTA
+alter table OPERACION add constraint FKeq15kqtib722r4h7mby8872id foreign key (NUM_CUENTA_REALIZANTE) references CUENTA
+alter table OPERACION add constraint FK909on4joity2oqdw5hy4vscg foreign key (CODIGO) references SUCURSAL
+alter table POSEER add constraint FKpp80tadgcr2f071u3xuvjtfmj foreign key (NUM_CUENTA) references CUENTA
+alter table POSEER add constraint FKoeth3ceb6oh8fhermft90dfa0 foreign key (DNI) references CLIENTE
+alter table TRANSACCION add constraint FKascqovg7l1a5y5ho7mbt1wwiv foreign key (NUM_CUENTA_REALIZANTE) references CUENTA
+alter table TRANSACCION add constraint FKjl2gcu6r07dmmh2m8had4aesh foreign key (CODIGO) references SUCURSAL
+alter table TRANSACCION add constraint FKhwvcb6bk6b5gcnwbwyr9sln7r foreign key (NUM_CUENTA_BENEFICIARIO) references CUENTA
