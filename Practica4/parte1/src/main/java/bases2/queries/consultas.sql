@@ -1,15 +1,16 @@
 -- Consulta 1
 select
   cl.nombre,
-  SUM(op.importe),
-  op.num_cuenta_realizante
-from operacion op
-JOIN poseer pos ON op.num_cuenta_realizante = pos.num_cuenta
-JOIN cliente cl ON pos.DNI = cl.DNI
+  SUM(tr.importe),
+  tr.realizante_numcuenta
+from transaccion tr
+JOIN cliente_cuenta pos ON tr.realizante_numcuenta = pos.cuentas_numcuenta
+JOIN cliente cl ON pos.propietarios_DNI = cl.DNI
 where
-  op.tipo = 'Retirada'
+  tr.DTYPE = 'Operacion'
+  AND tr.tipo = 'Retirada'
 GROUP BY
-  op.num_cuenta_realizante,
+  tr.realizante_numcuenta,
   cl.nombre
 ORDER BY
   SUM(importe) DESC;
@@ -18,63 +19,35 @@ SELECT
   suc.CODIGO,
   cl.NOMBRE,
   cl.EDAD,
-  cc.ID_CUENTA
+  cc.NUMCUENTA
 FROM Sucursal suc
-JOIN CUENTA_CORRIENTE cc ON suc.CODIGO = cc.ID_SUCURSAL
-JOIN POSEER pos ON cc.ID_CUENTA = pos.NUM_CUENTA
-JOIN CLIENTE cl ON pos.DNI = cl.DNI
+JOIN CUENTA cc ON suc.CODIGO = cc.sucursal_codigo
+JOIN CLIENTE_CUENTA pos ON cc.numCuenta = pos.cuentas_numcuenta
+JOIN CLIENTE cl ON pos.PROPIETARIOS_DNI = cl.DNI
 WHERE
   cl.EDAD < 30
+  AND cc.DTYPE = 'CuentaCorriente'
 ORDER BY
   suc.codigo;
-< < < < < < < Updated upstream -- Consulta 3
-  == == == = --Consulta3
-  > > > > > > > Stashed changes
+-- Consulta 3
 SELECT
-  cl.Nombre,
-  p.num_cuenta,
-  s1.fecha
+  cl.NOMBRE,
+  p.CUENTAS_NUMCUENTA,
+  s1.FECHA
 FROM (
     SELECT
-      max(t.fecha) AS fecha,
-      t.num_cuenta_realizante
+      max(t.FECHA) AS fecha,
+      t.REALIZANTE_NUMCUENTA
     from transaccion t
     GROUP BY
-      t.num_cuenta_realizante
+      t.REALIZANTE_NUMCUENTA
   ) s1
-JOIN poseer p ON p.num_cuenta = s1.num_cuenta_realizante
-JOIN cliente cl ON p.DNI = cl.DNI
+JOIN CLIENTE_CUENTA p ON p.CUENTAS_NUMCUENTA = s1.REALIZANTE_NUMCUENTA
+JOIN cliente cl ON p.PROPIETARIOS_DNI = cl.DNI
 GROUP BY
-  cl.Nombre,
-  p.num_cuenta,
-  s1.fecha
-ORDER BY
-  cl.Nombre;
--- Consulta 4 para BD original de oracle
-SELECT
-  cl.Nombre,
-  subquery1.Num_cuenta,
-  MAX(subquery1.importe) as importe
-FROM (
-    SELECT
-      tr.NUM_CUENTA_REALIZANTE AS Num_cuenta,
-      MAX(tr.importe) AS Importe
-    FROM TRANSACCION tr
-    GROUP BY
-      tr.NUM_CUENTA_REALIZANTE
-    UNION
-    SELECT
-      op.NUM_CUENTA_REALIZANTE AS Num_cuenta,
-      MAX(op.importe) AS Importe
-    FROM OPERACION op
-    GROUP BY
-      op.NUM_CUENTA_REALIZANTE
-  ) subquery1
-JOIN POSEER pos ON pos.Num_cuenta = subquery1.Num_cuenta
-JOIN CLIENTE cl ON cl.DNI = pos.DNI
-GROUP BY
-  subquery1.Num_cuenta,
-  cl.NOMBRE
+  cl.NOMBRE,
+  p.CUENTAS_NUMCUENTA,
+  s1.FECHA
 ORDER BY
   cl.NOMBRE;
 -- Consulta 4 para BD original de oracle
