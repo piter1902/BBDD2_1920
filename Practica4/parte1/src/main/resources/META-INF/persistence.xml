@@ -6,13 +6,13 @@
 		<properties>
 		   <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle8iDialect" />
 		   <property name="hibernate.show_sql" value="false"/>		
-		   <property name="hibernate.hbm2ddl.auto" value="none"/>
+		   <property name="hibernate.hbm2ddl.auto" value="create"/>
 		  
 		   
 		   <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.driver.OracleDriver"/>
 		   <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@danae04.cps.unizar.es:1521:barret"/>
-		   <property name="javax.persistence.jdbc.user" value="a755742"/>
-		   <property name="javax.persistence.jdbc.password" value="quasi-28"/>		   
+		   <property name="javax.persistence.jdbc.user" value=""/>
+		   <property name="javax.persistence.jdbc.password" value=""/>		   
 		   
 
 		</properties>

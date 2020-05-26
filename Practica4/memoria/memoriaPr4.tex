@@ -64,8 +64,8 @@ literate=%
 	\begin{itemize}
 	\item Formación en \emph{JPA}: 3 horas
 	\item Código Java del esquema lógico preexistente: 2 horas
-	\item Consultas de ambos esquemas: 4 horas
-	\item Memoria: 1 hora
+	\item Consultas de ambos esquemas: 5 horas
+	\item Memoria: 2 horas
 	\end{itemize}
 \item Pedro:
 	\begin{itemize}
@@ -264,7 +264,6 @@ En el caso de la herencia entre \emph{Transacción, Transferencia y Operación},
 \newpage
 \section{Consultas con JPA}
 
-\textbf{Aquí se expondrán las consultas, con su código SQL, JPQL, Criteria API}.\\
 Para la elaboración de las consultas en \emph{JPA} se han propuesto 5 consultas diferentes y se han abordado tanto para el esquema lógico generado con \emph{JPA} como para el esquema lógico preexistente adaptado. También se han utilizado los diferentes lenguajes de consultas propuestos (SQL, JPQL y Criteria). 
 Para cada una de las consultas realizadas con \textit{JPA} y \textit{Criteria API}, se han creado dos clases adicionales. La primera de ella es una clase de \textit{Java} que posee tantos atributos como los indicados en la consulta. La otra clase es la encargada de atribuir cada una de las columnas de la consulta a los atributos correspondientes de la clase de \textit{Java}. Esta clase \textit{Transformadora} deriva de la clase \textit{org.hibernate.transform.ResultTransformer} de \textit{Hibernate}. Tras comparar varios resultados en internet, todos coinciden en que esta es la mejor forma de mostrar las consultas de \textit{JPQ} actualmente.
 Además, \textit{JPA} permite realizar consulas en \textit{SQL} utilizando la función \textit{createNativeQuery}.
@@ -280,6 +279,7 @@ Las consultas propuestas son las siguientes:
 
 La consulta 1 se ha realizado para ambas versiones en \textit{SQL}, \textit{JPQL} y \textit{Criteria.}
 Los códigos para la versión del esquema lógio creado son:\\
+\bigbreak
 \textbf{Código para \textit{SQL}:}
 \begin{lstlisting}
 String query_sql = "select cl.nombre, tr.realizante_numcuenta,
@@ -302,7 +302,7 @@ System.out.println("[ Cliente: " + res[0] + ", Cuenta: "
 	+ res[1] + ",Suma: " + res[2] + "]");
 }
 \end{lstlisting}
-
+\newpage
 \textbf{Código para \textit{JPQL}:}
 \begin{lstlisting}
 String query_text = "SELECT cl.Nombre, op.realizante.numCuenta,
@@ -325,6 +325,7 @@ System.out.println(q);
 }
 
 \end{lstlisting}
+\bigbreak
 \textbf{Código para \textit{Criteria}:}
 \begin{lstlisting}
 javax.persistence.criteria.CriteriaBuilder cb = 
@@ -415,6 +416,7 @@ for (Query1 q : results) {
 System.out.println(q);
 }
 \end{lstlisting}
+\newpage
 \textbf{Código para \textit{Criteria}:}
 \begin{lstlisting}
 javax.persistence.criteria.CriteriaBuilder cb = 
@@ -457,8 +459,7 @@ System.out.println(q);
 
 \end{lstlisting}
 
-\bigskip
-
+\newpage
 La \textbf{consulta 2} también se ha realizado en \textit{SQL}, \textit{JPQL} y \textit{Criteria} para ambas versiones.
 Los códigos para la versión del esquema lógico creado son los siguientes:\\
 
@@ -580,6 +581,7 @@ System.out.println("[ Sucursal: " + res[0] + ", Cliente: "
 }
 \end{lstlisting}
 
+\bigbreak
 \textbf{Código para \textit{JPQL}:}
 \begin{lstlisting}
 String query_text = "SELECT suc.codigo, cl.Nombre, cl.edad, 
@@ -602,6 +604,7 @@ System.out.println(q);
 }
 \end{lstlisting}
 
+\bigbreak
 \textbf{Código para \textit{Criteria}:}
 \begin{lstlisting}
 javax.persistence.criteria.CriteriaBuilder cb = 
@@ -654,6 +657,7 @@ System.out.println(row);
 Para la consulta 3, para las dos versiones, se ha abordado la solución en \emph{JPQL} y \textit{SQL}. \\
 El código para la versión de esquema lógico adaptado es el siguiente:
 
+\bigbreak
 \textbf{Código para \textit{SQL}:}
 \begin{lstlisting}
 String query_sql = "SELECT cl.Nombre, p.num_cuenta, s1.fecha "
@@ -702,6 +706,7 @@ System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1] + ", Fecha: " 
    }
 \end{lstlisting}
 
+\bigbreak
 El código para la versión de esquema lógico creado es el siguiente:
 
 
@@ -760,6 +765,7 @@ System.out.println("[ Cliente: " + res[0] + ", Cuenta: " + res[1]
 \bigbreak
 En cuanto a la consulta 4, se ha realizado en \textit{SQL} únicamente para la versión del esquema lógico adaptado, debido a que se necesita una unión entre dos tablas y \textit{JPQL} ni \textit{Criteria} lo admiten.
 
+\bigbreak
 \textbf{Código para esquema lógico adaptado en \textit{SQL}:}
 \begin{lstlisting}
 
@@ -848,8 +854,8 @@ System.out.println(
 \end{lstlisting}
 
 
-\bigbreak
-Para la consulta 5, para las dos versiones, se ha abordado la solución en \emph{JPQL}. \\
+\newpage
+Para la \textbf{consulta 5}, para las dos versiones, se ha abordado la solución en \emph{JPQL}. \\
 El código para la versión de esquema lógico adaptado es el siguiente:
 
 \begin{lstlisting}
@@ -876,6 +882,7 @@ El código para la versión de esquema lógico adaptado es el siguiente:
   	}
 \end{lstlisting}
 
+\bigbreak
 El código para la versión de esquema lógico creado es el siguiente:
 \begin{lstlisting}
 EntityManager em = emf.createEntityManager();
@@ -900,6 +907,7 @@ for (Query5 q : results) {
   	}
 \end{lstlisting}
 
+\newpage
 \section{Conclusiones y opiniones}
 
 \emph{JPA} es una herramienta muy potente para el acceso a los datos de una base de datos de manera uniforme desde el código \emph{Java}. Nos permite abstraernos de la estructura de la base de datos teniendo solamente en cuenta las entidades definidas en el mismo código.\\
@@ -907,9 +915,13 @@ Uno de los aspectos a tener en cuenta de esta librería es su gran adaptabilidad
 
 La utilización y formación en la herramienta no ha resultado complicada debido a que la sintaxis y semántica de las anotaciones no dificultó la tarea. Además se han consultado los capítulos del libro \emph{Java Persistence with Hibernate} ubicados en la página de la asignatura.\\
 
-\textbf{PONER UNA CONCLUSIÓN DE LAS CONSULTAS}.\\
+Las consultas en \textit{JPA} han dado algunos problemas para su realización, ya que se ha tenido que estudiar documentación sobre \textit{JPQL} y \textit{Criteria}.
+La realización de consultas con \textit{JPQL} ha resultado bastante cómodo ya que el lenguaje utilizado es muy similar a \textit{SQL}, con el que los miembros poseen experiencia. Como \textit{JPQL} se basa en las clases creadas en \textit{Java}, la sintaxis de las consultas es muy estricta ya que los nombres utilizados en la misma deben ser los mismos que las clases (incluso con las mayúsculas y minúsculas), a diferencia de las consultas en \textit{SQL}. Como punto positivo es que los \textit{Join} son más sencillos que con otros lenguajes ya que su lógica es utilizar los que representan las relaciones entre entidades. Un punto en contra de este lenguaje es que es menos potente para realizar algunas consultas, como por ejemplo que no permite realizar \textit{Union}. Además, para poder mostrar los resultados obtenidos de una consulta, ha sido preciso utilizar \textit{Hibernate} y la creación de dos clases más, lo que puede llegar a ser bastante ocioso.\\
 
-Para finalizar, se ha utilizado anteriormente el framework \emph{Django\footnote{\url{https://www.djangoproject.com/}}}. Este Framework está orientado al desarrollo web utilizando \emph{Python}. Además cuenta con un \emph{ORM} que hace casi totalmente transparente el acceso a la base de datos de cara al programador.\\
+En cuanto a \textit{Criteria} se puede decir que ha sido complicado su uso, ya que formular una consulta con este lenguaje resulta costoso y pesado además de que no es tan intuitivo como los dos lenguajes mencionados anteriormente.\\
+Como conclusión de las consultas se puede decir que es preferible un lenguaje como \textit{SQL} ya que resulta menos ocioso realizar una consulta y tiene más potencia expresiva.
+
+Para finalizar, se ha utilizado anteriormente el \textit{framework} \emph{Django\footnote{\url{https://www.djangoproject.com/}}}. Este Framework está orientado al desarrollo web utilizando \emph{Python}. Además cuenta con un \emph{ORM} que hace casi totalmente transparente el acceso a la base de datos de cara al programador.\\
 La diferencia principal entre estos dos \emph{ORMs} se basa en las anotaciones, siendo \emph{JPA} más sencillo de implantar, tanto en el caso de la generación del esquema lógico desde 0 como en la adopción de un esquema preexistente.
 
 \newpage

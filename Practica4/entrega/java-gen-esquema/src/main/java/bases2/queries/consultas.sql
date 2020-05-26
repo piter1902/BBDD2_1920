@@ -51,7 +51,7 @@ GROUP BY
   s1.FECHA
 ORDER BY
   cl.NOMBRE;
--- Consulta 4 para BD original de oracle
+-- Consulta 4 para BD creada por JPA
 SELECT
   cl.Nombre,
   subquery1.Num_cuenta,
