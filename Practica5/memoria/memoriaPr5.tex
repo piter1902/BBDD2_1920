@@ -152,8 +152,41 @@ start-dfs.sh
 hdfs dfs -mkdir -p /user/$LOGNAME
 \end{lstlisting}
 
+Para la configuración de \emph{YARN}, se va a proceder a parar todos los servicios (\texttt{stop-all.sh}) y a modificar los ficheros de configuración situados en \emph{./etc/hadoop/}. En el fichero \emph{mapred-site.xml} se establecerá el siguiente contenido:
 
-\textbf{{\Huge Falta YARN}}
+\begin{lstlisting}
+<configuration>
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+    <property>
+        <name>mapreduce.application.classpath</name>
+        <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
+    </property>
+</configuration>
+\end{lstlisting}
+
+Y en el fichero \emph{yarn-site.xml} se establecerá el siguiente contenido:
+
+\begin{lstlisting}
+<configuration>
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.env-whitelist</name>
+        <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
+    </property>
+</configuration>
+\end{lstlisting}
+
+Se va a proceder a iniciar \emph{Hadoop} de nuevo, para ello se va a utilizar el siguiente comando:
+
+\begin{lstlisting}
+start-all.sh
+\end{lstlisting}
 
 \subsection{Apache HBase}
 
@@ -195,6 +228,11 @@ Tras esto, se va a proceder a ejecutar \emph{HBase}, para ello (con \emph{Hadoop
 start-hbase.sh
 \end{lstlisting}
 
+Si se quiere acceder a hbase utilizando un prompt interactivo se puede utilizar el comando:
+
+\begin{lstlisting}
+hbase shell
+\end{lstlisting}
 
 \section{Pseudo-código de las funciones map y reduce utilizadas}
 
