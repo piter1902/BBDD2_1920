@@ -140,11 +140,11 @@ public class Logistica {
 			scan.setCaching(300);
 
 			try {
-				TableMapReduceUtil.initTableMapperJob("Clientes",  	    // nombre de la tabla
-						scan, 										  	// Instancia scan para controlar CF y atributos
-						LogisticMapper.class,                           // Clase mapper
-						LongWritable.class,                             // Tipo de clave de salida del mapper
-						DoubleWritable.class,                           // Tipo de valor de salida del mapper
+				TableMapReduceUtil.initTableMapperJob("Clientes", // nombre de la tabla
+						scan, // Instancia scan para controlar CF y atributos
+						LogisticMapper.class, // Clase mapper
+						LongWritable.class, // Tipo de clave de salida del mapper
+						DoubleWritable.class, // Tipo de valor de salida del mapper
 						job);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -187,7 +187,7 @@ public class Logistica {
 				grad[i] = 0;
 			}
 			int i = 0;
-			while(scanner.hasNextLine()){
+			while (scanner.hasNextLine()) {
 				line = scanner.nextLine();
 				i++;
 				String[] splited = line.split("\\t");
@@ -196,13 +196,14 @@ public class Logistica {
 				// int j = scanner.nextInt();
 				// double val = 0;
 				// try {
-				// 	val = scanner.nextDouble();	
+				// val = scanner.nextDouble();
 				// } catch (InputMismatchException ime) {
-				// 	//TODO: handle exception
-				// 	System.out.println("Línea de erorr: " + i);
-				// 	System.exit(-1);
+				// //TODO: handle exception
+				// System.out.println("Línea de erorr: " + i);
+				// System.exit(-1);
 				// }
-				System.err.println(String.format("Iter: %10d Linea: %10d --- j: %10d | val: %10d", new Object[]{paso, i, j, val}));
+				//System.err.println(String.format("Iter: %10s Linea: %10s --- j: %10s | val: %10s",
+						new Object[] { paso, i, j, val }));
 				grad[j] = val;
 			}
 			// actualizar los thetasAct
@@ -238,10 +239,13 @@ public class Logistica {
 		out.close();
 	}
 
-	private static double[] actualizarThetas(double[] thetasAct, double[] grad, double alpha){
-		double[] resul = new double[TOTAL_FEATURES+1];
-		for (int i=0; i<resul.length; i++){
-			resul[i]=thetasAct[i]+alpha*grad[i];
+	private static double[] actualizarThetas(double[] thetasAct, double[] grad, double alpha) {
+		double[] resul = new double[TOTAL_FEATURES + 1];
+		for (int i = 0; i < resul.length; i++) {
+			resul[i] = thetasAct[i] + alpha * grad[i];
+			if(resul[i] == Double.NaN){
+				System.out.println("Error NaN en posicion: " + i);
+			}
 		}
 		return resul;
 	}
