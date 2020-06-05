@@ -32,8 +32,8 @@ import org.apache.hadoop.hbase.client.Scan;
 public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
-	private static final int TOTAL_PASOS = 20;
-	// private static final int TOTAL_PASOS = 1;
+	// private static final int TOTAL_PASOS = 20;
+	private static final int TOTAL_PASOS = 1;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
@@ -190,7 +190,7 @@ public class Logistica {
 			while(scanner.hasNextLine()){
 				line = scanner.nextLine();
 				i++;
-				String[] splited = line.split("\t");
+				String[] splited = line.split("\\t");
 				int j = Integer.parseInt(splited[0]);
 				double val = Double.parseDouble(splited[1]);
 				// int j = scanner.nextInt();
@@ -202,6 +202,7 @@ public class Logistica {
 				// 	System.out.println("Línea de erorr: " + i);
 				// 	System.exit(-1);
 				// }
+				System.err.println(String.format("Iter: %10d Linea: %10d --- j: %10d | val: %10d", new Object[]{paso, i, j, val}));
 				grad[j] = val;
 			}
 			// actualizar los thetasAct
