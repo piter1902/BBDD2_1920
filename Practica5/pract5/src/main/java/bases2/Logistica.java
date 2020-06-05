@@ -175,6 +175,7 @@ public class Logistica {
 			// una vez finalizado el trabajo que calcula el gradiente,
 			// leer de los ficheros el gradiente calculado
 			Scanner scanner = null;
+			String line = "";
 			try {
 				scanner = new Scanner(new File("out/part-r-00000"));
 			} catch (FileNotFoundException e1) {
@@ -187,16 +188,20 @@ public class Logistica {
 			}
 			int i = 0;
 			while(scanner.hasNextLine()){
+				line = scanner.nextLine();
 				i++;
-				int j = scanner.nextInt();
-				double val = 0;
-				try {
-					val = scanner.nextDouble();	
-				} catch (InputMismatchException ime) {
-					//TODO: handle exception
-					System.out.println("Línea de erorr: " + i);
-					System.exit(-1);
-				}
+				String[] splited = line.split("t");
+				int j = Integer.parseInt(splited[0]);
+				double val = Double.parseDouble(splited[1]);
+				// int j = scanner.nextInt();
+				// double val = 0;
+				// try {
+				// 	val = scanner.nextDouble();	
+				// } catch (InputMismatchException ime) {
+				// 	//TODO: handle exception
+				// 	System.out.println("Línea de erorr: " + i);
+				// 	System.exit(-1);
+				// }
 				grad[j] = val;
 			}
 			// actualizar los thetasAct
