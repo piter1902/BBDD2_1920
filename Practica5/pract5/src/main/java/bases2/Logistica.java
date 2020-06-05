@@ -187,7 +187,7 @@ public class Logistica {
 			for (int i = 0; i < grad.length; i++) {
 				grad[i] = 0;
 			}
-			//int i = 0;
+			int i = 0;
 			while (scanner.hasNextLine()) {
 				line = scanner.nextLine();
 				i++;
