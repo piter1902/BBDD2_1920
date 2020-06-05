@@ -1,4 +1,4 @@
-package practica5;
+package bases2;
 
 import java.io.File;
 import java.io.FileNotFoundException;
