@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.NavigableMap;
 import java.util.Scanner;
@@ -170,6 +171,7 @@ public class Logistica {
 			if (!exito)
 				System.exit(-1);
 
+			System.out.println("Final del paso: " + paso);
 			// una vez finalizado el trabajo que calcula el gradiente,
 			// leer de los ficheros el gradiente calculado
 			Scanner scanner = null;
@@ -183,9 +185,18 @@ public class Logistica {
 			for (int i = 0; i < grad.length; i++) {
 				grad[i] = 0;
 			}
+			int i = 0;
 			while(scanner.hasNextLine()){
+				i++;
 				int j = scanner.nextInt();
-				double val = scanner.nextDouble();
+				double val = 0;
+				try {
+					val = scanner.nextDouble();	
+				} catch (InputMismatchException ime) {
+					//TODO: handle exception
+					System.out.println("Línea de erorr: " + i);
+					System.exit(-1);
+				}
 				grad[j] = val;
 			}
 			// actualizar los thetasAct
