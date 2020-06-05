@@ -151,6 +151,7 @@ public class Logistica {
 				e1.printStackTrace();
 			}
 
+			job.setNumReduceTasks(5);
 			FileOutputFormat.setOutputPath(job, new Path("out"));
 
 			// lanzar y esperar a que finalice el trabajo
