@@ -33,7 +33,7 @@ public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
 	// private static final int TOTAL_PASOS = 20;
-	private static final int TOTAL_PASOS = 1;
+	private static final int TOTAL_PASOS = 5;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
@@ -234,7 +234,7 @@ public class Logistica {
 		PrintWriter out = new PrintWriter(nomFich);
 		out.print(Double.toString(thetas[0]));
 		for (int i = 1; i < thetas.length; i++) {
-			out.print("," + Double.toString(thetas[i]));
+			out.print("," + thetas[i]);
 		}
 		out.close();
 	}
