@@ -190,7 +190,7 @@ public class Logistica {
 			while(scanner.hasNextLine()){
 				line = scanner.nextLine();
 				i++;
-				String[] splited = line.split("t");
+				String[] splited = line.split("\t");
 				int j = Integer.parseInt(splited[0]);
 				double val = Double.parseDouble(splited[1]);
 				// int j = scanner.nextInt();
