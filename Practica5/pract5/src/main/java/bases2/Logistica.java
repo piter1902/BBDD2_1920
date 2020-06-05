@@ -234,9 +234,17 @@ public class Logistica {
 		PrintWriter out = new PrintWriter(nomFich);
 		out.print(Double.toString(thetas[0]));
 		for (int i = 1; i < thetas.length; i++) {
-			out.print("," + thetas[i]);
+			out.print("," + Double.toString(thetas[i]));
 		}
 		out.close();
+		System.err.println(Double.toString(thetas[0]));
+		for (int i = 0; i < thetas.length; i++){
+			System.err.println("," + Double.toString(thetas[i]));
+			double d = thetas[i];
+			if(d == Double.NaN){
+				System.out.println("El " + i + "-esimo elemento es NaN (" + Double.toString(d) + ")");
+			}
+		}
 	}
 
 	private static double[] actualizarThetas(double[] thetasAct, double[] grad, double alpha) {
