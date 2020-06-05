@@ -1,5 +1,6 @@
 package bases2;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -171,13 +172,21 @@ public class Logistica {
 
 			// una vez finalizado el trabajo que calcula el gradiente,
 			// leer de los ficheros el gradiente calculado
-			Scanner scanner = new Scanner(new File("out/part-r-00000"));
+			Scanner scanner = null;
+			try {
+				scanner = new Scanner(new File("out/part-r-00000"));
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			double[] grad = new double[TOTAL_FEATURES + 1];
+			for (int i = 0; i < grad.length; i++) {
+				grad[i] = 0;
+			}
 			while(scanner.hasNextLine()){
-				int sigNum = scanner.nextInt();
-				double valor = scanner.nextDouble();
-				thetasAct[sigNum] = thetasAct[sigNum] - 0.01*valor;
-				scanner.nextLine();
-				System.out.println(thetasAct[sigNum]);
+				int j = scanner.nextInt();
+				double val = scanner.nextDouble();
+				grad[j] = val;
 			}
 			// actualizar los thetasAct
 			thetasAct = actualizarThetas(thetasAct, grad, ALPHA);
