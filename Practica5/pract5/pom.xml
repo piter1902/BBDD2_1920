@@ -102,6 +102,7 @@
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-yarn-site</artifactId>
       <version>3.2.1</version>
+      <type>pom</type>
     </dependency>
     <!-- HBase Mapreduce -->
     <dependency>
