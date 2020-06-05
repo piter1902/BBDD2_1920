@@ -32,8 +32,8 @@ import org.apache.hadoop.hbase.client.Scan;
 public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
-	// private static final int TOTAL_PASOS = 20;
-	private static final int TOTAL_PASOS = 5;
+	private static final int TOTAL_PASOS = 20;
+	// private static final int TOTAL_PASOS = 5;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
@@ -137,7 +137,7 @@ public class Logistica {
 
 			// Scan para leer de la tabla
 			Scan scan = new Scan();
-			scan.setCaching(300);
+			scan.setCaching(500);
 
 			try {
 				TableMapReduceUtil.initTableMapperJob("Clientes", // nombre de la tabla
@@ -187,7 +187,7 @@ public class Logistica {
 			for (int i = 0; i < grad.length; i++) {
 				grad[i] = 0;
 			}
-			int i = 0;
+			//int i = 0;
 			while (scanner.hasNextLine()) {
 				line = scanner.nextLine();
 				i++;
@@ -238,14 +238,14 @@ public class Logistica {
 			out.print("," + Double.toString(thetas[i]));
 		}
 		out.close();
-		System.err.println(Double.toString(thetas[0]));
-		for (int i = 0; i < thetas.length; i++){
-			System.err.println("," + Double.toString(thetas[i]));
-			double d = thetas[i];
-			if(d == Double.NaN){
-				System.out.println("El " + i + "-esimo elemento es NaN (" + Double.toString(d) + ")");
-			}
-		}
+		// System.err.println(Double.toString(thetas[0]));
+		// for (int i = 1; i < thetas.length; i++){
+		// 	System.err.println("," + Double.toString(thetas[i]));
+		// 	double d = thetas[i];
+		// 	if(d == Double.NaN){
+		// 		System.out.println("El " + i + "-esimo elemento es NaN (" + Double.toString(d) + ")");
+		// 	}
+		// }
 	}
 
 	private static double[] actualizarThetas(double[] thetasAct, double[] grad, double alpha) {
