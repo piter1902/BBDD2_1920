@@ -60,6 +60,37 @@
       <artifactId>hbase-common</artifactId>
       <version>1.4.13</version>
     </dependency>
+    <!-- Duda 1 -->
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-server</artifactId>
+      <version>1.4.13</version>
+    </dependency>
+    <!-- Duda 2 -->
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-hadoop-compat</artifactId>
+      <version>1.4.13</version>
+    </dependency>
+    <!-- Duda 3 -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+    <!-- Duda 4 -->
+      <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-core</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+    <!-- Duda 5 -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+      <version>2.9.2</version>
+      <scope>provided</scope>
+    </dependency>
     <!-- HBase Mapreduce -->
     <dependency>
       <groupId>org.apache.hbase</groupId>
