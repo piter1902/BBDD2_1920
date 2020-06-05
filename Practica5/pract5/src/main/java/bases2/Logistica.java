@@ -1,4 +1,4 @@
-package bases2;
+package practica5;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -53,11 +53,14 @@ public class Logistica {
 			xi[0] = 1;
 			
 			//Con los datos de mapCar, rellenar en xi las caracteristicas
-			
+			for(byte[] i : mapCar.keySet()){
+				xi[Integer.parseInt(Bytes.toString(i))] = 1.0;
+			}
 			
 			//Hallar producto escalar thetasAct*xi
-			
-			
+			for(int i=0;i<xi.length;i++){
+				z +=  thetasAct[i]* xi[i];
+			}
 			//leer de parametro value, clasificacion A o B de cliente
 			String classi = Bytes.toString(value.getValue(Bytes.toBytes("cli"), Bytes.toBytes("class")));
 			double yi = classi.equals("A")?0.0:1.0;
@@ -85,10 +88,12 @@ public class Logistica {
 	public static void main(String[] args) {
 		Configuration conf = HBaseConfiguration.create();
 		FileSystem fs = FileSystem.get(conf);
-		
+		for (int i=0: i < thetasAct.lenght; i++){
+			thetasAct[i] = 0.0;
+		}
 		for (int paso = 0; paso < TOTAL_PASOS; paso++) {		
 			//preparar el trabajo map/reduce para calcular el gradiente
-			
+			Job job = Job.getInstance(conf,"Regresion logistica");
 
 			FileOutputFormat.setOutputPath(job, new Path("out"));
 			
