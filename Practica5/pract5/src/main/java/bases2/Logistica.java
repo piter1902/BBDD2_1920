@@ -30,8 +30,8 @@ import org.apache.hadoop.hbase.client.Scan;
 public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
-	// private static final int TOTAL_PASOS = 20;
-	private static final int TOTAL_PASOS = 1;
+	private static final int TOTAL_PASOS = 20;
+	// private static final int TOTAL_PASOS = 1;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
@@ -171,17 +171,24 @@ public class Logistica {
 
 			// una vez finalizado el trabajo que calcula el gradiente,
 			// leer de los ficheros el gradiente calculado
-
+			Scanner scanner = new Scanner(new File("out/part-r-00000"));
+			while(scanner.hasNextLine()){
+				int sigNum = scanner.nextInt();
+				double valor = scanner.nextDouble();
+				thetasAct[sigNum] = thetasAct[sigNum] - 0.01*valor;
+				scanner.nextLine();
+				System.out.println(thetasAct[sigNum]);
+			}
 			// actualizar los thetasAct
-			// thetasAct = actualizarThetas(thetasAct, grad, ALPHA);
-
+			thetasAct = actualizarThetas(thetasAct, grad, ALPHA);
+			scanner.close();
 			// borrar directorio out, preparando el siguiente paso
-			// try {
-			// 	fs.delete(new Path("out"), true);
-			// } catch (IllegalArgumentException | IOException e) {
-			// 	// TODO Auto-generated catch block
-			// 	e.printStackTrace();
-			// }
+			try {
+				fs.delete(new Path("out"), true);
+			} catch (IllegalArgumentException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		// Guardar a fichero los thetasAct
@@ -203,6 +210,14 @@ public class Logistica {
 			out.print("," + Double.toString(thetas[i]));
 		}
 		out.close();
+	}
+
+	private static double[] actualizarThetas(double[] thetasAct, double[] grad, double alpha){
+		double[] resul = new double[TOTAL_FEATURES+1];
+		for (int i=0; i<resul.length; i++){
+			resul[i]=thetasAct[i]+alpha*grad[i];
+		}
+		return resul;
 	}
 
 }
