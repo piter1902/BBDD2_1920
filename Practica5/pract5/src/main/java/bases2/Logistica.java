@@ -133,6 +133,22 @@ public class Logistica {
 				e.printStackTrace();
 			}
 
+			// Scan para leer de la tabla
+			Scan scan = new Scan();
+			scan.setCaching(300);
+
+			try {
+				TableMapReduceUtil.initTableMapperJob("Clientes",  	    // nombre de la tabla
+						scan, 										  	// Instancia scan para controlar CF y atributos
+						LogisticMapper.class,                           // Clase mapper
+						LongWritable.class,                             // Tipo de clave de salida del mapper
+						DoubleWritable.class,                           // Tipo de valor de salida del mapper
+						job);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 			FileOutputFormat.setOutputPath(job, new Path("out"));
 
 			// lanzar y esperar a que finalice el trabajo
