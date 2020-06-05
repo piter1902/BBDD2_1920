@@ -34,8 +34,9 @@ public class Importacion {
 					//guardar clasificacion del cliente
 					//asociar a familia_columna:calificador_columna->valor,
 					//esto es, cli:class-> A o B
-								
-
+					put.addColumn("cli".getBytes(), 
+						"class".getBytes(), 
+						toks[i].getBytes());
 				} else {
 					//guardar solo caracteristicas no nulas
 					//car:<numerocaracteristica>->1 
