@@ -176,12 +176,12 @@ public class Logistica {
 			// thetasAct = actualizarThetas(thetasAct, grad, ALPHA);
 
 			// borrar directorio out, preparando el siguiente paso
-			try {
-				fs.delete(new Path("out"), true);
-			} catch (IllegalArgumentException | IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			// try {
+			// 	fs.delete(new Path("out"), true);
+			// } catch (IllegalArgumentException | IOException e) {
+			// 	// TODO Auto-generated catch block
+			// 	e.printStackTrace();
+			// }
 		}
 
 		// Guardar a fichero los thetasAct
@@ -191,6 +191,8 @@ public class Logistica {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		System.out.println("Done");
 
 	}
 
