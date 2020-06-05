@@ -203,7 +203,7 @@ public class Logistica {
 				// System.exit(-1);
 				// }
 				//System.err.println(String.format("Iter: %10s Linea: %10s --- j: %10s | val: %10s",
-						new Object[] { paso, i, j, val }));
+				//		new Object[] { paso, i, j, val }));
 				grad[j] = val;
 			}
 			// actualizar los thetasAct
