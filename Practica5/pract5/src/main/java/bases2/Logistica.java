@@ -113,19 +113,42 @@ public class Logistica {
 	public static void main(String[] args) {
 		Configuration conf = HBaseConfiguration.create();
 
-		FileSystem fs = FileSystem.get(conf);
+		FileSystem fs = null;
+		try {
+			fs = FileSystem.get(conf);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		for (int i = 0; i < thetasAct.length; i++) {
 			thetasAct[i] = 0.0;
 		}
 
 		for (int paso = 0; paso < TOTAL_PASOS; paso++) {
 			// preparar el trabajo map/reduce para calcular el gradiente
-			Job job = Job.getInstance(conf, "Regresion logistica");
+			Job job = null;
+			try {
+				job = Job.getInstance(conf, "Regresion logistica");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			FileOutputFormat.setOutputPath(job, new Path("out"));
 
 			// lanzar y esperar a que finalice el trabajo
-			boolean exito = job.waitForCompletion(true);
+			boolean exito = false;
+			try {
+				exito = job.waitForCompletion(true);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// si el trabajo finalizo sin exito, acabar
 			if (!exito)
 				System.exit(-1);
@@ -137,11 +160,21 @@ public class Logistica {
 			// thetasAct = actualizarThetas(thetasAct, grad, ALPHA);
 
 			// borrar directorio out, preparando el siguiente paso
-			fs.delete(new Path("out"), true);
+			try {
+				fs.delete(new Path("out"), true);
+			} catch (IllegalArgumentException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		// Guardar a fichero los thetasAct
-		guardar(thetasAct, "thetas.csv");
+		try {
+			guardar(thetasAct, "thetas.csv");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
