@@ -91,6 +91,18 @@
       <version>2.9.2</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Hadoop YARN -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-yarn-api</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+    <!-- Hadoop YARN-site -->
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-yarn-site</artifactId>
+      <version>3.2.1</version>
+    </dependency>
     <!-- HBase Mapreduce -->
     <dependency>
       <groupId>org.apache.hbase</groupId>
