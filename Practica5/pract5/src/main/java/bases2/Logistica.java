@@ -26,6 +26,9 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import bases2.Logistica.LogisticMapper.LogisticReducer;
+
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.Scan;
 
@@ -151,7 +154,13 @@ public class Logistica {
 				e1.printStackTrace();
 			}
 
+			job.setJarByClass(Logistica.class);
+			job.setReducerClass(LogisticReducer.class);
 			job.setNumReduceTasks(5);
+			job.setOutputKeyClass(Long.class);
+			job.setOutputValueClass(DoubleWritable.class);
+
+
 			FileOutputFormat.setOutputPath(job, new Path("out"));
 
 			// lanzar y esperar a que finalice el trabajo
