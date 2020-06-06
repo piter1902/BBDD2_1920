@@ -101,7 +101,8 @@ ssh localhost
 Después de la configuración técnica de la máquina se va a proceder a instalar \emph{Hadoop 3.2.1}. Se ejecutarán los siguientes comandos:
 
 \begin{lstlisting}
-wget http://apache.uvigo.es/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz
+wget http://apache.uvigo.es/hadoop/common/hadoop-3.2.1/		\
+	hadoop-3.2.1.tar.gz
 tar -xzvf hadoop-3.2.1.tar.gz
 # Exportamos al PATH
 export PATH="$PATH:$PWD/hadoop-3.2.1/bin:$PWD/hadoop-3.2.1/sbin" 
@@ -162,7 +163,8 @@ Para la configuración de \emph{YARN}, se va a proceder a parar todos los servic
     </property>
     <property>
         <name>mapreduce.application.classpath</name>
-        <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
+        <value>$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/*:		\
+        		$HADOOP_MAPRED_HOME/share/hadoop/mapreduce/lib/*</value>
     </property>
 </configuration>
 \end{lstlisting}
@@ -177,7 +179,9 @@ Y en el fichero \emph{yarn-site.xml} se establecerá el siguiente contenido:
     </property>
     <property>
         <name>yarn.nodemanager.env-whitelist</name>
-        <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
+        <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,	\
+        		HADOOP_CONF_DIR,	CLASSPATH_PREPEND_DISTCACHE,		\
+        		HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
     </property>
 </configuration>
 \end{lstlisting}
@@ -239,9 +243,6 @@ hbase shell
 \section{Más cosas necesarias}
 
 \section{Conclusiones sobre Hadoop y HBase}
-
-\newpage\section{Apéndice 1: Figuras}
-
 
 
 \end{document}
