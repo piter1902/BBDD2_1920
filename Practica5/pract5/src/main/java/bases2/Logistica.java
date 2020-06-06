@@ -24,6 +24,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
@@ -94,6 +95,8 @@ public class Logistica {
 				double valor = g * xi[j];
 				if(Double.isNaN(valor)){
 					System.out.println("Error en NaN en la operacion de g * xi[j] para j = " + j);
+					System.out.println("g = " + g + ", yi = " + yi + ", xi[j] = " + xi[j]);
+					System.exit(-1);
 				}
 				context.write(new LongWritable(j), new DoubleWritable(valor));
 			}
