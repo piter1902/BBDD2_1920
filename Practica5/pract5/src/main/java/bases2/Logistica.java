@@ -35,8 +35,8 @@ import org.apache.hadoop.hbase.client.Scan;
 public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
-	private static final int TOTAL_PASOS = 20;
-	// private static final int TOTAL_PASOS = 5;
+	// private static final int TOTAL_PASOS = 20;
+	private static final int TOTAL_PASOS = 2;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
@@ -91,7 +91,11 @@ public class Logistica {
 			// emitir para cada dimenson j el valor correspondiente a
 			// uno de los sumandos del sumatorio del algoritmo del enunciado
 			for (int j = 0; j < TOTAL_FEATURES + 1; j++) {
-				context.write(new LongWritable(j), new DoubleWritable(g * xi[j]));
+				double valor = g * xi[j];
+				if(Double.isNaN(valor)){
+					System.out.println("Error en NaN en la operacion de g * xi[j] para j = " + j);
+				}
+				context.write(new LongWritable(j), new DoubleWritable(valor));
 			}
 		}
 
@@ -156,7 +160,7 @@ public class Logistica {
 
 			job.setJarByClass(Logistica.class);
 			job.setReducerClass(LogisticReducer.class);
-			job.setNumReduceTasks(5);
+			job.setNumReduceTasks(1);
 			job.setOutputKeyClass(Long.class);
 			job.setOutputValueClass(DoubleWritable.class);
 			//job.setOutputFormatClass(FileOutputFormat.class);
