@@ -36,8 +36,8 @@ import org.apache.hadoop.hbase.client.Scan;
 public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
-	// private static final int TOTAL_PASOS = 20;
-	private static final int TOTAL_PASOS = 2;
+	private static final int TOTAL_PASOS = 20;
+	// private static final int TOTAL_PASOS = 2;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
