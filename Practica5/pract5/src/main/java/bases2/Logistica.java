@@ -83,11 +83,11 @@ public class Logistica {
 			String classi = Bytes.toString(value.getValue(Bytes.toBytes("cli"), Bytes.toBytes("class")));
 			double yi = classi.equals("A") ? 0.0 : 1.0;
 
-			double g = (1 / 1 + Math.exp(-prod_Esc));
+			double g = (1 / (1 + Math.exp(-prod_Esc)));
 
 			// Esto debería ser así pero es al revés
-			//g = yi - g;
-			g = g - yi;
+			g = yi - g;
+			//g = g - yi;
 
 			// emitir para cada dimenson j el valor correspondiente a
 			// uno de los sumandos del sumatorio del algoritmo del enunciado
