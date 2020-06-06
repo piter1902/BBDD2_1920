@@ -159,6 +159,7 @@ public class Logistica {
 			job.setNumReduceTasks(5);
 			job.setOutputKeyClass(Long.class);
 			job.setOutputValueClass(DoubleWritable.class);
+			job.setOutputFormatClass(FileOutputFormat.class);
 
 
 			FileOutputFormat.setOutputPath(job, new Path("out"));
@@ -261,8 +262,8 @@ public class Logistica {
 		double[] resul = new double[TOTAL_FEATURES + 1];
 		for (int i = 0; i < resul.length; i++) {
 			resul[i] = thetasAct[i] + alpha * grad[i];
-			if(resul[i] == Double.NaN){
-				System.out.println("Error NaN en posicion: " + i);
+			if(Double.isNaN(resul[i])){
+				System.out.println("actualizarThetas: Error cálculo de NaN en posicion: " + i);
 			}
 		}
 		return resul;
