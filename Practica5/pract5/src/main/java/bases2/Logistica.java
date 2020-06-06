@@ -159,7 +159,7 @@ public class Logistica {
 			job.setNumReduceTasks(5);
 			job.setOutputKeyClass(Long.class);
 			job.setOutputValueClass(DoubleWritable.class);
-			job.setOutputFormatClass(FileOutputFormat.class);
+			//job.setOutputFormatClass(FileOutputFormat.class);
 
 
 			FileOutputFormat.setOutputPath(job, new Path("out"));
@@ -206,7 +206,12 @@ public class Logistica {
 				double val = Double.parseDouble(splited[1]);
 				if(Double.isNaN(val)){
 					System.out.println(splited.toString());
-					System.out.println(splited.length);
+					System.out.println("(");
+					for (String s : splited) {
+						System.out.println(s);
+					}
+					System.out.println(")");
+					System.out.println("LENGTH" + splited.length);
 					System.out.println("Error NaN en la lectura " + j + i + ". Val=" + val);
 					System.exit(-1);
 				}
