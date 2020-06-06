@@ -204,6 +204,12 @@ public class Logistica {
 				String[] splited = line.split("\\t");
 				int j = Integer.parseInt(splited[0]);
 				double val = Double.parseDouble(splited[1]);
+				if(Double.isNaN(val)){
+					System.out.println(splited.toString());
+					System.out.println(splited.length);
+					System.out.println("Error NaN en la lectura " + j + i + ". Val=" + val);
+					System.exit(-1);
+				}
 				// int j = scanner.nextInt();
 				// double val = 0;
 				// try {
