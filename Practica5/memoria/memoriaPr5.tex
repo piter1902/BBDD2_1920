@@ -250,9 +250,54 @@ hbase shell
 
 \section{Pseudo-código de las funciones map y reduce utilizadas}
 
+Para la adaptación del algoritmo de descenso de gradiente en \emph{Hadoop} se ha dividido el algoritmo proporcionado en el enunciado (Figura \ref{fig:pseudoenunciado}) en uno equivalente utilizando las funcionalidades de \emph{Map-Reduce} disponibles en \emph{Hadoop}.
+
+La función \emph{map} se encargaría de emitir para cada clave $j$ el valor de cada uno de sus $n$ sumandos.\\
+De esta manera la función \emph{reduce} se encargará de realizar ese sumatorio de $n$ sumandos y será una vez se haya completado la tarea de cálculo del vector gradiente cuando se hará el ajuste de los parámetros $\theta_{act}$.\\
+De esta manera el pseudocódigo de las funciones mencionadas anteriormente quedará de la sieguiente manera:
+
+\begin{lstlisting}
+function map(key:clave1, value:valor1) {
+	// clave1 se corresponde con el identificador del cliente a evaluar.
+	// valor1 contiene toda la información asociada al cliente.
+	// Hallamos el producto escalar 
+	var prod_Esc = thetasAct * value[caracteristicas]
+	// Calculamos yi en función de value[cliclass] es A o B
+	var yi = if (value[cliclass] == A) then 0 else 1
+	// Para cada caracteristica (indice, valor) de
+	// value[caracteristicas] emitimos
+	foreach (j,valor) in value[caracteristicas] do
+		emit(j, (yi - g(prod_Esc))*valor )
+	end
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+function reduce(key:clave2, value:valor2) {
+	// clave2 se corresponde con el identificador de
+	// la caracteristica a evaluar.
+	// valor2 contiene la lista de sumandos de la caracteristica j.
+	// Hallamos el sumatorio
+	emit(key, sum(value))
+}
+\end{lstlisting}
+
+
+\label{listing:enunciado}
+
 \section{Más cosas necesarias}
 
 \section{Conclusiones sobre Hadoop y HBase}
+
+\newpage
+\section{Anexo 1: Figuras}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.75]{images/pseudocodigo_enunciado.jpg}
+\caption{Pseudocódigo proporcionado en el enunciado de la práctica}
+\label{fig:pseudoenunciado}
+\end{figure}
 
 
 \end{document}
