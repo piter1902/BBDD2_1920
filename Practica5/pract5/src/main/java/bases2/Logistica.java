@@ -87,17 +87,12 @@ public class Logistica {
 
 			// Esto debería ser así pero es al revés
 			g = yi - g;
-			//g = g - yi;
+			// g = g - yi;
 
 			// emitir para cada dimenson j el valor correspondiente a
 			// uno de los sumandos del sumatorio del algoritmo del enunciado
 			for (int j = 0; j < TOTAL_FEATURES + 1; j++) {
 				double valor = g * xi[j];
-				if(Double.isNaN(valor)){
-					System.out.println("Error en NaN en la operacion de g * xi[j] para j = " + j);
-					System.out.println("g = " + g + ", yi = " + yi + ", xi[j] = " + xi[j]);
-					System.exit(-1);
-				}
 				context.write(new LongWritable(j), new DoubleWritable(valor));
 			}
 		}
@@ -166,8 +161,7 @@ public class Logistica {
 			job.setNumReduceTasks(1);
 			job.setOutputKeyClass(Long.class);
 			job.setOutputValueClass(DoubleWritable.class);
-			//job.setOutputFormatClass(FileOutputFormat.class);
-
+			// job.setOutputFormatClass(FileOutputFormat.class);
 
 			FileOutputFormat.setOutputPath(job, new Path("out"));
 
@@ -185,11 +179,7 @@ public class Logistica {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// si el trabajo finalizo sin exito, acabar
-			if (!exito)
-				System.exit(-1);
-
-			System.out.println("Final del paso: " + paso);
+			
 			// una vez finalizado el trabajo que calcula el gradiente,
 			// leer de los ficheros el gradiente calculado
 			Scanner scanner = null;
@@ -211,28 +201,7 @@ public class Logistica {
 				String[] splited = line.split("\\t");
 				int j = Integer.parseInt(splited[0]);
 				double val = Double.parseDouble(splited[1]);
-				if(Double.isNaN(val)){
-					System.out.println(splited.toString());
-					System.out.println("(");
-					for (String s : splited) {
-						System.out.println(s);
-					}
-					System.out.println(")");
-					System.out.println("LENGTH" + splited.length);
-					System.out.println("Error NaN en la lectura " + j + i + ". Val=" + val);
-					System.exit(-1);
-				}
-				// int j = scanner.nextInt();
-				// double val = 0;
-				// try {
-				// val = scanner.nextDouble();
-				// } catch (InputMismatchException ime) {
-				// //TODO: handle exception
-				// System.out.println("Línea de erorr: " + i);
-				// System.exit(-1);
-				// }
-				//System.err.println(String.format("Iter: %10s Linea: %10s --- j: %10s | val: %10s",
-				//		new Object[] { paso, i, j, val }));
+
 				grad[j] = val;
 			}
 			// actualizar los thetasAct
@@ -254,9 +223,6 @@ public class Logistica {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		System.out.println("Done");
-
 	}
 
 	private static void guardar(double[] thetas, String nomFich) throws IOException {
@@ -266,23 +232,12 @@ public class Logistica {
 			out.print("," + Double.toString(thetas[i]));
 		}
 		out.close();
-		// System.err.println(Double.toString(thetas[0]));
-		// for (int i = 1; i < thetas.length; i++){
-		// 	System.err.println("," + Double.toString(thetas[i]));
-		// 	double d = thetas[i];
-		// 	if(d == Double.NaN){
-		// 		System.out.println("El " + i + "-esimo elemento es NaN (" + Double.toString(d) + ")");
-		// 	}
-		// }
 	}
 
 	private static double[] actualizarThetas(double[] thetasAct, double[] grad, double alpha) {
 		double[] resul = new double[TOTAL_FEATURES + 1];
 		for (int i = 0; i < resul.length; i++) {
 			resul[i] = thetasAct[i] + alpha * grad[i];
-			if(Double.isNaN(resul[i])){
-				System.out.println("actualizarThetas: Error cálculo de NaN en posicion: " + i);
-			}
 		}
 		return resul;
 	}
