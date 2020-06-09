@@ -37,7 +37,6 @@ public class Logistica {
 	private static final int TOTAL_FEATURES = 1600;
 	private static final double ALPHA = 0.01;
 	private static final int TOTAL_PASOS = 20;
-	// private static final int TOTAL_PASOS = 2;
 	public static double[] thetasAct = new double[TOTAL_FEATURES + 1];
 
 	public static class LogisticMapper extends TableMapper<LongWritable, DoubleWritable> {
@@ -85,9 +84,8 @@ public class Logistica {
 
 			double g = (1 / (1 + Math.exp(-prod_Esc)));
 
-			// Esto debería ser así pero es al revés
+			// Calculamos la diferencia del sumatorio
 			g = yi - g;
-			// g = g - yi;
 
 			// emitir para cada dimenson j el valor correspondiente a
 			// uno de los sumandos del sumatorio del algoritmo del enunciado
@@ -136,7 +134,6 @@ public class Logistica {
 			try {
 				job = Job.getInstance(conf, "Regresion logistica");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -152,7 +149,6 @@ public class Logistica {
 						DoubleWritable.class, // Tipo de valor de salida del mapper
 						job);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -170,13 +166,10 @@ public class Logistica {
 			try {
 				exito = job.waitForCompletion(true);
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -187,7 +180,6 @@ public class Logistica {
 			try {
 				scanner = new Scanner(new File("out/part-r-00000"));
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			double[] grad = new double[TOTAL_FEATURES + 1];
@@ -220,7 +212,6 @@ public class Logistica {
 		try {
 			guardar(thetasAct, "thetas.csv");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
