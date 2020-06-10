@@ -173,6 +173,12 @@ public class Logistica {
 				e.printStackTrace();
 			}
 			
+			// si el trabajo finalizo sin exito, acabar
+			if (!exito)
+				System.exit(-1);
+
+			System.out.println("Final del paso: " + paso);
+			
 			// una vez finalizado el trabajo que calcula el gradiente,
 			// leer de los ficheros el gradiente calculado
 			Scanner scanner = null;
