@@ -287,8 +287,13 @@ function reduce(key:clave2, value:valor2) {
 
 \section{Tareas extras}
 Para completar la práctica se tomo la decisión de crear un servidor para que los 4 miembros tuviésemos acceso a este. De esta manera se evito realizar varias veces las mismas tareas como es la instalación de Hadoop y HBase. \\
-Para completar el código de los tres ficheros necesarios, se optó por realizar el proyecto con el gestor y constructor  Apache Maven, con el se resolvieron las dependencias de ficheros jar necesarios para compilar y ejecutar la práctica, de esta forma no era necesario la instalación y configuración de Eclipse.\\
-Finalmente, destacar que es necesario la creación la tabla 'Clientes' para poder ejecutar los códigos y llevar a cabo las pruebas.La id será la primera columna de los csv, además, dispone de dos familias de columnas, \emph{cli} que contiene la clase del cliente (A o B), y \emph{car} que contiene el número de características.
+Para completar el código de los tres ficheros necesarios, se optó por realizar el proyecto con el gestor y constructor  Apache Maven, con el se resolvieron las dependencias de ficheros \emph{jar} necesarios para compilar y ejecutar la práctica, de esta forma no era necesario la instalación y configuración de Eclipse.\\
+Finalmente, destacar que es necesario la creación la tabla `Clientes' para poder ejecutar los códigos y llevar a cabo las pruebas. La id será la primera columna de los ficheros \emph{csv}, además, dispone de dos familias de columnas, \emph{cli} que contiene la clase del cliente (A o B), y \emph{car} que contiene el número de características. Para crear esta tabla utilizaremos la siguiente sentencia en el \texttt{hbase shell}:
+
+\begin{lstlisting}
+create "Clientes", "cli", "car"
+\end{lstlisting}
+
 \newpage
 \section{Conclusiones sobre Hadoop y HBase}
 Como conclusión cabe resaltar que lo más costoso a la hora de realizar la práctica ha sido la configuración (con las instalaciones requeridas) del entorno necesario para trabajar con \emph{Hadoop} y \emph{HBase}. Se considera que \emph{Hadoop} es una herramienta bastante más potente de lo que se ha podido demostrar en esta práctica, no se ha podido explotar todo su potencial. Con \emph{HBase} sucede algo similar, al ser utilizado tan superficialmente no se ha podido obtener una conclusión consistente. La realización del código no ha sido muy compleja, pese al nulo conocimiento previo sobre regresión logística y solo haber recibido unas nociones básicas acerca de ello.
